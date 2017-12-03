@@ -1,4 +1,10 @@
 *.iml
-.idea
+
+
+gradle/
+gradlew
+gradlew.bat
 
 out/
+.idea/
+build/
