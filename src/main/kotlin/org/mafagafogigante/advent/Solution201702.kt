@@ -1,8 +1,10 @@
+package org.mafagafogigante.advent
+
 class Solution201702 {
 
     fun getFirstSolution(): Int {
         var checksum = 0
-        for (line in javaClass.getResource("2017-02.txt").readText(Charsets.UTF_8).split("\n")) {
+        for (line in javaClass.getResource("/2017-02.txt").readText(Charsets.UTF_8).split("\n")) {
             if (line.isEmpty()) {
                 continue
             }
@@ -19,7 +21,7 @@ class Solution201702 {
 
     fun getSecondSolution(): Int {
         var sum = 0
-        for (line in javaClass.getResource("2017-02.txt").readText(Charsets.UTF_8).split("\n")) {
+        for (line in javaClass.getResource("/2017-02.txt").readText(Charsets.UTF_8).split("\n")) {
             if (line.isEmpty()) {
                 continue
             }
