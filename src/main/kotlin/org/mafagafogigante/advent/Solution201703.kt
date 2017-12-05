@@ -3,7 +3,7 @@ package org.mafagafogigante.advent
 import java.lang.Math.abs
 import java.lang.Math.max
 
-class SolutionSeventeenThree(val z: Int) {
+class Solution201703(val z: Int) {
 
     fun getFirstSolution(): Pair<Int, Int> {
         var n = z - 1
@@ -94,7 +94,7 @@ class SolutionSeventeenThree(val z: Int) {
 }
 
 fun main(args: Array<String>) {
-    val solutionSeventeenThree = SolutionSeventeenThree(368078)
+    val solutionSeventeenThree = Solution201703(368078)
     val firstSolution = solutionSeventeenThree.getFirstSolution()
     val secondSolution = solutionSeventeenThree.getSecondSolution()
     println(abs(firstSolution.first) + abs(firstSolution.second))

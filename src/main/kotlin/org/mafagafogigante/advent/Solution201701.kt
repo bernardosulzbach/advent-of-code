@@ -1,4 +1,4 @@
-class SolutionSeventeenOne {
+class Solution201701 {
 
     fun getFirstSolution(): Int {
         val string = javaClass.getResource("2017-01.txt").readText(Charsets.UTF_8).trim()
@@ -20,7 +20,7 @@ class SolutionSeventeenOne {
 }
 
 fun main(args: Array<String>) {
-    val solutionSeventeenOne = SolutionSeventeenOne()
+    val solutionSeventeenOne = Solution201701()
     println(solutionSeventeenOne.getFirstSolution())
     println(solutionSeventeenOne.getSecondSolution())
 }
