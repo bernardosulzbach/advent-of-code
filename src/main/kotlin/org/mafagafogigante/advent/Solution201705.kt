@@ -39,9 +39,9 @@ class Solution201705 {
 }
 
 fun main(args: Array<String>) {
-    val solutionSeventeenThree = Solution201705()
-    val firstSolution = solutionSeventeenThree.getFirstSolution()
-    val secondSolution = solutionSeventeenThree.getSecondSolution()
+    val solution = Solution201705()
+    val firstSolution = solution.getFirstSolution()
+    val secondSolution = solution.getSecondSolution()
     println(firstSolution)
     println(secondSolution)
 }

@@ -22,7 +22,7 @@ class Solution201701 {
 }
 
 fun main(args: Array<String>) {
-    val solutionSeventeenOne = Solution201701()
-    println(solutionSeventeenOne.getFirstSolution())
-    println(solutionSeventeenOne.getSecondSolution())
+    val solution = Solution201701()
+    println(solution.getFirstSolution())
+    println(solution.getSecondSolution())
 }
