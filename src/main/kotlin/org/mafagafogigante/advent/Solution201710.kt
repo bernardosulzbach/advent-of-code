@@ -44,6 +44,14 @@ class Solution201710 {
         return simulate(values, lengths, 1)
     }
 
+    fun calculateKnotHash(ints: List<Int>): String {
+        val suffix = arrayListOf(17, 31, 73, 47, 23)
+        val range = (0..255).mapTo(ArrayList<Int>(), { x -> x })
+        val result = simulate(range, ints + suffix, 64)
+        val condensed = condenseHash(result)
+        return condensed.map({ x -> "%02x".format(x) }).joinToString("")
+    }
+
     fun getFirstSolution(): Int {
         val ints = javaClass.getResource("/2017-10.txt").readText(Charsets.UTF_8).trim().split(',').map(String::toInt)
         val range = (0..255).mapTo(ArrayList<Int>(), { x -> x })
@@ -52,12 +60,8 @@ class Solution201710 {
     }
 
     fun getSecondSolution(): String {
-        val suffix = arrayListOf(17, 31, 73, 47, 23)
-        val ints = javaClass.getResource("/2017-10.txt").readText(Charsets.UTF_8).trim().map(Char::toInt) + suffix
-        val range = (0..255).mapTo(ArrayList<Int>(), { x -> x })
-        val result = simulate(range, ints, 64)
-        val condensed = condenseHash(result)
-        return condensed.map({ x -> "%02x".format(x) }).joinToString("")
+        val ints = javaClass.getResource("/2017-10.txt").readText(Charsets.UTF_8).trim().map(Char::toInt)
+        return calculateKnotHash(ints)
     }
 
 }
