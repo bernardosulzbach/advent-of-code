@@ -3,7 +3,7 @@ package org.mafagafogigante.advent
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class Solution201709Test {
+internal class Solution201709Test {
 
     @Test
     fun testRemoveGarbageShouldRemoveAllGarbage() {
