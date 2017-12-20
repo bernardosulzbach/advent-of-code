@@ -3,7 +3,7 @@ package org.mafagafogigante.advent
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class Solution201703Test {
+internal class Solution201703Test {
 
     @Test
     fun getSolution() {
