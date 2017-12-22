@@ -35,9 +35,9 @@ class Solution201714 {
 
     private fun countIsles(grid: Array<IntArray>): Int {
         fun clearIsle(i: Int, j: Int) {
-            val seen = HashSet<Point>()
-            val queue = LinkedList<Point>()
-            queue.push(Point(j, i))
+            val seen = HashSet<Point2D>()
+            val queue = LinkedList<Point2D>()
+            queue.push(Point2D(j, i))
             while (queue.isNotEmpty()) {
                 val head = queue.poll()
                 if (grid[head.y][head.x] != 0) {
