@@ -1,0 +1,8 @@
+[package]
+name = "advent"
+version = "1.0.0"
+authors = ["Bernardo Sulzbach <bernardo@bernardosulzbach.com>"]
+
+[lib]
+name = "advent"
+path = "src/lib/advent.rs"
