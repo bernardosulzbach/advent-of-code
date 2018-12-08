@@ -6,7 +6,13 @@ One of my goals is to use a different programming language each year.
 
 ## 2018
 
-Rust.
+Using Rust.
+
+### Challenge 5.
+
+Linked lists in Rust are a pain.
+
+`std::collections::LinkedList` is quite poor on features.
 
 ## 2017
 
