@@ -8,7 +8,7 @@ const FILENAME_PATH: &str = "input/";
 const FILENAME_EXTENSION: &str = ".txt";
 
 pub fn derive_filename(day: u32) -> String {
-    return FILENAME_PATH.to_string() + &day.to_string() + FILENAME_EXTENSION;
+    return FILENAME_PATH.to_string() + &format!("{:0>2}", day.to_string()) + FILENAME_EXTENSION;
 }
 
 pub fn read_integers_from_file<T>(filename: &str) -> Vec<T>
