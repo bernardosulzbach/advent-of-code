@@ -4,11 +4,28 @@ use std::hash::Hasher;
 use std::io::prelude::Read;
 use std::vec::Vec;
 
-const FILENAME_PATH: &str = "input/";
+const SAMPLE_PATH: &str = "input/sample/";
+const PUZZLE_PATH: &str = "input/puzzle/";
+
 const FILENAME_EXTENSION: &str = ".txt";
 
 pub fn derive_filename(day: u32) -> String {
-    return FILENAME_PATH.to_string() + &format!("{:0>2}", day.to_string()) + FILENAME_EXTENSION;
+    let mut running_sample = false;
+    for (i, argument) in std::env::args().enumerate() {
+        if i == 0 {
+            continue;
+        }
+        if argument == "-s" {
+            running_sample = true;
+        } else {
+            panic!("Unrecognized argument.");
+        }
+    }
+    let mut path = PUZZLE_PATH;
+    if running_sample {
+        path = SAMPLE_PATH;
+    }
+    return path.to_string() + &format!("{:0>2}", day.to_string()) + FILENAME_EXTENSION;
 }
 
 pub fn read_integers_from_file<T>(filename: &str) -> Vec<T>
