@@ -7,15 +7,6 @@ use std::vec::Vec;
 const WORKERS: u32 = 5;
 const NO_STEP: char = '.';
 
-fn get_char(string: &str, index: usize) -> char {
-    for (i, character) in string.chars().enumerate() {
-        if i == index {
-            return character;
-        }
-    }
-    panic!("String too short.");
-}
-
 fn solve_part_one(steps: &HashSet<char>, mut blockers: HashMap<char, HashSet<char>>) {
     let mut ordered_steps = Vec::new();
     for value in steps.iter() {
@@ -115,8 +106,8 @@ fn solve(filename: &str) {
     let mut steps = HashSet::new();
     let lines = advent::read_lines_from_file(filename);
     for line in lines.iter() {
-        let a = get_char(&line.as_str(), 5);
-        let b = get_char(&line.as_str(), 36);
+        let a = advent::get_char(&line.as_str(), 5);
+        let b = advent::get_char(&line.as_str(), 36);
         steps.insert(a);
         steps.insert(b);
         if !blockers.contains_key(&b) {

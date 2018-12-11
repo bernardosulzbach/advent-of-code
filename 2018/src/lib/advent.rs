@@ -28,6 +28,15 @@ pub fn derive_filename(day: u32) -> String {
     return path.to_string() + &format!("{:0>2}", day.to_string()) + FILENAME_EXTENSION;
 }
 
+pub fn get_char(string: &str, index: usize) -> char {
+    for (i, character) in string.chars().enumerate() {
+        if i == index {
+            return character;
+        }
+    }
+    panic!("String too short.");
+}
+
 pub fn read_integers_from_file<T>(filename: &str) -> Vec<T>
 where
     T: std::str::FromStr,
@@ -38,8 +47,8 @@ where
     file.read_to_string(&mut contents)
         .expect("Something went wrong while reading.");
     let mut result = std::vec::Vec::new();
-    for line in contents.lines() {
-        result.push(line.parse::<T>().expect("Should have only integers."));
+    for word in contents.split_whitespace() {
+        result.push(word.parse::<T>().expect("Should have only integers."));
     }
     return result;
 }
