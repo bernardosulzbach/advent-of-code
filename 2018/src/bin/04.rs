@@ -54,7 +54,7 @@ fn solve(filename: &str) {
     for line in lines.iter() {
         if line.find("#").is_some() {
             let tail = &line[line.find("#").unwrap() + 1..];
-            let (number, rest) = tail.split_at(tail.find(" ").unwrap());
+            let (number, _) = tail.split_at(tail.find(" ").unwrap());
             current_guard_id = number.parse().unwrap();
         } else {
             let is_falls_asleep = &line[19..20] == "f";
