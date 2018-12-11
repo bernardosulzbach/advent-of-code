@@ -59,8 +59,11 @@ fn solve_second_part(filename: &str) {
     }
 }
 
+fn solve(filename: &str) {
+    solve_first_part(filename);
+    solve_second_part(filename);
+}
+
 fn main() {
-    let filename = advent::derive_filename(2);
-    solve_first_part(filename.as_ref());
-    solve_second_part(filename.as_ref());
+    solve(&advent::derive_filename(2));
 }

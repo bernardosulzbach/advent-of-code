@@ -15,12 +15,8 @@ fn solve_part_one(sleep_vectors: &HashMap<u16, Vec<u32>>) {
     }
     let mut worst_entry_i = 0usize;
     let mut worst_entry_value = 0u32;
-    for (i, value) in sleep_vectors
-        .get(&worst_guard_id)
-        .unwrap()
-        .iter()
-        .enumerate()
-    {
+    let worst_guard_vector = sleep_vectors.get(&worst_guard_id);
+    for (i, value) in worst_guard_vector.unwrap().iter().enumerate() {
         if value > &worst_entry_value {
             worst_entry_i = i;
             worst_entry_value = value.clone();
@@ -76,6 +72,5 @@ fn solve(filename: &str) {
 }
 
 fn main() {
-    let filename = advent::derive_filename(4);
-    solve(filename.as_ref());
+    solve(&advent::derive_filename(4));
 }

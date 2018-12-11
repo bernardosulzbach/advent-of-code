@@ -21,9 +21,7 @@ impl Claim {
         };
         for (i, word) in string.to_string().split_whitespace().enumerate() {
             if i == 0 {
-                claim.id = word[1..word.len()]
-                    .parse()
-                    .expect("Failed to parse integer.");
+                claim.id = word[1..word.len()].parse().unwrap();
             } else if i == 2 {
                 let (x, y) = word[0..word.len() - 1].split_at(word.find(',').unwrap());
                 claim.x = x.parse().expect("Failed to parse integer.");
@@ -88,6 +86,5 @@ fn solve(filename: &str) {
 }
 
 fn main() {
-    let filename = advent::derive_filename(3);
-    solve(filename.as_ref());
+    solve(&advent::derive_filename(3));
 }

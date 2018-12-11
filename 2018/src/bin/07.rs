@@ -120,6 +120,5 @@ fn solve(filename: &str) {
 }
 
 fn main() {
-    let filename = advent::derive_filename(7);
-    solve(filename.as_ref());
+    solve(&advent::derive_filename(7));
 }
