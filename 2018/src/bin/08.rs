@@ -4,9 +4,6 @@ use std::collections::HashMap;
 use std::collections::HashSet;
 use std::vec::Vec;
 
-const WORKERS: u32 = 5;
-const NO_STEP: char = '.';
-
 fn get_metadata_sum(integers: &Vec<u32>, start: usize, sum: &mut u32) -> usize {
     if start == integers.len() {
         panic!();
