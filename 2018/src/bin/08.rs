@@ -1,7 +1,5 @@
 extern crate advent;
 
-use std::collections::HashMap;
-use std::collections::HashSet;
 use std::vec::Vec;
 
 fn get_metadata_sum(integers: &Vec<u32>, start: usize, sum: &mut u32) -> usize {
@@ -11,7 +9,7 @@ fn get_metadata_sum(integers: &Vec<u32>, start: usize, sum: &mut u32) -> usize {
     let children = integers[start] as usize;
     let metadata = integers[start + 1] as usize;
     let mut position = start + 2;
-    for child in 0..children {
+    for _ in 0..children {
         position = get_metadata_sum(integers, position, sum);
     }
     for i in position..position + metadata {
