@@ -9,6 +9,29 @@ const PUZZLE_PATH: &str = "input/puzzle/";
 
 const FILENAME_EXTENSION: &str = ".txt";
 
+#[derive(Debug, Copy, Clone, PartialOrd, PartialEq)]
+pub enum Direction {
+    North,
+    East,
+    South,
+    West,
+}
+
+impl Direction {
+    pub fn get_symbol(&self) -> char {
+        if *self == Direction::North {
+            return '↑';
+        } else if *self == Direction::East {
+            return '→';
+        } else if *self == Direction::South {
+            return '↓';
+        } else if *self == Direction::West {
+            return '←';
+        }
+        return '?';
+    }
+}
+
 pub fn derive_filename(day: u32) -> String {
     let mut running_sample = false;
     for (i, argument) in std::env::args().enumerate() {
