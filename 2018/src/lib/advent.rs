@@ -9,6 +9,11 @@ const PUZZLE_PATH: &str = "input/puzzle/";
 
 const FILENAME_EXTENSION: &str = ".txt";
 
+pub struct Point<T> {
+    pub x: T,
+    pub y: T,
+}
+
 #[derive(Debug, Copy, Clone, PartialOrd, PartialEq)]
 pub enum Direction {
     North,
@@ -20,15 +25,39 @@ pub enum Direction {
 impl Direction {
     pub fn get_symbol(&self) -> char {
         if *self == Direction::North {
-            return '↑';
+            return '▲';
         } else if *self == Direction::East {
-            return '→';
+            return '▶';
         } else if *self == Direction::South {
-            return '↓';
+            return '▼';
         } else if *self == Direction::West {
-            return '←';
+            return '◀';
         }
-        return '?';
+        panic!("Unhandled.");
+    }
+    pub fn get_left(&self) -> Direction {
+        if *self == Direction::North {
+            return Direction::West;
+        } else if *self == Direction::East {
+            return Direction::North;
+        } else if *self == Direction::South {
+            return Direction::East;
+        } else if *self == Direction::West {
+            return Direction::South;
+        }
+        panic!("Unhandled.");
+    }
+    pub fn get_right(&self) -> Direction {
+        if *self == Direction::North {
+            return Direction::East;
+        } else if *self == Direction::East {
+            return Direction::South;
+        } else if *self == Direction::South {
+            return Direction::West;
+        } else if *self == Direction::West {
+            return Direction::North;
+        }
+        panic!("Unhandled.");
     }
 }
 
