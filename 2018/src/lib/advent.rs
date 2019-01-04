@@ -148,3 +148,141 @@ pub fn string_matching(a: &str, b: &str) -> String {
     }
     return result;
 }
+
+pub struct Ring<T>
+where
+    T: std::clone::Clone,
+{
+    cursor: Option<usize>,
+    allocator: usize,
+    slots: Vec<Option<RingNode<T>>>,
+}
+
+#[derive(Clone)]
+struct RingNode<T>
+where
+    T: std::clone::Clone,
+{
+    value: T,
+    previous: usize,
+    next: usize,
+}
+
+impl<T> Ring<T>
+where
+    T: std::clone::Clone,
+{
+    pub fn new(capacity: usize) -> Self {
+        Ring {
+            cursor: None,
+            allocator: 0,
+            slots: vec![None; capacity],
+        }
+    }
+
+    fn allocate(&mut self) -> usize {
+        let mut result = None;
+        for offset in 0..self.slots.len() {
+            let index = (self.allocator + offset) % self.slots.len();
+            if self.slots[index].is_none() {
+                result = Some(index);
+                break;
+            }
+        }
+        self.allocator = (result.unwrap() + 1) % self.slots.len();
+        return result.unwrap();
+    }
+
+    fn is_empty(&self) -> bool {
+        return self.cursor.is_none();
+    }
+
+    fn is_singleton(&self) -> bool {
+        if self.is_empty() {
+            return false;
+        }
+        return self.slots[self.cursor.unwrap()].clone().unwrap().next == self.cursor.unwrap();
+    }
+
+    pub fn get(&self) -> T {
+        return self.slots[self.cursor.unwrap()].clone().unwrap().value;
+    }
+
+    pub fn insert(&mut self, value: T) {
+        let new_index = self.allocate();
+        if self.is_empty() {
+            self.slots[new_index] = Some(RingNode {
+                value,
+                previous: new_index,
+                next: new_index,
+            });
+        } else if self.is_singleton() {
+            let current_index = self.cursor.unwrap();
+            self.slots[current_index].as_mut().unwrap().previous = new_index;
+            self.slots[current_index].as_mut().unwrap().next = new_index;
+            self.slots[new_index] = Some(RingNode {
+                value,
+                previous: current_index,
+                next: current_index,
+            });
+        } else {
+            let current_index = self.cursor.unwrap();
+            let next_index = self.slots[current_index].clone().unwrap().next;
+            self.slots[current_index].as_mut().unwrap().next = new_index;
+            self.slots[next_index].as_mut().unwrap().previous = new_index;
+            self.slots[new_index] = Some(RingNode {
+                value,
+                previous: current_index,
+                next: next_index,
+            });
+        }
+        self.cursor = Some(new_index);
+    }
+
+    pub fn remove(&mut self) -> T {
+        if self.is_empty() {
+            panic!()
+        }
+        let current_index = self.cursor.unwrap();
+        let value = self.slots[current_index].clone().unwrap().value;
+        if self.is_singleton() {
+            self.cursor = None;
+        } else {
+            let previous_index = self.slots[current_index].clone().unwrap().previous;
+            let next_index = self.slots[current_index].clone().unwrap().next;
+            self.slots[previous_index].as_mut().unwrap().next = next_index;
+            self.slots[next_index].as_mut().unwrap().previous = previous_index;
+            self.cursor = Some(next_index);
+        }
+        self.slots[current_index] = None;
+        return value;
+    }
+
+    pub fn advance(&mut self) {
+        self.cursor = Some(self.slots[self.cursor.unwrap()].clone().unwrap().next);
+    }
+
+    pub fn go_back(&mut self) {
+        let current_index = self.cursor.unwrap();
+        self.cursor = Some(self.slots[self.cursor.unwrap()].clone().unwrap().previous);
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn ring_works() {
+        let mut ring = Ring::<i32>::new(2);
+        ring.insert(1);
+        assert_eq!(ring.get(), 1);
+        ring.insert(2);
+        assert_eq!(ring.get(), 2);
+        ring.advance();
+        assert_eq!(ring.get(), 1);
+        assert_eq!(ring.remove(), 1);
+        assert_eq!(ring.get(), 2);
+        assert_eq!(ring.remove(), 2);
+    }
+}
