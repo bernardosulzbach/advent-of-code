@@ -149,6 +149,18 @@ pub fn string_matching(a: &str, b: &str) -> String {
     return result;
 }
 
+pub fn string_to_range(string: &str) -> std::ops::Range<i32> {
+    if !string.contains("..") {
+        let value = string.parse::<i32>().unwrap();
+        return value.clone()..value + 1;
+    } else {
+        let dots = string.find("..").unwrap();
+        let start = string[..dots].parse::<i32>().unwrap();
+        let end = string[dots + 2..].parse::<i32>().unwrap() + 1;
+        return start..end;
+    }
+}
+
 pub struct Ring<T>
 where
     T: std::clone::Clone,
