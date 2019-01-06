@@ -24,40 +24,36 @@ pub enum Direction {
 
 impl Direction {
     pub fn get_symbol(&self) -> char {
-        if *self == Direction::North {
-            return '▲';
-        } else if *self == Direction::East {
-            return '▶';
-        } else if *self == Direction::South {
-            return '▼';
-        } else if *self == Direction::West {
-            return '◀';
+        match *self {
+            Direction::North => '▲',
+            Direction::East => '▶',
+            Direction::South => '▼',
+            Direction::West => '◀',
         }
-        panic!("Unhandled.");
     }
     pub fn get_left(&self) -> Direction {
-        if *self == Direction::North {
-            return Direction::West;
-        } else if *self == Direction::East {
-            return Direction::North;
-        } else if *self == Direction::South {
-            return Direction::East;
-        } else if *self == Direction::West {
-            return Direction::South;
+        match *self {
+            Direction::North => Direction::West,
+            Direction::East => Direction::North,
+            Direction::South => Direction::East,
+            Direction::West => Direction::South,
         }
-        panic!("Unhandled.");
     }
     pub fn get_right(&self) -> Direction {
-        if *self == Direction::North {
-            return Direction::East;
-        } else if *self == Direction::East {
-            return Direction::South;
-        } else if *self == Direction::South {
-            return Direction::West;
-        } else if *self == Direction::West {
-            return Direction::North;
+        match *self {
+            Direction::North => Direction::East,
+            Direction::East => Direction::South,
+            Direction::South => Direction::West,
+            Direction::West => Direction::North,
         }
-        panic!("Unhandled.");
+    }
+    pub fn get_index(&self) -> u32 {
+        match *self {
+            Direction::North => 0,
+            Direction::East => 1,
+            Direction::South => 2,
+            Direction::West => 3,
+        }
     }
 }
 
