@@ -8,11 +8,17 @@ One of my goals is to use a different programming language each year.
 
 Using Rust.
 
-### Challenge 5.
+### Challenge 5
 
 Linked lists in Rust are a pain.
 
 `std::collections::LinkedList` is quite poor on features.
+
+### Challenge 9
+
+Needed (at least I think so) a circular doubly-linked list.
+
+Ended up allocating a chunk of memory and used indexes into it as pointers.
 
 ## 2017
 
