@@ -1,5 +1,6 @@
 *.iml
 
+**/__pycache__/
 
 gradle/
 gradlew
