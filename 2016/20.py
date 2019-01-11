@@ -1,5 +1,4 @@
 import advent
-import collections
 
 
 def merge_intervals(intervals):
