@@ -28,6 +28,13 @@ Using Kotlin.
 
 Using Python.
 
+The lack of typing when using Python makes it really annoying at times.
+Simple semantic mistakes which could be caught by the compiler are only detected during execution.
+The origin of these mistakes are sometimes hard to track down.
+
+I had to use the `nonlocal` keyword to reference **some** (and only some) variables declared in an outer scope.
+There is [a relevant Stack Overflow answer](https://stackoverflow.com/a/5219055/3271844) for an explanation of why this is so.
+
 ## Using these solutions
 
 You are free to use my solutions.
