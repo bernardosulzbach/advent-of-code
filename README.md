@@ -8,6 +8,12 @@ One of my goals is to use a different programming language each year.
 
 Using Rust.
 
+```
+cargo fmt
+cargo build
+./target/debug/01
+```
+
 ### Challenge 5
 
 Linked lists in Rust are a pain.
@@ -27,6 +33,10 @@ Using Kotlin.
 ## 2016
 
 Using Python.
+
+```
+python3 01.py
+```
 
 The lack of typing when using Python makes it really annoying at times.
 Simple semantic mistakes which could be caught by the compiler are only detected during execution.
