@@ -29,6 +29,39 @@ def read_lines(filename: str):
     return lines
 
 
+class Computer:
+    def __init__(self, instructions):
+        self.instruction_pointer = 0
+        self.instructions = instructions
+        self.registers = [0] * 4
+
+    def get_value(self, value):
+        if value.isalpha():
+            return self.registers[self.get_register_index(value)]
+        return int(value)
+
+    @staticmethod
+    def get_register_index(value):
+        return ord(value) - ord('a')
+
+    def step(self):
+        instruction = self.instructions[self.instruction_pointer]
+        if instruction[0] == 'cpy':
+            self.registers[self.get_register_index(instruction[2])] = self.get_value(instruction[1])
+        elif instruction[0] == 'inc':
+            self.registers[self.get_register_index(instruction[1])] += 1
+        elif instruction[0] == 'dec':
+            self.registers[self.get_register_index(instruction[1])] -= 1
+        elif instruction[0] == 'jnz':
+            if self.get_value(instruction[1]):
+                self.instruction_pointer += int(instruction[2]) - 1
+        self.instruction_pointer += 1
+
+    def execute(self):
+        while 0 <= self.instruction_pointer < len(self.instructions):
+            self.step()
+
+
 def print_grid(grid):
     for row in grid:
         for cell in row:
