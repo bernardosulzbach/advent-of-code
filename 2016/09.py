@@ -1,6 +1,4 @@
 import advent
-import collections
-
 
 def part_one():
     text = ''.join(advent.read_lines(advent.derive_filename(9)))
