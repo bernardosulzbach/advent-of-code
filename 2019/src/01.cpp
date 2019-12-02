@@ -1,7 +1,9 @@
 #include <fstream>
 #include <iostream>
 
-int fuelRequired(int weight) { return weight / 3 - 2; }
+int fuelRequired(int weight) {
+  return weight / 3 - 2;
+}
 
 void partOne() {
   std::ifstream stream("../input/01.txt");

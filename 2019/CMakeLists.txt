@@ -15,4 +15,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   add_definitions(-DDEBUGGING)
 endif()
 
+add_library(advent-of-code OBJECT src/Intcode.cpp src/Intcode.hpp)
+
 add_executable(01 src/01.cpp)
+add_executable(02 src/02.cpp $<TARGET_OBJECTS:advent-of-code>)
