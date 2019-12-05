@@ -28,3 +28,4 @@ add_library(
 add_executable(01 src/01.cpp)
 add_executable(02 src/02.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(03 src/03.cpp $<TARGET_OBJECTS:advent-of-code>)
+add_executable(04 src/04.cpp $<TARGET_OBJECTS:advent-of-code>)
