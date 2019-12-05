@@ -23,9 +23,12 @@ add_library(
   src/Intcode.cpp
   src/Intcode.hpp
   src/Point.hpp
-  src/Path.hpp)
+  src/Path.hpp
+  src/StandardInput.hpp
+  src/StandardInput.cpp)
 
-add_executable(01 src/01.cpp)
+add_executable(01 src/01.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(02 src/02.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(03 src/03.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(04 src/04.cpp $<TARGET_OBJECTS:advent-of-code>)
+add_executable(05 src/05.cpp $<TARGET_OBJECTS:advent-of-code>)

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "StandardInput.hpp"
+
 void Intcode::printMemory() const {
   for (std::size_t i = 0; i < memory.size(); i++) {
     if (i > 0) {
@@ -18,38 +20,107 @@ void Intcode::setDebugging(bool value) {
   debugging = value;
 }
 
+Intcode::Opcode Intcode::getInstructionType() const {
+  const auto instructionOpcode = memory[instructionPointer] % 100;
+  for (const auto opcode : opcodes) {
+    if (static_cast<int>(opcode) == instructionOpcode) {
+      return opcode;
+    }
+  }
+  throw std::invalid_argument("Invalid opcode: " + std::to_string(instructionOpcode) + ".");
+}
+
+int &Intcode::getOperand(int operandIndex) {
+  auto mode = memory[instructionPointer] / 100;
+  for (int i = operandIndex; i > 1; i--) {
+    mode /= 10;
+  }
+  mode %= 10;
+  if (mode == 0) {
+    return memory[memory[instructionPointer + operandIndex]];
+  } else if (mode == 1) {
+    return memory[instructionPointer + operandIndex];
+  }
+  throw std::invalid_argument("Unrecognized operator mode.");
+}
+
+void Intcode::writeMessageIfDebugging(const std::string &message) const {
+  if (debugging) {
+    std::cout << message << '\n';
+  }
+}
+
+void Intcode::addUserInput(int input) {
+  userInputBuffer.push_back(input);
+}
+
 void Intcode::run() {
   if (debugging) {
     printMemory();
   }
   instructionPointer = 0;
   while (instructionPointer < memory.size()) {
-    const auto operationCode = memory[instructionPointer];
-    if (operationCode == Intcode::AddInstruction) {
-      const auto &a = memory[memory[instructionPointer + 1]];
-      const auto &b = memory[memory[instructionPointer + 2]];
-      auto &c = memory[memory[instructionPointer + 3]];
+    if (getInstructionType() == Opcode::Add) {
+      const auto &a = getOperand(1);
+      const auto &b = getOperand(2);
+      auto &c = getOperand(3);
       c = a + b;
       instructionPointer += 4;
-      if (debugging) {
-        std::cout << "Added." << '\n';
-      }
-    } else if (operationCode == Intcode::MultiplyInstruction) {
-      const auto &a = memory[memory[instructionPointer + 1]];
-      const auto &b = memory[memory[instructionPointer + 2]];
-      auto &c = memory[memory[instructionPointer + 3]];
+      writeMessageIfDebugging("Added.");
+    } else if (getInstructionType() == Opcode::Multiply) {
+      const auto &a = getOperand(1);
+      const auto &b = getOperand(2);
+      auto &c = getOperand(3);
       c = a * b;
       instructionPointer += 4;
-      if (debugging) {
-        std::cout << "Multiplied." << '\n';
+      writeMessageIfDebugging("Multiplied.");
+    } else if (getInstructionType() == Opcode::Input) {
+      auto &a = getOperand(1);
+      if (userInputBuffer.empty()) {
+        a = readInt();
+      } else {
+        a = userInputBuffer.front();
+        userInputBuffer.pop_front();
       }
-    } else if (operationCode == Intcode::HaltInstruction) {
+      instructionPointer += 2;
+      writeMessageIfDebugging("Read input.");
+    } else if (getInstructionType() == Opcode::Output) {
+      std::cout << getOperand(1) << '\n';
+      instructionPointer += 2;
+      writeMessageIfDebugging("Wrote output.");
+    } else if (getInstructionType() == Opcode::JumpIfTrue) {
+      if (getOperand(1) != 0) {
+        instructionPointer = getOperand(2);
+      } else {
+        instructionPointer += 3;
+      }
+      writeMessageIfDebugging("Evaluated jump if true.");
+    } else if (getInstructionType() == Opcode::JumpIfFalse) {
+      if (getOperand(1) == 0) {
+        instructionPointer = getOperand(2);
+      } else {
+        instructionPointer += 3;
+      }
+      writeMessageIfDebugging("Evaluated jump if false.");
+    } else if (getInstructionType() == Opcode::LessThan) {
+      const auto &a = getOperand(1);
+      const auto &b = getOperand(2);
+      auto &c = getOperand(3);
+      c = a < b ? 1 : 0;
+      instructionPointer += 4;
+      writeMessageIfDebugging("Tested if less than.");
+    } else if (getInstructionType() == Opcode::Equals) {
+      const auto &a = getOperand(1);
+      const auto &b = getOperand(2);
+      auto &c = getOperand(3);
+      c = a == b ? 1 : 0;
+      instructionPointer += 4;
+      writeMessageIfDebugging("Tested for equality.");
+    } else if (getInstructionType() == Opcode::HaltInstruction) {
       if (debugging) {
-        std::cout << "Halted." << '\n';
+        writeMessageIfDebugging("Halted.");
       }
       break;
-    } else {
-      throw std::invalid_argument("Invalid instruction: " + std::to_string(operationCode) + ".");
     }
   }
   if (debugging) {
