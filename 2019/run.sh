@@ -11,3 +11,6 @@ for i in {1..3}; do
 done
 
 ./03 ../input/03.txt >../output/03.txt
+
+./06 ../samples/06.txt > ../output/samples/06.txt
+./06 ../input/06.txt > ../output/06.txt

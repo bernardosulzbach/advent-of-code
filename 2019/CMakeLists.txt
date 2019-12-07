@@ -24,6 +24,8 @@ add_library(
   src/Intcode.hpp
   src/Point.hpp
   src/Path.hpp
+  src/OrbitGraph.hpp
+  src/OrbitGraph.cpp
   src/StandardInput.hpp
   src/StandardInput.cpp)
 
@@ -32,3 +34,4 @@ add_executable(02 src/02.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(03 src/03.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(04 src/04.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(05 src/05.cpp $<TARGET_OBJECTS:advent-of-code>)
+add_executable(06 src/06.cpp $<TARGET_OBJECTS:advent-of-code>)
