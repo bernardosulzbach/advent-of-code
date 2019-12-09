@@ -50,6 +50,8 @@ public:
 
   void addInput(int input);
 
+  bool hasOutput() const;
+
   int getOutput();
 
   void setInstructionPointer(std::size_t newInstructionPointer);

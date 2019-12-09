@@ -40,7 +40,9 @@ bool isValid(U32 password, bool exactlyTwoEqual) {
 }
 
 int main(int argc, char **argv) {
-  const auto path = parseArguments(argc, argv);
+  ArgumentParser argumentParser;
+  argumentParser.parseArguments(argc, argv);
+  const auto path = argumentParser.getPath();
   std::ifstream stream(path);
   U32 a;
   stream >> a;
@@ -57,7 +59,13 @@ int main(int argc, char **argv) {
       validInPartTwo++;
     }
   }
-  std::cout << validInPartOne << '\n';
-  std::cout << validInPartTwo << '\n';
+  const auto part = argumentParser.getAdditionalArgument(0);
+  if (part == 1) {
+    std::cout << validInPartOne << '\n';
+  } else if (part == 2) {
+    std::cout << validInPartTwo << '\n';
+  } else {
+    throw std::runtime_error("Part should be 1 or 2.");
+  }
   return 0;
 }

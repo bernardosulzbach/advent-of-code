@@ -2,20 +2,20 @@
 #include <iostream>
 #include <vector>
 
+#include "ArgumentParser.hpp"
 #include "Intcode.hpp"
 
-void partOne() {
-  auto memory = readMemory("../input/02.txt");
+void partOne(const std::string &path) {
+  auto memory = readMemory(path);
   memory[1] = 12;
   memory[2] = 2;
   Intcode intcode(memory);
-  // intcode.setDebugging(true);
   intcode.run();
   std::cout << intcode.memory[0] << '\n';
 }
 
-void partTwo() {
-  std::ifstream stream("../input/02.txt");
+void partTwo(const std::string &path) {
+  std::ifstream stream(path);
   std::vector<int> memory;
   int value;
   while (stream >> value) {
@@ -40,8 +40,16 @@ void partTwo() {
   }
 }
 
-int main() {
-  partOne();
-  partTwo();
+int main(int argc, char **argv) {
+  ArgumentParser argumentParser;
+  argumentParser.parseArguments(argc, argv);
+  const auto part = argumentParser.getAdditionalArgument(0);
+  if (part == 1) {
+    partOne(argumentParser.getPath());
+  } else if (part == 2) {
+    partTwo(argumentParser.getPath());
+  } else {
+    throw std::runtime_error("Part should be 1 or 2.");
+  }
   return 0;
 }

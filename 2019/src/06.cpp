@@ -6,7 +6,9 @@
 #include <string>
 
 int main(int argc, char **argv) {
-  const auto path = parseArguments(argc, argv);
+  ArgumentParser argumentParser;
+  argumentParser.parseArguments(argc, argv);
+  const auto path = argumentParser.getPath();
   OrbitGraph orbitGraph;
   {
     std::ifstream stream(path);
@@ -18,7 +20,13 @@ int main(int argc, char **argv) {
       orbitGraph.addOrbit(a, b);
     }
   }
-  std::cout << orbitGraph.getTotalOrbits() << '\n';
-  std::cout << orbitGraph.distanceBetween("YOU", "SAN") - 2 << '\n';
+  const auto part = argumentParser.getAdditionalArgument(0);
+  if (part == 1) {
+    std::cout << orbitGraph.getTotalOrbits() << '\n';
+  } else if (part == 2) {
+    std::cout << orbitGraph.distanceBetween("YOU", "SAN") - 2 << '\n';
+  } else {
+    throw std::runtime_error("Part should be 1 or 2.");
+  }
   return 0;
 }

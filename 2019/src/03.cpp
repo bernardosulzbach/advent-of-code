@@ -48,38 +48,48 @@ S32 distance(Point<S32> point) {
   return std::abs(point.x) + std::abs(point.y);
 }
 
-void partOne(const std::string &inputPath) {
+void solve(const std::string &inputPath, int part) {
   std::ifstream stream(inputPath);
   std::string pathStringA;
   std::string pathStringB;
   stream >> pathStringA >> pathStringB;
   const auto pathA = pathFromString(pathStringA);
   const auto pathB = pathFromString(pathStringB);
-  std::optional<Point<S32>> nearestIntersection;
-  for (const auto point : pathA.computeIntersection(pathB)) {
-    if (point == Point<S32>(0, 0)) {
-      continue;
+  if (part == 1) {
+    std::optional<Point<S32>> nearestIntersection;
+    for (const auto point : pathA.computeIntersection(pathB)) {
+      if (point == Point<S32>(0, 0)) {
+        continue;
+      }
+      if (!nearestIntersection || distance(point) < distance(nearestIntersection.value())) {
+        nearestIntersection = point;
+      }
     }
-    if (!nearestIntersection || distance(point) < distance(nearestIntersection.value())) {
-      nearestIntersection = point;
+    std::cout << distance(nearestIntersection.value()) << '\n';
+  } else if (part == 2) {
+    std::optional<Point<S32>> nearestIntersection;
+    auto nearestIntersectionCost = std::numeric_limits<U32>::max();
+    for (const auto point : pathA.computeIntersection(pathB)) {
+      if (point == Point<S32>(0, 0)) {
+        continue;
+      }
+      if (!nearestIntersection || pathA.getVisits(point)[0] + pathB.getVisits(point)[0] < nearestIntersectionCost) {
+        nearestIntersection = point;
+        nearestIntersectionCost = pathA.getVisits(point)[0] + pathB.getVisits(point)[0];
+      }
     }
+    std::cout << nearestIntersectionCost << '\n';
   }
-  std::cout << distance(nearestIntersection.value()) << '\n';
-  auto nearestIntersectionCost = std::numeric_limits<U32>::max();
-  for (const auto point : pathA.computeIntersection(pathB)) {
-    if (point == Point<S32>(0, 0)) {
-      continue;
-    }
-    if (!nearestIntersection || pathA.getVisits(point)[0] + pathB.getVisits(point)[0] < nearestIntersectionCost) {
-      nearestIntersection = point;
-      nearestIntersectionCost = pathA.getVisits(point)[0] + pathB.getVisits(point)[0];
-    }
-  }
-  std::cout << nearestIntersectionCost << '\n';
 }
 
 int main(int argc, char **argv) {
-  const auto path = parseArguments(argc, argv);
-  partOne(path);
+  ArgumentParser argumentParser;
+  argumentParser.parseArguments(argc, argv);
+  const auto part = argumentParser.getAdditionalArgument(0);
+  if (part == 1 || part == 2) {
+    solve(argumentParser.getPath(), part);
+  } else {
+    throw std::runtime_error("Part should be 1 or 2.");
+  }
   return 0;
 }

@@ -55,6 +55,10 @@ void Intcode::addInput(int input) {
   inputBuffer.push_back(input);
 }
 
+bool Intcode::hasOutput() const {
+  return !outputBuffer.empty();
+}
+
 int Intcode::getOutput() {
   const auto result = outputBuffer.front();
   outputBuffer.pop_front();

@@ -15,6 +15,10 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   add_definitions(-DDEBUGGING)
 endif()
 
+find_package(Boost REQUIRED COMPONENTS)
+include_directories(${Boost_INCLUDE_DIR})
+set(Boost_USE_MULTITHREADED ON)
+
 add_library(
   advent-of-code OBJECT
   src/Types.hpp
@@ -30,6 +34,12 @@ add_library(
   src/IntcodeState.cpp
   src/StandardInput.hpp
   src/StandardInput.cpp)
+
+find_package(Threads REQUIRED)
+
+add_executable(runner src/Runner.cpp)
+target_link_libraries(runner ${Boost_LIBRARIES})
+target_link_libraries(runner ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(01 src/01.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(02 src/02.cpp $<TARGET_OBJECTS:advent-of-code>)

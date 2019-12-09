@@ -1,5 +1,6 @@
 #include "ArgumentParser.hpp"
 
+#include <iostream>
 #include <stdexcept>
 
 void ArgumentParser::parseArguments(int argc, char **argv) {
@@ -19,5 +20,11 @@ std::string ArgumentParser::getPath() {
 }
 
 int ArgumentParser::getAdditionalArgument(int index) const {
+  if (index < 0) {
+    std::cerr << "Index cannot be negative." << '\n';
+  }
+  if (static_cast<std::size_t>(index) >= additionalArguments.size()) {
+    std::cerr << "There are not enough arguments." << '\n';
+  }
   return additionalArguments.at(index);
 }
