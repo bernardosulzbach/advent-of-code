@@ -2,9 +2,22 @@
 
 #include <stdexcept>
 
-std::string parseArguments(int argc, char **argv) {
-  if (argc != 2) {
-    throw std::invalid_argument("Argument count should be 2.");
+void ArgumentParser::parseArguments(int argc, char **argv) {
+  if (argc >= 2) {
+    path = std::string(argv[1]);
   }
-  return std::string(argv[1]);
+  for (int i = 2; i < argc; i++) {
+    additionalArguments.push_back(std::stoi(argv[i]));
+  }
+}
+
+std::string ArgumentParser::getPath() {
+  if (path) {
+    return path.value();
+  }
+  throw std::runtime_error("Does not have a path.");
+}
+
+int ArgumentParser::getAdditionalArgument(int index) const {
+  return additionalArguments.at(index);
 }

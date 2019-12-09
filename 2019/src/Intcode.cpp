@@ -4,6 +4,7 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "IntcodeState.hpp"
 #include "StandardInput.hpp"
 
 void Intcode::printMemory() const {
@@ -50,15 +51,24 @@ void Intcode::writeMessageIfDebugging(const std::string &message) const {
   }
 }
 
-void Intcode::addUserInput(int input) {
-  userInputBuffer.push_back(input);
+void Intcode::addInput(int input) {
+  inputBuffer.push_back(input);
 }
 
-void Intcode::run() {
+int Intcode::getOutput() {
+  const auto result = outputBuffer.front();
+  outputBuffer.pop_front();
+  return result;
+}
+
+void Intcode::setInstructionPointer(std::size_t newInstructionPointer) {
+  instructionPointer = newInstructionPointer;
+}
+
+IntcodeState Intcode::run() {
   if (debugging) {
     printMemory();
   }
-  instructionPointer = 0;
   while (instructionPointer < memory.size()) {
     if (getInstructionType() == Opcode::Add) {
       const auto &a = getOperand(1);
@@ -76,16 +86,16 @@ void Intcode::run() {
       writeMessageIfDebugging("Multiplied.");
     } else if (getInstructionType() == Opcode::Input) {
       auto &a = getOperand(1);
-      if (userInputBuffer.empty()) {
-        a = readInt();
+      if (inputBuffer.empty()) {
+        return IntcodeState::Blocked;
       } else {
-        a = userInputBuffer.front();
-        userInputBuffer.pop_front();
+        a = inputBuffer.front();
+        inputBuffer.pop_front();
       }
       instructionPointer += 2;
       writeMessageIfDebugging("Read input.");
     } else if (getInstructionType() == Opcode::Output) {
-      std::cout << getOperand(1) << '\n';
+      outputBuffer.push_back(getOperand(1));
       instructionPointer += 2;
       writeMessageIfDebugging("Wrote output.");
     } else if (getInstructionType() == Opcode::JumpIfTrue) {
@@ -120,12 +130,13 @@ void Intcode::run() {
       if (debugging) {
         writeMessageIfDebugging("Halted.");
       }
-      break;
+      if (debugging) {
+        printMemory();
+      }
+      return IntcodeState::Halted;
     }
   }
-  if (debugging) {
-    printMemory();
-  }
+  throw std::runtime_error("Should never happen.");
 }
 
 std::vector<int> readMemory(const std::string &path) {

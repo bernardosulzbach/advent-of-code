@@ -6,12 +6,12 @@ int main(int argc, char **argv) {
   const auto memory = readMemory(path);
   {
     Intcode intcode(memory);
-    intcode.addUserInput(1);
+    intcode.addInput(1);
     intcode.run();
   }
   {
     Intcode intcode(memory);
-    intcode.addUserInput(5);
+    intcode.addInput(5);
     intcode.run();
   }
   return 0;

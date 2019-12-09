@@ -6,6 +6,8 @@
 #include <utility>
 #include <vector>
 
+#include "IntcodeState.hpp"
+
 class Intcode {
   enum class Opcode {
     Add = 1,
@@ -25,7 +27,8 @@ class Intcode {
 
   std::size_t instructionPointer = 0;
 
-  std::deque<int> userInputBuffer;
+  std::deque<int> inputBuffer;
+  std::deque<int> outputBuffer;
 
   bool debugging = false;
 
@@ -45,9 +48,13 @@ public:
 
   int &getOperand(int operandIndex);
 
-  void addUserInput(int input);
+  void addInput(int input);
 
-  void run();
+  int getOutput();
+
+  void setInstructionPointer(std::size_t newInstructionPointer);
+
+  IntcodeState run();
 };
 
 std::vector<int> readMemory(const std::string &path);
