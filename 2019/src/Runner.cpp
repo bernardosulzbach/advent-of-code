@@ -19,13 +19,12 @@ struct TestsStatistics {
 };
 
 std::string getOutput(const std::string &command) {
-  boost::process::ipstream pipe_stream;
-  boost::process::child child(command, boost::process::std_out > pipe_stream);
+  boost::process::ipstream pipeStream;
+  boost::process::child child(command, boost::process::std_out > pipeStream);
   std::string result;
-  while (pipe_stream) {
-    std::string reading;
-    pipe_stream >> reading;
-    result += reading;
+  std::string line;
+  while (pipeStream && std::getline(pipeStream, line) && !line.empty()) {
+    result += line + '\n';
   }
   child.wait();
   boost::trim(result);
@@ -101,7 +100,7 @@ int main() {
   test(7, true, 2, 1, testsStatistics);
   test(7, true, 2, 2, testsStatistics);
 
-  for (int day = 1; day <= 7; day++) {
+  for (int day = 1; day <= 8; day++) {
     test(day, false, 1, 1, testsStatistics);
     test(day, false, 2, 1, testsStatistics);
   }
