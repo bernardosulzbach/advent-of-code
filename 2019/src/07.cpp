@@ -8,7 +8,7 @@
 
 constexpr int AmplifierCount = 5;
 
-void solvePartOne(const std::vector<int> &memory) {
+void solvePartOne(const std::vector<Intcode::ValueType> &memory) {
   std::optional<std::array<int, AmplifierCount>> bestPhaseConfiguration;
   std::optional<int> bestOutputLevel;
   std::array<int, AmplifierCount> phaseConfiguration{0, 1, 2, 3, 4};
@@ -37,7 +37,7 @@ void solvePartOne(const std::vector<int> &memory) {
   std::cout << bestOutputLevel.value() << '\n';
 }
 
-void solvePartTwo(const std::vector<int> &memory) {
+void solvePartTwo(const std::vector<Intcode::ValueType> &memory) {
   std::optional<std::array<int, AmplifierCount>> bestPhaseConfiguration;
   std::optional<int> bestOutputLevel;
   std::array<int, AmplifierCount> phaseConfiguration{5, 6, 7, 8, 9};

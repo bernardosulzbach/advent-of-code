@@ -16,7 +16,7 @@ void partOne(const std::string &path) {
 
 void partTwo(const std::string &path) {
   std::ifstream stream(path);
-  std::vector<int> memory;
+  std::vector<Intcode::ValueType> memory;
   int value;
   while (stream >> value) {
     memory.push_back(value);

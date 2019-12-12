@@ -7,8 +7,14 @@
 #include <vector>
 
 #include "IntcodeState.hpp"
+#include "Types.hpp"
 
 class Intcode {
+public:
+  using ValueType = S64;
+  using IndexType = U32;
+
+private:
   enum class Opcode {
     Add = 1,
     Multiply = 2,
@@ -18,17 +24,19 @@ class Intcode {
     JumpIfFalse = 6,
     LessThan = 7,
     Equals = 8,
+    AdjustRelativeBase = 9,
     HaltInstruction = 99
   };
 
-  constexpr static std::array<Opcode, 9> opcodes = {Opcode::Add,      Opcode::Multiply,   Opcode::Input,
-                                                    Opcode::Output,   Opcode::JumpIfTrue, Opcode::JumpIfFalse,
-                                                    Opcode::LessThan, Opcode::Equals,     Opcode::HaltInstruction};
+  constexpr static std::array<Opcode, 10> opcodes = {
+      Opcode::Add,         Opcode::Multiply, Opcode::Input,  Opcode::Output,          Opcode::JumpIfTrue,
+      Opcode::JumpIfFalse, Opcode::LessThan, Opcode::Equals, Opcode::HaltInstruction, Opcode::AdjustRelativeBase};
 
-  std::size_t instructionPointer = 0;
+  IndexType instructionPointer = 0;
+  IndexType relativeBase = 0;
 
-  std::deque<int> inputBuffer;
-  std::deque<int> outputBuffer;
+  std::deque<ValueType> inputBuffer;
+  std::deque<ValueType> outputBuffer;
 
   bool debugging = false;
 
@@ -37,26 +45,28 @@ class Intcode {
   void writeMessageIfDebugging(const std::string &message) const;
 
 public:
-  std::vector<int> memory;
+  std::vector<ValueType> memory;
 
-  explicit Intcode(std::vector<int> initialMemory) : memory(std::move(initialMemory)) {
+  explicit Intcode(std::vector<ValueType> initialMemory) : memory(std::move(initialMemory)) {
   }
 
   void setDebugging(bool value);
 
   [[nodiscard]] Opcode getInstructionType() const;
 
-  int &getOperand(int operandIndex);
+  [[nodiscard]] ValueType &readMemory(IndexType index);
 
-  void addInput(int input);
+  ValueType &getOperand(IndexType operandIndex);
 
-  bool hasOutput() const;
+  void addInput(ValueType input);
 
-  int getOutput();
+  [[nodiscard]] bool hasOutput() const;
+
+  ValueType getOutput();
 
   void setInstructionPointer(std::size_t newInstructionPointer);
 
   IntcodeState run();
 };
 
-std::vector<int> readMemory(const std::string &path);
+std::vector<Intcode::ValueType> readMemory(const std::string &path);

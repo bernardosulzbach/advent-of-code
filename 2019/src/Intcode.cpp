@@ -31,16 +31,25 @@ Intcode::Opcode Intcode::getInstructionType() const {
   throw std::invalid_argument("Invalid opcode: " + std::to_string(instructionOpcode) + ".");
 }
 
-int &Intcode::getOperand(int operandIndex) {
-  auto mode = memory[instructionPointer] / 100;
+Intcode::ValueType &Intcode::readMemory(IndexType index) {
+  if (index >= memory.size()) {
+    memory.resize(index + 1);
+  }
+  return memory[index];
+}
+
+Intcode::ValueType &Intcode::getOperand(IndexType operandIndex) {
+  auto mode = memory.at(instructionPointer) / 100;
   for (int i = operandIndex; i > 1; i--) {
     mode /= 10;
   }
   mode %= 10;
   if (mode == 0) {
-    return memory[memory[instructionPointer + operandIndex]];
+    return readMemory(readMemory(instructionPointer + operandIndex));
   } else if (mode == 1) {
-    return memory[instructionPointer + operandIndex];
+    return readMemory(instructionPointer + operandIndex);
+  } else if (mode == 2) {
+    return readMemory(relativeBase + readMemory(instructionPointer + operandIndex));
   }
   throw std::invalid_argument("Unrecognized operator mode.");
 }
@@ -51,7 +60,7 @@ void Intcode::writeMessageIfDebugging(const std::string &message) const {
   }
 }
 
-void Intcode::addInput(int input) {
+void Intcode::addInput(Intcode::ValueType input) {
   inputBuffer.push_back(input);
 }
 
@@ -59,7 +68,7 @@ bool Intcode::hasOutput() const {
   return !outputBuffer.empty();
 }
 
-int Intcode::getOutput() {
+Intcode::ValueType Intcode::getOutput() {
   const auto result = outputBuffer.front();
   outputBuffer.pop_front();
   return result;
@@ -130,6 +139,10 @@ IntcodeState Intcode::run() {
       c = a == b ? 1 : 0;
       instructionPointer += 4;
       writeMessageIfDebugging("Tested for equality.");
+    } else if (getInstructionType() == Opcode::AdjustRelativeBase) {
+      relativeBase += getOperand(1);
+      instructionPointer += 2;
+      writeMessageIfDebugging("Adjusted the relative base.");
     } else if (getInstructionType() == Opcode::HaltInstruction) {
       if (debugging) {
         writeMessageIfDebugging("Halted.");
@@ -143,9 +156,9 @@ IntcodeState Intcode::run() {
   throw std::runtime_error("Should never happen.");
 }
 
-std::vector<int> readMemory(const std::string &path) {
+std::vector<Intcode::ValueType> readMemory(const std::string &path) {
   std::ifstream stream(path);
-  std::vector<int> memory;
+  std::vector<Intcode::ValueType> memory;
   int value;
   while (stream >> value) {
     memory.push_back(value);
