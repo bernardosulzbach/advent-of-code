@@ -31,27 +31,54 @@ Intcode::Opcode Intcode::getInstructionType() const {
   throw std::invalid_argument("Invalid opcode: " + std::to_string(instructionOpcode) + ".");
 }
 
-Intcode::ValueType &Intcode::readMemory(IndexType index) {
-  if (index >= memory.size()) {
-    memory.resize(index + 1);
+void Intcode::resizeMemoryIfNeeded(IndexType index) {
+  if (index < 0) {
+    throw std::invalid_argument("Cannot use an index < 0 for memory access.");
   }
+  const auto oldSize = memory.size();
+  if (index >= static_cast<S64>(memory.size())) {
+    memory.resize(index + 1);
+  } else {
+    return;
+  }
+  const auto newSize = memory.size();
+  if (debugging) {
+    std::cout << "Resized memory from " << oldSize << " to " << newSize << "." << '\n';
+  }
+}
+
+Intcode::ValueType Intcode::readMemory(IndexType index) {
+  resizeMemoryIfNeeded(index);
   return memory[index];
 }
 
-Intcode::ValueType &Intcode::getOperand(IndexType operandIndex) {
+void Intcode::writeMemory(IndexType index, ValueType value) {
+  resizeMemoryIfNeeded(index);
+  memory[index] = value;
+}
+
+Intcode::IndexType Intcode::getMemoryIndexOfOperand(IndexType operandIndex) {
   auto mode = memory.at(instructionPointer) / 100;
   for (int i = operandIndex; i > 1; i--) {
     mode /= 10;
   }
   mode %= 10;
   if (mode == 0) {
-    return readMemory(readMemory(instructionPointer + operandIndex));
-  } else if (mode == 1) {
     return readMemory(instructionPointer + operandIndex);
+  } else if (mode == 1) {
+    return instructionPointer + operandIndex;
   } else if (mode == 2) {
-    return readMemory(relativeBase + readMemory(instructionPointer + operandIndex));
+    return relativeBase + readMemory(instructionPointer + operandIndex);
   }
   throw std::invalid_argument("Unrecognized operator mode.");
+}
+
+Intcode::ValueType Intcode::readFromOperand(IndexType operandIndex) {
+  return readMemory(getMemoryIndexOfOperand(operandIndex));
+}
+
+void Intcode::writeIntoOperand(IndexType operandIndex, ValueType value) {
+  writeMemory(getMemoryIndexOfOperand(operandIndex), value);
 }
 
 void Intcode::writeMessageIfDebugging(const std::string &message) const {
@@ -69,6 +96,9 @@ bool Intcode::hasOutput() const {
 }
 
 Intcode::ValueType Intcode::getOutput() {
+  if (outputBuffer.empty()) {
+    throw std::runtime_error("Attempted to read from an empty buffer.");
+  }
   const auto result = outputBuffer.front();
   outputBuffer.pop_front();
   return result;
@@ -82,67 +112,64 @@ IntcodeState Intcode::run() {
   if (debugging) {
     printMemory();
   }
-  while (instructionPointer < memory.size()) {
+  while (true) {
+    if (debugging) {
+      std::cout << "Instruction pointer is " << instructionPointer << "." << '\n';
+    }
     if (getInstructionType() == Opcode::Add) {
-      const auto &a = getOperand(1);
-      const auto &b = getOperand(2);
-      auto &c = getOperand(3);
-      c = a + b;
+      writeIntoOperand(3, readFromOperand(1) + readFromOperand(2));
       instructionPointer += 4;
       writeMessageIfDebugging("Added.");
     } else if (getInstructionType() == Opcode::Multiply) {
-      const auto &a = getOperand(1);
-      const auto &b = getOperand(2);
-      auto &c = getOperand(3);
-      c = a * b;
+      writeIntoOperand(3, readFromOperand(1) * readFromOperand(2));
       instructionPointer += 4;
       writeMessageIfDebugging("Multiplied.");
     } else if (getInstructionType() == Opcode::Input) {
-      auto &a = getOperand(1);
       if (inputBuffer.empty()) {
         return IntcodeState::Blocked;
       } else {
-        a = inputBuffer.front();
+        writeIntoOperand(1, inputBuffer.front());
         inputBuffer.pop_front();
       }
       instructionPointer += 2;
       writeMessageIfDebugging("Read input.");
     } else if (getInstructionType() == Opcode::Output) {
-      outputBuffer.push_back(getOperand(1));
+      outputBuffer.push_back(readFromOperand(1));
       instructionPointer += 2;
       writeMessageIfDebugging("Wrote output.");
     } else if (getInstructionType() == Opcode::JumpIfTrue) {
-      if (getOperand(1) != 0) {
-        instructionPointer = getOperand(2);
+      if (readFromOperand(1) != 0) {
+        instructionPointer = readFromOperand(2);
       } else {
         instructionPointer += 3;
       }
       writeMessageIfDebugging("Evaluated jump if true.");
     } else if (getInstructionType() == Opcode::JumpIfFalse) {
-      if (getOperand(1) == 0) {
-        instructionPointer = getOperand(2);
+      if (readFromOperand(1) == 0) {
+        instructionPointer = readFromOperand(2);
       } else {
         instructionPointer += 3;
       }
       writeMessageIfDebugging("Evaluated jump if false.");
     } else if (getInstructionType() == Opcode::LessThan) {
-      const auto &a = getOperand(1);
-      const auto &b = getOperand(2);
-      auto &c = getOperand(3);
-      c = a < b ? 1 : 0;
+      const auto &a = readFromOperand(1);
+      const auto &b = readFromOperand(2);
+      writeIntoOperand(3, a < b ? 1 : 0);
       instructionPointer += 4;
       writeMessageIfDebugging("Tested if less than.");
     } else if (getInstructionType() == Opcode::Equals) {
-      const auto &a = getOperand(1);
-      const auto &b = getOperand(2);
-      auto &c = getOperand(3);
-      c = a == b ? 1 : 0;
+      const auto &a = readFromOperand(1);
+      const auto &b = readFromOperand(2);
+      writeIntoOperand(3, a == b ? 1 : 0);
       instructionPointer += 4;
       writeMessageIfDebugging("Tested for equality.");
     } else if (getInstructionType() == Opcode::AdjustRelativeBase) {
-      relativeBase += getOperand(1);
+      const auto oldRelativeBase = std::to_string(relativeBase);
+      relativeBase += readFromOperand(1);
+      const auto newRelativeBase = std::to_string(relativeBase);
       instructionPointer += 2;
-      writeMessageIfDebugging("Adjusted the relative base.");
+      const auto oldToNew = oldRelativeBase + " to " + newRelativeBase;
+      writeMessageIfDebugging("Adjusted the relative base from " + oldToNew + ".");
     } else if (getInstructionType() == Opcode::HaltInstruction) {
       if (debugging) {
         writeMessageIfDebugging("Halted.");
@@ -159,7 +186,7 @@ IntcodeState Intcode::run() {
 std::vector<Intcode::ValueType> readMemory(const std::string &path) {
   std::ifstream stream(path);
   std::vector<Intcode::ValueType> memory;
-  int value;
+  Intcode::ValueType value;
   while (stream >> value) {
     memory.push_back(value);
     char comma;

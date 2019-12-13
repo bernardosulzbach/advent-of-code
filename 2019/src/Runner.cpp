@@ -103,7 +103,7 @@ int main() {
   test(10, true, 1, 1, testsStatistics);
   test(10, true, 2, 1, testsStatistics);
 
-  for (int day = 1; day <= 10; day++) {
+  for (int day = 1; day <= 11; day++) {
     test(day, false, 1, 1, testsStatistics);
     test(day, false, 2, 1, testsStatistics);
   }

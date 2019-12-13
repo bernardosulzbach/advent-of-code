@@ -12,7 +12,7 @@
 class Intcode {
 public:
   using ValueType = S64;
-  using IndexType = U32;
+  using IndexType = S64;
 
 private:
   enum class Opcode {
@@ -54,9 +54,15 @@ public:
 
   [[nodiscard]] Opcode getInstructionType() const;
 
-  [[nodiscard]] ValueType &readMemory(IndexType index);
+  void resizeMemoryIfNeeded(IndexType index);
 
-  ValueType &getOperand(IndexType operandIndex);
+  [[nodiscard]] ValueType readMemory(IndexType index);
+  void writeMemory(IndexType index, ValueType value);
+
+  IndexType getMemoryIndexOfOperand(IndexType operandIndex);
+
+  [[nodiscard]] ValueType readFromOperand(IndexType operandIndex);
+  void writeIntoOperand(IndexType operandIndex, ValueType value);
 
   void addInput(ValueType input);
 

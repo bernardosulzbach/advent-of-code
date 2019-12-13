@@ -13,6 +13,12 @@ add_definitions(-Werror)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   add_definitions(-DDEBUGGING)
+  set(CMAKE_CXX_FLAGS
+      "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -fsanitize=leak -g"
+  )
+  set(CMAKE_EXE_LINKER_FLAGS_DEBUG
+      "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -fsanitize=leak -g"
+  )
 endif()
 
 find_package(Boost REQUIRED COMPONENTS)
@@ -36,6 +42,10 @@ add_library(
   src/OrbitGraph.cpp
   src/IntcodeState.hpp
   src/IntcodeState.cpp
+  src/Direction.hpp
+  src/Direction.cpp
+  src/Robot.hpp
+  src/Robot.cpp
   src/StandardInput.hpp
   src/StandardInput.cpp)
 
@@ -55,3 +65,4 @@ add_executable(07 src/07.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(08 src/08.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(09 src/09.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(10 src/10.cpp $<TARGET_OBJECTS:advent-of-code>)
+add_executable(11 src/11.cpp $<TARGET_OBJECTS:advent-of-code>)
