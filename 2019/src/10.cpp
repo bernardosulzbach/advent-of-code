@@ -15,10 +15,10 @@ using AsteroidField = std::vector<std::vector<bool>>;
 struct VisibleAsteroid {
   std::size_t i;
   std::size_t j;
-  Vector direction;
+  Vector<F64, 2> direction;
 
   [[nodiscard]] F64 getClockwiseAngle() const {
-    auto angle = direction.getAngle();
+    auto angle = getAngle(direction);
     if (angle < 0.0) {
       angle += 2.0 * Pi;
     }
@@ -51,7 +51,7 @@ std::vector<VisibleAsteroid> computeVisibleAsteroids(const AsteroidField &astero
       }
       const auto di = cIAsFloat - static_cast<F64>(i);
       const auto dj = static_cast<F64>(j) - cJAsFloat;
-      const auto directionVector = Vector(dj, di).normalize();
+      const auto directionVector = Vector<F64, 2>{dj, di}.normalize();
       const auto None = std::numeric_limits<std::size_t>::max();
       auto kForDirection = None;
       for (std::size_t k = 0; k < visibleAsteroids.size(); k++) {

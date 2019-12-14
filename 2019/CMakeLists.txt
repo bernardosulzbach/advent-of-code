@@ -46,6 +46,10 @@ add_library(
   src/Direction.cpp
   src/Robot.hpp
   src/Robot.cpp
+  src/Body.hpp
+  src/Body.cpp
+  src/Cycle.hpp
+  src/Cycle.cpp
   src/StandardInput.hpp
   src/StandardInput.cpp)
 
@@ -66,3 +70,4 @@ add_executable(08 src/08.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(09 src/09.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(10 src/10.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(11 src/11.cpp $<TARGET_OBJECTS:advent-of-code>)
+add_executable(12 src/12.cpp $<TARGET_OBJECTS:advent-of-code>)

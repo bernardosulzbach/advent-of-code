@@ -2,6 +2,8 @@
 
 #include <functional>
 
+#include <boost/functional/hash/hash.hpp>
+
 template <typename T> class Point {
 public:
   T x;
@@ -21,9 +23,9 @@ public:
 
 template <typename T> struct std::hash<Point<T>> {
   std::size_t operator()(const Point<T> &point) const {
-    std::size_t result = 17;
-    result = 31 * result + std::hash<T>()(point.x);
-    result = 31 * result + std::hash<T>()(point.y);
-    return result;
+    std::size_t seed = 0;
+    boost::hash_combine(seed, point.x);
+    boost::hash_combine(seed, point.y);
+    return seed;
   }
 };
