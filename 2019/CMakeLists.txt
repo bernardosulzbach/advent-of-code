@@ -21,7 +21,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   )
 endif()
 
-find_package(Boost REQUIRED COMPONENTS)
+find_package(Boost REQUIRED COMPONENTS unit_test_framework)
 include_directories(${Boost_INCLUDE_DIR})
 set(Boost_USE_MULTITHREADED ON)
 
@@ -50,12 +50,21 @@ add_library(
   src/Body.cpp
   src/Screen.hpp
   src/Screen.cpp
+  src/Text.hpp
+  src/Text.cpp
   src/Cycle.hpp
   src/Cycle.cpp
+  src/DirectedGraph.hpp
+  src/DirectedGraph.cpp
   src/StandardInput.hpp
   src/StandardInput.cpp)
 
 find_package(Threads REQUIRED)
+
+add_executable(tests test/Tests.cpp $<TARGET_OBJECTS:advent-of-code>)
+
+target_link_libraries(tests ${Boost_LIBRARIES})
+target_link_libraries(tests ${CMAKE_THREAD_LIBS_INIT})
 
 add_executable(runner src/Runner.cpp)
 target_link_libraries(runner ${Boost_LIBRARIES})
@@ -74,3 +83,4 @@ add_executable(10 src/10.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(11 src/11.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(12 src/12.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(13 src/13.cpp $<TARGET_OBJECTS:advent-of-code>)
+add_executable(14 src/14.cpp $<TARGET_OBJECTS:advent-of-code>)

@@ -106,8 +106,18 @@ int main() {
   test(12, true, 2, 1, testsStatistics);
   test(12, true, 2, 2, testsStatistics);
 
-  for (int day = 1; day <= 12; day++) {
+  for (int part = 1; part <= 2; part++) {
+    for (int number = 1; number <= 4; number++) {
+      test(14, true, part, number, testsStatistics);
+    }
+  }
+
+  for (int day = 1; day <= 14; day++) {
     test(day, false, 1, 1, testsStatistics);
+    // TODO: remove this once day 13 is solved.
+    if (day == 13) {
+      continue;
+    }
     test(day, false, 2, 1, testsStatistics);
   }
 
