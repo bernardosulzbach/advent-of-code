@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+#include "Point.hpp"
 #include "Types.hpp"
 
 class Screen {
@@ -30,6 +31,17 @@ public:
 
   [[nodiscard]] S64 getScore() const {
     return score;
+  }
+
+  [[nodiscard]] Point<S64> getPosition(char symbol) const {
+    for (std::size_t i = 0; i < height; i++) {
+      for (std::size_t j = 0; j < width; j++) {
+        if (pixels[i][j] == symbol) {
+          return Point<S64>(j, i);
+        }
+      }
+    }
+    throw std::runtime_error("Symbol '" + std::string(1, symbol) + "' not found.");
   }
 
   void paint(S64 x, S64 y, char c) {

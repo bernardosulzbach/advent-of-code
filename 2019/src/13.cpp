@@ -9,25 +9,33 @@
 #include "Vector.hpp"
 
 #include <cassert>
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <optional>
+#include <thread>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
+constexpr auto EmptySpaceSymbol = ' ';
+constexpr auto WallSymbol = '+';
+constexpr auto BlockSymbol = '*';
+constexpr auto PadSymbol = '-';
+constexpr auto BallSymbol = 'o';
+
 char characterFromTileId(U64 tileId) {
   switch (tileId) {
   case 0:
-    return ' ';
+    return EmptySpaceSymbol;
   case 1:
-    return '+';
+    return WallSymbol;
   case 2:
-    return '*';
+    return BlockSymbol;
   case 3:
-    return '-';
+    return PadSymbol;
   case 4:
-    return 'o';
+    return BallSymbol;
   default:
     throw std::runtime_error("Should never happen.");
   }
@@ -50,6 +58,22 @@ void updateScreen(Intcode &intcode, Screen &screen) {
   }
 }
 
+struct DefeatCause {
+  Point<S64> position;
+  U32 turns;
+};
+
+DefeatCause findDefeatCause(Intcode intcode, Screen screen) {
+  intcode.addInput(0);
+  U32 turns = 1;
+  while (intcode.run() != IntcodeState::Halted) {
+    updateScreen(intcode, screen);
+    intcode.addInput(0);
+    turns++;
+  }
+  return DefeatCause{screen.getPosition(BallSymbol), turns};
+}
+
 int main(int argc, char **argv) {
   ArgumentParser argumentParser;
   argumentParser.parseArguments(argc, argv);
@@ -64,16 +88,30 @@ int main(int argc, char **argv) {
     intcode.run();
     updateScreen(intcode, screen);
     const auto string = screen.toString();
-    std::cout << std::count(std::begin(string), std::end(string), '*') << '\n';
+    std::cout << std::count(std::begin(string), std::end(string), BlockSymbol) << '\n';
   } else {
     intcode.memory[0] = 2;
+    std::optional<Point<S64>> previousBallPosition{};
     while (intcode.run() != IntcodeState::Halted) {
       updateScreen(intcode, screen);
+      // Idea: find the position at which we are defeated, then move the paddle to that position in the old state.
+      const auto defeatCause = findDefeatCause(intcode, screen);
+      const auto currentPaddlePosition = screen.getPosition(PadSymbol);
+      const auto dx = defeatCause.position.x - currentPaddlePosition.x;
+      const auto currentBallPosition = screen.getPosition(BallSymbol);
+      if (std::abs(dx) + 2 >= defeatCause.turns) {
+        if (currentPaddlePosition.x == defeatCause.position.x) {
+          intcode.addInput(0);
+        } else if (currentPaddlePosition.x < defeatCause.position.x) {
+          intcode.addInput(+1);
+        } else {
+          intcode.addInput(-1);
+        }
+      } else {
+        intcode.addInput(0);
+      }
       std::cout << screen.toString() << '\n';
-      Intcode::ValueType direction = 0;
-      std::cout << "> ";
-      std::cin >> direction;
-      intcode.addInput(direction);
+      previousBallPosition = currentBallPosition;
     }
   }
   return 0;
