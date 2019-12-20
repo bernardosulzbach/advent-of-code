@@ -8,6 +8,14 @@ One of my goals is to use a different programming language each year.
 
 Using C++.
 
+```bash
+mkdir build
+cd build
+cmake .. && make
+./tests
+./runner
+```
+
 ## 2018
 
 Using Rust.
