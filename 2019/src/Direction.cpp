@@ -19,3 +19,17 @@ Direction rotateClockwise(Direction direction) {
 Direction rotateCounterClockwise(Direction direction) {
   return rotateClockwise(rotateClockwise(rotateClockwise(direction)));
 }
+
+char directionToCharacter(Direction direction) {
+  switch (direction) {
+  case Direction::North:
+    return 'N';
+  case Direction::East:
+    return 'E';
+  case Direction::South:
+    return 'S';
+  case Direction::West:
+    return 'W';
+  }
+  throw std::runtime_error("Should never happen.");
+}
