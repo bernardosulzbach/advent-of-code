@@ -4,6 +4,8 @@
 
 #include <boost/functional/hash/hash.hpp>
 
+#include "Direction.hpp"
+
 template <typename T> class Point {
 public:
   T x;
@@ -18,6 +20,20 @@ public:
 
   bool operator!=(const Point &rhs) const {
     return !(rhs == *this);
+  }
+
+  [[nodiscard]] Point<T> move(Direction direction) const {
+    switch (direction) {
+    case Direction::North:
+      return Point(x, y + 1);
+    case Direction::East:
+      return Point(x + 1, y);
+    case Direction::South:
+      return Point(x, y - 1);
+    case Direction::West:
+      return Point(x - 1, y);
+    }
+    throw std::runtime_error("Should be unreachable.");
   }
 };
 

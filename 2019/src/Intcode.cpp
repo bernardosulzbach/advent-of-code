@@ -91,6 +91,10 @@ void Intcode::addInput(Intcode::ValueType input) {
   inputBuffer.push_back(input);
 }
 
+std::size_t Intcode::getOutputBufferLength() const {
+  return outputBuffer.size();
+}
+
 bool Intcode::hasOutput() const {
   return !outputBuffer.empty();
 }

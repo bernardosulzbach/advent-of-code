@@ -66,6 +66,8 @@ public:
 
   void addInput(ValueType input);
 
+  [[nodiscard]] std::size_t getOutputBufferLength() const;
+
   [[nodiscard]] bool hasOutput() const;
 
   ValueType getOutput();

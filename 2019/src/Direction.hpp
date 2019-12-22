@@ -7,3 +7,5 @@ Direction rotateClockwise(Direction direction);
 Direction rotateCounterClockwise(Direction direction);
 
 char directionToCharacter(Direction direction);
+
+char directionToArrowCharacter(Direction direction);

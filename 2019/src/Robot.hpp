@@ -5,8 +5,7 @@
 #include "Types.hpp"
 
 class Robot {
-  S32 x = 0;
-  S32 y = 0;
+  Point<S32> p{0, 0};
 
   Direction direction = Direction::North;
 
@@ -17,5 +16,11 @@ public:
 
   void goForward();
 
-  Point<S32> getPosition();
+  [[nodiscard]] Point<S32> getPosition() const;
+
+  void setPosition(Point<S32> newPosition);
+
+  [[nodiscard]] Direction getDirection() const;
+
+  void setDirection(Direction newDirection);
 };

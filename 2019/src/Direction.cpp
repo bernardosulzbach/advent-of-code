@@ -33,3 +33,17 @@ char directionToCharacter(Direction direction) {
   }
   throw std::runtime_error("Should never happen.");
 }
+
+char directionToArrowCharacter(Direction direction) {
+  switch (direction) {
+  case Direction::North:
+    return '^';
+  case Direction::East:
+    return '>';
+  case Direction::South:
+    return 'v';
+  case Direction::West:
+    return '<';
+  }
+  throw std::runtime_error("Should never happen.");
+}

@@ -9,23 +9,21 @@ void Robot::rotateLeft() {
 }
 
 void Robot::goForward() {
-  switch (direction) {
-  case Direction::North:
-    y++;
-    return;
-  case Direction::East:
-    x++;
-    return;
-  case Direction::South:
-    y--;
-    return;
-  case Direction::West:
-    x--;
-    return;
-  }
-  throw std::runtime_error("Should never happen.");
+  p = p.move(direction);
 }
 
-Point<S32> Robot::getPosition() {
-  return {x, y};
+Point<S32> Robot::getPosition() const {
+  return p;
+}
+
+void Robot::setPosition(Point<S32> newPosition) {
+  p = newPosition;
+}
+
+Direction Robot::getDirection() const {
+  return direction;
+}
+
+void Robot::setDirection(Direction newDirection) {
+  direction = newDirection;
 }
