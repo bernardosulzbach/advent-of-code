@@ -7,20 +7,59 @@
 
 #include <cassert>
 #include <iostream>
+#include <map>
 #include <optional>
+#include <variant>
 #include <vector>
 
-struct RobotMovement {
+class RobotMovement {
+public:
   bool turnedLeft = false;
   bool turnedRight = false;
   S32 stride = 0;
+
+  [[nodiscard]] std::string toString() const {
+    if (turnedLeft) {
+      return "L";
+    } else if (turnedRight) {
+      return "R";
+    } else {
+      return std::to_string(stride);
+    }
+  }
+
+  bool operator==(const RobotMovement &rhs) const {
+    return turnedLeft == rhs.turnedLeft && turnedRight == rhs.turnedRight && stride == rhs.stride;
+  }
+
+  bool operator!=(const RobotMovement &rhs) const {
+    return !(rhs == *this);
+  }
+
+  bool operator<(const RobotMovement &rhs) const {
+    if (turnedLeft < rhs.turnedLeft) {
+      return true;
+    }
+    if (rhs.turnedLeft < turnedLeft) {
+      return false;
+    }
+    if (turnedRight < rhs.turnedRight) {
+      return true;
+    }
+    if (rhs.turnedRight < turnedRight) {
+      return false;
+    }
+    return stride < rhs.stride;
+  }
 };
+
+using RobotMovementSequence = std::vector<RobotMovement>;
 
 class Map {
 public:
   std::vector<std::vector<char>> grid;
   std::optional<Robot> robot;
-  std::vector<RobotMovement> robotMovements;
+  RobotMovementSequence robotMovementSequence;
 
   void setRobot(Robot newRobot) {
     robot = newRobot;
@@ -78,10 +117,11 @@ public:
 
   void moveTheRobotForward() {
     robot->goForward();
-    if (!robotMovements.empty() && !robotMovements.back().turnedLeft && !robotMovements.back().turnedRight) {
-      robotMovements.back().stride++;
+    if (!robotMovementSequence.empty() && !robotMovementSequence.back().turnedLeft &&
+        !robotMovementSequence.back().turnedRight) {
+      robotMovementSequence.back().stride++;
     } else {
-      robotMovements.push_back({false, false, 1});
+      robotMovementSequence.push_back({false, false, 1});
     }
   }
 
@@ -94,7 +134,7 @@ public:
 
   void moveTheRobotToTheRight() {
     robot->rotateRight();
-    robotMovements.push_back({false, true, 0});
+    robotMovementSequence.push_back({false, true, 0});
     moveTheRobotForward();
   }
 
@@ -107,26 +147,12 @@ public:
 
   void moveTheRobotToTheLeft() {
     robot->rotateLeft();
-    robotMovements.push_back({true, false, 0});
+    robotMovementSequence.push_back({true, false, 0});
     moveTheRobotForward();
   }
 
-  void dumpRobotMovement() {
-    auto first = true;
-    for (const auto movement : robotMovements) {
-      if (!first) {
-        std::cout << ", ";
-      }
-      if (movement.turnedLeft) {
-        std::cout << 'L';
-      } else if (movement.turnedRight) {
-        std::cout << 'R';
-      } else {
-        std::cout << movement.stride;
-      }
-      first = false;
-    }
-    std::cout << "\n";
+  [[nodiscard]] RobotMovementSequence getRobotMovementSequence() const {
+    return robotMovementSequence;
   }
 };
 
@@ -205,6 +231,126 @@ Map readMap(Intcode &intcode) {
   return map;
 }
 
+std::string robotMovementSequenceToString(const RobotMovementSequence &sequence) {
+  std::string string;
+  auto first = true;
+  for (const auto movement : sequence) {
+    if (!first) {
+      string += ",";
+    }
+    string += movement.toString();
+    first = false;
+  }
+  return string;
+}
+
+S64 getRobotMovementSequenceLength(const RobotMovementSequence &sequence) {
+  return robotMovementSequenceToString(sequence).size();
+}
+
+using MainRoutine = std::vector<std::variant<RobotMovement, std::size_t>>;
+
+bool equals(const MainRoutine &main, const std::size_t &offset, const RobotMovementSequence &sequence) {
+  for (std::size_t i = 0; i < sequence.size(); i++) {
+    if (std::holds_alternative<RobotMovement>(main[i + offset])) {
+      if (std::get<RobotMovement>(main[i + offset]) != sequence[i]) {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
+
+std::string mainRoutineToString(const MainRoutine &main) {
+  std::string string;
+  auto first = true;
+  for (const auto value : main) {
+    if (!first) {
+      string += ",";
+    }
+    if (std::holds_alternative<RobotMovement>(value)) {
+      string += std::get<RobotMovement>(value).toString();
+    } else if (std::holds_alternative<std::size_t>(value)) {
+      string += static_cast<char>('A' + std::get<std::size_t>(value));
+    } else {
+      throw std::invalid_argument("Somehow, the main routine has a value that is not valid.");
+    }
+    first = false;
+  }
+  return string;
+}
+
+class CompressedMovementSequence {
+public:
+  std::vector<std::variant<RobotMovement, std::size_t>> main;
+  std::vector<RobotMovementSequence> routines;
+
+  static S64 evaluateReplacementSavings(const RobotMovementSequence &sequence) {
+    return getRobotMovementSequenceLength(sequence) - 1;
+  }
+
+  void extractRoutine() {
+    std::map<RobotMovementSequence, std::size_t> counter;
+    for (std::size_t i = 0; i < main.size(); i++) {
+      RobotMovementSequence subsequence;
+      for (std::size_t j = i; j < main.size(); j++) {
+        if (!std::holds_alternative<RobotMovement>(main[j])) {
+          break;
+        }
+        const auto movement = std::get<RobotMovement>(main[j]);
+        // Only count sequences that start with a rotation.
+        if (subsequence.empty()) {
+          if (!movement.turnedLeft && !movement.turnedRight) {
+            break;
+          }
+        }
+        subsequence.push_back(movement);
+        if (getRobotMovementSequenceLength(subsequence) > 20) {
+          break;
+        }
+        // Do not count sequences that end with a rotation.
+        if (subsequence.back().stride == 0) {
+          continue;
+        }
+        // This adds overlapping sequences, which is not ideal.
+        // ABA in ABABABA is 3, but could be 2.
+        counter[subsequence]++;
+      }
+    }
+    // Find one of the best extractions.
+    RobotMovementSequence bestSequence;
+    S64 bestSequenceSavings = 0;
+    for (const auto &entry : counter) {
+      const auto savings = static_cast<S64>(entry.second * evaluateReplacementSavings(entry.first));
+      if (savings > bestSequenceSavings) {
+        bestSequence = entry.first;
+        bestSequenceSavings = savings;
+      }
+    }
+    routines.push_back(bestSequence);
+    for (std::size_t i = 0; i + bestSequence.size() - 1 < main.size(); i++) {
+      if (equals(main, i, bestSequence)) {
+        const auto index = routines.size() - 1;
+        main[i] = index;
+        main.erase(std::begin(main) + i + 1, std::begin(main) + i + bestSequence.size());
+      }
+    }
+  }
+};
+
+CompressedMovementSequence compressMovementSequence(const std::vector<RobotMovement> &sequence, std::size_t routines) {
+  CompressedMovementSequence compressedMovementSequence;
+  for (const auto movement : sequence) {
+    compressedMovementSequence.main.emplace_back(movement);
+  }
+  for (std::size_t i = 0; i < routines; i++) {
+    compressedMovementSequence.extractRoutine();
+  }
+  return compressedMovementSequence;
+}
+
 int main(int argc, char **argv) {
   ArgumentParser argumentParser;
   argumentParser.parseArguments(argc, argv);
@@ -228,7 +374,6 @@ int main(int argc, char **argv) {
     const auto firstState = intcode.run();
     assert(firstState == IntcodeState::Blocked);
     auto initialMap = readMap(intcode);
-    std::cout << initialMap << '\n' << '\n';
     while (true) {
       if (initialMap.canMoveTheRobotForward()) {
         initialMap.moveTheRobotForward();
@@ -240,7 +385,8 @@ int main(int argc, char **argv) {
         break;
       }
     }
-    initialMap.dumpRobotMovement();
+    const auto movementSequence = initialMap.getRobotMovementSequence();
+    const auto compressedMovementSequence = compressMovementSequence(movementSequence, 3);
     const auto enterInputString = [&intcode](const std::string &string) {
       while (intcode.hasOutput()) {
         intcode.getOutput();
@@ -248,20 +394,19 @@ int main(int argc, char **argv) {
       for (const auto character : string) {
         intcode.addInput(character);
       }
+      intcode.addInput('\n');
       intcode.run();
     };
-    const auto main = "A,B,A,C,A,B,C,B,C,B\n";
+    const auto main = mainRoutineToString(compressedMovementSequence.main);
     enterInputString(main);
-    const auto routineA = "R,8,L,10,L,12,R,4\n";
-    enterInputString(routineA);
-    const auto routineB = "R,8,L,12,R,4,R,4\n";
-    enterInputString(routineB);
-    const auto routineC = "R,8,L,10,R,8\n";
-    enterInputString(routineC);
-    enterInputString("y\n");
+    for (std::size_t i = 0; i < 3; i++) {
+      const auto routine = robotMovementSequenceToString(compressedMovementSequence.routines[i]);
+      enterInputString(routine);
+    }
+    enterInputString("n");
     intcode.getOutput();
     while (intcode.getOutputBufferLength() > 1) {
-      std::cout << readMap(intcode) << '\n' << '\n';
+      readMap(intcode);
     }
     std::cout << intcode.getOutput() << '\n';
   }

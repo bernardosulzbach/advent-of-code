@@ -116,7 +116,7 @@ int main() {
     test(16, true, 1, number, testsStatistics);
   }
 
-  for (int day = 1; day <= 16; day++) {
+  for (int day = 1; day <= 17; day++) {
     test(day, false, 1, 1, testsStatistics);
     // TODO: remove this once day 13 is solved.
     if (day == 13 || day == 16) {
