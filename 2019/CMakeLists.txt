@@ -6,9 +6,12 @@ set(CMAKE_CXX_STANDARD 20)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS 1)
 
-add_definitions(-Wall)
-add_definitions(-Wextra)
-add_definitions(-Wshadow)
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+  add_definitions(-Wall)
+  add_definitions(-Wextra)
+  add_definitions(-Wshadow)
+endif()
+
 add_definitions(-Werror)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
@@ -90,3 +93,4 @@ add_executable(14 src/14.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(15 src/15.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(16 src/16.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(17 src/17.cpp $<TARGET_OBJECTS:advent-of-code>)
+add_executable(19 src/19.cpp $<TARGET_OBJECTS:advent-of-code>)
