@@ -63,7 +63,11 @@ add_library(advent-of-code OBJECT
             src/DirectedGraph.hpp
             src/DirectedGraph.cpp
             src/StandardInput.hpp
-            src/StandardInput.cpp)
+            src/StandardInput.cpp
+            src/BugScan.cpp
+            src/BugScan.hpp
+            src/Filesystem.cpp
+            src/Filesystem.hpp)
 
 find_package(Threads REQUIRED)
 
@@ -94,3 +98,4 @@ add_executable(15 src/15.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(16 src/16.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(17 src/17.cpp $<TARGET_OBJECTS:advent-of-code>)
 add_executable(19 src/19.cpp $<TARGET_OBJECTS:advent-of-code>)
+add_executable(24 src/24.cpp $<TARGET_OBJECTS:advent-of-code>)

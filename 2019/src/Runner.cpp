@@ -7,6 +7,8 @@
 #include <sstream>
 #include <string>
 
+#include "Filesystem.hpp"
+
 struct TestsStatistics {
   int tested = 0;
   int passed = 0;
@@ -31,14 +33,6 @@ std::string getOutput(const std::string &command) {
   return result;
 }
 
-std::string readFile(const std::filesystem::path &path) {
-  std::ostringstream buffer;
-  std::ifstream input(path.native());
-  buffer << input.rdbuf();
-  auto asString = buffer.str();
-  boost::trim(asString);
-  return asString;
-}
 std::string toPaddedDayString(int day) {
   std::stringstream stream;
   stream << std::setfill('0') << std::setw(2) << day;
