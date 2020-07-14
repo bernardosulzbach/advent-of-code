@@ -71,12 +71,14 @@ add_library(advent-of-code OBJECT
 
 find_package(Threads REQUIRED)
 
+include_directories(SYSTEM include)
+
 add_executable(tests test/Tests.cpp $<TARGET_OBJECTS:advent-of-code>)
 
 target_link_libraries(tests ${Boost_LIBRARIES})
 target_link_libraries(tests ${CMAKE_THREAD_LIBS_INIT})
 
-add_executable(runner src/Runner.cpp)
+add_executable(runner src/Runner.cpp $<TARGET_OBJECTS:advent-of-code>)
 target_link_libraries(runner ${Boost_LIBRARIES})
 target_link_libraries(runner ${CMAKE_THREAD_LIBS_INIT})
 
