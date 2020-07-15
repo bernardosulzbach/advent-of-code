@@ -66,3 +66,5 @@ I am publishing my solutions because people will eventually publish solutions fo
 Additionally, I think that the code I write is of good quality and can help someone who is completely lost to not only solve a problem, but to understand the solution.
 
 It might also be interesting to compare solutions written in different languages.
+
+If you want to point out a problem or fix something yourself, feel free to open a PR to this repository.
