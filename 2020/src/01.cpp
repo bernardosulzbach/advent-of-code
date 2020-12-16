@@ -7,6 +7,15 @@
 #include "Ranges.hpp"
 #include "StandardInput.hpp"
 
+template <std::size_t N, typename Range> void findCombination(Range const &input) {
+  for (auto const combination : AoC::allCombinations<N>(input)) {
+    if (AoC::sum(combination) == 2020) {
+      std::cout << AoC::product(combination) << '\n';
+      break;
+    }
+  }
+}
+
 int main(int argc, char **argv) {
   try {
     ArgumentParser argumentParser;
@@ -15,12 +24,9 @@ int main(int argc, char **argv) {
     std::ifstream stream(argumentParser.getPath());
     auto const input = AoC::readVector<std::int64_t>(stream);
     if (part == 1) {
-      for (auto const pair : AoC::allPairs(input)) {
-        if (pair.first + pair.second == 2020) {
-          std::cout << pair.first * pair.second << '\n';
-          break;
-        }
-      }
+      findCombination<2>(input);
+    } else {
+      findCombination<3>(input);
     }
   } catch (const std::exception &exception) {
     std::cout << "Threw: " << exception.what() << '\n';

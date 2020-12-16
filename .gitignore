@@ -8,4 +8,7 @@ gradlew.bat
 
 out/
 .idea/
+
+# C++
 build/
+cmake-build-debug/
