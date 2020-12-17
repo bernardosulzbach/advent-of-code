@@ -26,3 +26,4 @@ include_directories("../common/src")
 
 add_executable(01 src/01.cpp $<TARGET_OBJECTS:advent-of-code-common>)
 add_executable(02 src/02.cpp $<TARGET_OBJECTS:advent-of-code-common>)
+add_executable(03 src/03.cpp $<TARGET_OBJECTS:advent-of-code-common>)
