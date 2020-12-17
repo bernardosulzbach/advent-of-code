@@ -20,8 +20,9 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -fsanitize=leak")
 endif()
 
-add_library(advent-of-code-common OBJECT ../common/src/ArgumentParser.hpp ../common/src/ArgumentParser.cpp ../common/src/Ranges.hpp)
+add_library(advent-of-code-common OBJECT ../common/src/ArgumentParser.hpp ../common/src/ArgumentParser.cpp ../common/src/Math.hpp ../common/src/Ranges.hpp)
 
 include_directories("../common/src")
 
 add_executable(01 src/01.cpp $<TARGET_OBJECTS:advent-of-code-common>)
+add_executable(02 src/02.cpp $<TARGET_OBJECTS:advent-of-code-common>)

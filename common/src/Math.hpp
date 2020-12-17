@@ -16,3 +16,16 @@ template <typename T> T greatestCommonDivisor(T a, T b) {
 template <typename T> T leastCommonMultiple(T a, T b) {
   return (a * b) / greatestCommonDivisor(a, b);
 }
+
+template <typename T> struct Interval {
+  Interval(T const intervalMin, T const intervalMax) noexcept : min(intervalMin), max(intervalMax) {
+  }
+
+  [[nodiscard]] bool contains(T const value) noexcept {
+    return min <= value && value <= max;
+  }
+
+private:
+  T min;
+  T max;
+};
