@@ -16,12 +16,8 @@ add_definitions(-Werror)
 
 if(CMAKE_BUILD_TYPE MATCHES "Debug")
   add_definitions(-DDEBUGGING)
-  set(CMAKE_CXX_FLAGS
-      "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -fsanitize=leak"
-  )
-  set(CMAKE_EXE_LINKER_FLAGS_DEBUG
-      "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -fsanitize=leak"
-  )
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -fsanitize=leak")
+  set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -fsanitize=leak")
 endif()
 
 find_package(Boost REQUIRED COMPONENTS unit_test_framework)
@@ -30,42 +26,36 @@ set(Boost_USE_MULTITHREADED ON)
 
 add_library(
   advent-of-code OBJECT
-  src/Types.hpp
-  src/ArgumentParser.hpp
   src/ArgumentParser.cpp
-  src/Intcode.cpp
-  src/Intcode.hpp
-  src/Point.hpp
-  src/Path.hpp
-  src/Math.hpp
-  src/Math.cpp
-  src/Vector.hpp
-  src/Vector.cpp
-  src/OrbitGraph.hpp
-  src/OrbitGraph.cpp
-  src/IntcodeState.hpp
-  src/IntcodeState.cpp
-  src/Direction.hpp
-  src/Direction.cpp
-  src/Robot.hpp
-  src/Robot.cpp
-  src/Body.hpp
+  src/ArgumentParser.hpp
   src/Body.cpp
-  src/Screen.hpp
-  src/Screen.cpp
-  src/Text.hpp
-  src/Text.cpp
-  src/Cycle.hpp
-  src/Cycle.cpp
-  src/DirectedGraph.hpp
-  src/DirectedGraph.cpp
-  src/StandardInput.hpp
-  src/StandardInput.cpp
-  src/BugScan.cpp
+  src/Body.hpp
   src/BugScan.hpp
+  src/Cycle.hpp
+  src/DirectedGraph.cpp
+  src/DirectedGraph.hpp
+  src/Direction.cpp
+  src/Direction.hpp
   src/Filesystem.cpp
   src/Filesystem.hpp
-  src/Ranges.hpp)
+  src/Intcode.cpp
+  src/Intcode.hpp
+  src/IntcodeState.hpp
+  src/Math.hpp
+  src/OrbitGraph.hpp
+  src/Path.hpp
+  src/Point.hpp
+  src/Ranges.hpp
+  src/Robot.cpp
+  src/Robot.hpp
+  src/Screen.hpp
+  src/StandardInput.cpp
+  src/StandardInput.hpp
+  src/Text.cpp
+  src/Text.hpp
+  src/Types.hpp
+  src/Vector.cpp
+  src/Vector.hpp)
 
 find_package(Threads REQUIRED)
 
