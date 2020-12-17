@@ -1,11 +1,10 @@
 #include "ArgumentParser.hpp"
+#include "Ranges.hpp"
+#include "StandardInput.hpp"
 
 #include <cstdint>
 #include <fstream>
 #include <iostream>
-
-#include "Ranges.hpp"
-#include "StandardInput.hpp"
 
 template <std::size_t N, typename Range> void findCombination(Range const &input) {
   for (auto const combination : AoC::allCombinations<N>(input)) {
