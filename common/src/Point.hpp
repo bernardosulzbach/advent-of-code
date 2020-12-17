@@ -11,27 +11,27 @@ public:
   T x;
   T y;
 
-  Point(T pointX, T pointY) : x(pointX), y(pointY) {
+  [[nodiscard]] Point(T const pointX, T const pointY) noexcept : x(pointX), y(pointY) {
   }
 
-  bool operator==(const Point &rhs) const {
+  [[nodiscard]] bool operator==(const Point &rhs) const {
     return x == rhs.x && y == rhs.y;
   }
 
-  bool operator!=(const Point &rhs) const {
+  [[nodiscard]] bool operator!=(const Point &rhs) const {
     return !(rhs == *this);
   }
 
-  [[nodiscard]] Point<T> move(Direction direction) const {
+  [[nodiscard]] Point<T> move(Direction direction, T amount = static_cast<T>(1)) const {
     switch (direction) {
     case Direction::North:
-      return Point(x, y + 1);
+      return Point(x, y + amount);
     case Direction::East:
-      return Point(x + 1, y);
+      return Point(x + amount, y);
     case Direction::South:
-      return Point(x, y - 1);
+      return Point(x, y - amount);
     case Direction::West:
-      return Point(x - 1, y);
+      return Point(x - amount, y);
     }
     throw std::runtime_error("Should be unreachable.");
   }
