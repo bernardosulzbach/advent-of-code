@@ -6,6 +6,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "Types.hpp"
+
 namespace AoC {
 template <typename Range>
 using RangeType = std::decay_t<decltype(*std::declval<decltype(std::declval<Range>().begin())>())>;
@@ -74,7 +76,7 @@ template <std::size_t N, typename Range> struct CombinationIterator {
 private:
   void increment(decltype(N) const i) &noexcept {
     ++iters[i];
-    if (std::distance(iters[i], itEnd) == N - 1 - i) {
+    if (toUnsigned(std::distance(iters[i], itEnd)) == N - 1 - i) {
       if (i == 0) {
         toEnd();
         return;
