@@ -1,6 +1,6 @@
 #pragma once
 
-enum class Direction { North, East, South, West };
+enum class Direction { North, East, South, West, Up = North, Right = East, Down = South, Left = West };
 
 Direction rotateClockwise(Direction direction);
 
