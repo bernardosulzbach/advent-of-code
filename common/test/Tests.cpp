@@ -3,6 +3,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "../src/Ranges.hpp"
+#include "../src/StandardInput.hpp"
 #include "../src/Text.hpp"
 
 BOOST_AUTO_TEST_CASE(splitAtTest) {
@@ -42,4 +43,31 @@ BOOST_AUTO_TEST_CASE(allCombinationsOfTotalLengthTest) {
   }
   std::vector<std::array<int, combinationSize>> expectedCombinations{{1, 2, 3}};
   BOOST_CHECK(expectedCombinations == combinations);
+}
+
+BOOST_AUTO_TEST_CASE(printTest) {
+  {
+    std::stringstream stream;
+    std::vector<bool> vector;
+    AoC::print(stream, vector, "");
+    BOOST_CHECK(stream.str() == "\n");
+  }
+  {
+    std::stringstream stream;
+    std::vector<bool> vector{false};
+    AoC::print(stream, vector, "");
+    BOOST_CHECK(stream.str() == "0\n");
+  }
+  {
+    std::stringstream stream;
+    std::vector<bool> vector{false, true};
+    AoC::print(stream, vector, "");
+    BOOST_CHECK(stream.str() == "01\n");
+  }
+  {
+    std::stringstream stream;
+    std::vector<bool> vector{false, true};
+    AoC::print(stream, vector, ", ");
+    BOOST_CHECK(stream.str() == "0, 1\n");
+  }
 }
