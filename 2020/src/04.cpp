@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
       passport.clear();
     };
     while (std::getline(stream, line)) {
-      if (line.size() <= 1) {
+      if (line.empty()) {
         verifyPassport();
         continue;
       }
