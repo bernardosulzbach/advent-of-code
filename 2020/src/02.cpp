@@ -1,6 +1,6 @@
 #include "ArgumentParser.hpp"
+#include "IO.hpp"
 #include "Math.hpp"
-#include "StandardInput.hpp"
 
 #include <fstream>
 #include <iostream>

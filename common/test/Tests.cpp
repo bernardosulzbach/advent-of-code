@@ -2,8 +2,8 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
+#include "../src/IO.hpp"
 #include "../src/Ranges.hpp"
-#include "../src/StandardInput.hpp"
 #include "../src/Text.hpp"
 
 BOOST_AUTO_TEST_CASE(splitAtTest) {

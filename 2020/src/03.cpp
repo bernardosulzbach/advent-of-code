@@ -1,7 +1,7 @@
 #include "ArgumentParser.hpp"
 #include "Direction.hpp"
+#include "IO.hpp"
 #include "Point.hpp"
-#include "StandardInput.hpp"
 
 #include <fstream>
 #include <iostream>

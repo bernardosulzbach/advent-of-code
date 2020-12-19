@@ -1,5 +1,5 @@
 #include "ArgumentParser.hpp"
-#include "StandardInput.hpp"
+#include "IO.hpp"
 
 #include <algorithm>
 #include <bitset>

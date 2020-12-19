@@ -34,6 +34,7 @@ add_library(
   ../common/src/Direction.hpp
   ../common/src/Filesystem.cpp
   ../common/src/Filesystem.hpp
+  ../common/src/IO.hpp
   ../common/src/Intcode.cpp
   ../common/src/Intcode.hpp
   ../common/src/IntcodeState.hpp
@@ -44,8 +45,6 @@ add_library(
   ../common/src/Robot.cpp
   ../common/src/Robot.hpp
   ../common/src/Screen.hpp
-  ../common/src/StandardInput.cpp
-  ../common/src/StandardInput.hpp
   ../common/src/Text.cpp
   ../common/src/Text.hpp
   ../common/src/Types.hpp

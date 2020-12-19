@@ -1,6 +1,6 @@
 #include "ArgumentParser.hpp"
+#include "IO.hpp"
 #include "Point.hpp"
-#include "StandardInput.hpp"
 
 #include <algorithm>
 #include <cassert>

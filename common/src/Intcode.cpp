@@ -4,8 +4,8 @@
 #include <iostream>
 #include <stdexcept>
 
+#include "IO.hpp"
 #include "IntcodeState.hpp"
-#include "StandardInput.hpp"
 
 void Intcode::printMemory() const {
   for (std::size_t i = 0; i < memory.size(); i++) {

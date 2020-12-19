@@ -1,6 +1,6 @@
 #include "ArgumentParser.hpp"
+#include "IO.hpp"
 #include "Ranges.hpp"
-#include "StandardInput.hpp"
 
 #include <cstdint>
 #include <fstream>

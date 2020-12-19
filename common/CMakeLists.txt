@@ -38,6 +38,7 @@ add_library(
   src/Direction.hpp
   src/Filesystem.cpp
   src/Filesystem.hpp
+  src/IO.hpp
   src/Intcode.cpp
   src/Intcode.hpp
   src/IntcodeState.hpp
@@ -49,8 +50,6 @@ add_library(
   src/Robot.cpp
   src/Robot.hpp
   src/Screen.hpp
-  src/StandardInput.cpp
-  src/StandardInput.hpp
   src/Text.cpp
   src/Text.hpp
   src/Types.hpp
