@@ -21,7 +21,7 @@ template <typename T> struct Interval {
   Interval(T const intervalMin, T const intervalMax) noexcept : min(intervalMin), max(intervalMax) {
   }
 
-  [[nodiscard]] bool contains(T const value) noexcept {
+  [[nodiscard]] bool contains(T const value) const noexcept {
     return min <= value && value <= max;
   }
 
