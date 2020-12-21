@@ -1,8 +1,8 @@
 #include "ArgumentParser.hpp"
 #include "IO.hpp"
 #include "Ranges.hpp"
+#include "Types.hpp"
 
-#include <cstdint>
 #include <fstream>
 #include <iostream>
 
@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
     argumentParser.parseArguments(argc, argv);
     auto const part = argumentParser.getAdditionalArgument(0);
     std::ifstream stream(argumentParser.getPath());
-    auto const input = AoC::readVector<std::int64_t>(stream);
+    auto const input = AoC::readVector<S64>(stream);
     if (part == 1) {
       findCombination<2>(input);
     } else {
