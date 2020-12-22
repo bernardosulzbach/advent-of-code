@@ -109,4 +109,16 @@ template <std::size_t N, typename Range> struct CombinationIteratorRange {
 template <std::size_t N, typename Range> decltype(auto) allCombinations(Range const &range) {
   return CombinationIteratorRange<N, Range>(range);
 }
+
+template <typename Range, typename BinaryPredicate>
+decltype(auto) findPair(Range const &range, BinaryPredicate const &binaryPredicate) {
+  for (auto itA = range.begin(); itA != range.end(); ++itA) {
+    for (auto itB = next(itA); itB != range.end(); ++itB) {
+      if (binaryPredicate(*itA, *itB)) {
+        return std::make_pair(itA, itB);
+      }
+    }
+  }
+  return std::make_pair(range.end(), range.end());
+}
 } // namespace AoC
