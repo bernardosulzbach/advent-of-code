@@ -121,4 +121,13 @@ decltype(auto) findPair(Range const &range, BinaryPredicate const &binaryPredica
   }
   return std::make_pair(range.end(), range.end());
 }
+
+template <typename Range, typename Callable>
+void mapOverAdjacentPairs(Range const &range,
+                          Callable const &callable) noexcept(noexcept(callable(std::declval<RangeType<Range>>(),
+                                                                               std::declval<RangeType<Range>>()))) {
+  for (auto itA = range.begin(); itA != range.end() && std::next(itA) != range.end(); ++itA) {
+    callable(*itA, *std::next(itA));
+  }
+}
 } // namespace AoC

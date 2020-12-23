@@ -1,10 +1,14 @@
 #pragma once
 
+#include <stdexcept>
 #include <string_view>
 #include <vector>
 
 namespace AoC {
 template <typename T, typename Stream> std::vector<T> readVector(Stream &s) {
+  if (!s) {
+    throw std::runtime_error("Stream is not in a good state.");
+  }
   std::vector<T> vector;
   T t;
   while (s >> t) {
