@@ -3,6 +3,7 @@
 #include "Math.hpp"
 #include "Ranges.hpp"
 #include "Types.hpp"
+#include "Vector.hpp"
 
 #include <algorithm>
 #include <cassert>
@@ -19,15 +20,11 @@ inline constexpr auto EmptySpace = '.';
 
 inline constexpr auto Undefined = std::numeric_limits<std::size_t>::max();
 
-struct Vector {
-  S64 x;
-  S64 y;
-};
-
-inline constexpr std::array<Vector, 8> DirectionVectors = {
-    {{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}};
-
 using DistanceArray = std::array<std::size_t, DirectionVectors.size()>;
+
+[[nodiscard]] constexpr Vector<S64, 2> sizesToVector(std::size_t const i, std::size_t const j) noexcept {
+  return Vector<S64, 2>{static_cast<S64>(i), static_cast<S64>(j)};
+}
 
 int main(int argc, char **argv) {
   try {
@@ -36,20 +33,19 @@ int main(int argc, char **argv) {
     auto const part = argumentParser.getAdditionalArgument(0);
     auto stream = std::ifstream(argumentParser.getPath());
     auto lines = AoC::readVector<std::string>(stream);
+    auto const iInterval = Interval<S64>(0, static_cast<S64>(lines.size()) - 1);
+    auto const jInterval = Interval<S64>(0, static_cast<S64>(lines.front().size()) - 1);
     auto updatedLines = lines;
     std::vector<std::vector<DistanceArray>> distanceToNeighbors(lines.size(),
                                                                 std::vector<DistanceArray>(lines.front().size()));
-    auto const countOccupiedNeighbors = [part, &lines, &distanceToNeighbors](std::size_t const i,
-                                                                             std::size_t const j) noexcept {
+    auto const countOccupiedNeighbors = [part, &lines, iInterval, jInterval,
+                                         &distanceToNeighbors](std::size_t const i, std::size_t const j) noexcept {
       assert(lines[i][j] != EmptySpace);
-      auto const iInterval = Interval<S64>(0, static_cast<S64>(lines.size()) - 1);
-      auto const jInterval = Interval<S64>(0, static_cast<S64>(lines.front().size()) - 1);
       std::size_t count = 0;
       if (part == 1) {
         for (auto const vector : DirectionVectors) {
-          auto const ni = static_cast<S64>(i) + vector.y;
-          auto const nj = static_cast<S64>(j) + vector.x;
-          if (iInterval.contains(ni) && jInterval.contains(nj) && lines[ni][nj] == OccupiedSeat) {
+          auto const n = sizesToVector(i, j).add(vector);
+          if (iInterval.contains(n[0]) && jInterval.contains(n[1]) && lines[n[0]][n[1]] == OccupiedSeat) {
             count++;
           }
         }
@@ -58,11 +54,10 @@ int main(int argc, char **argv) {
           if (distanceToNeighbors[i][j][k] == Undefined) {
             continue;
           }
-          auto const ni = static_cast<S64>(i) + distanceToNeighbors[i][j][k] * DirectionVectors[k].y;
-          auto const nj = static_cast<S64>(j) + distanceToNeighbors[i][j][k] * DirectionVectors[k].x;
-          assert(iInterval.contains(ni) && jInterval.contains(nj));
-          assert(lines[ni][nj] != EmptySpace);
-          if (lines[ni][nj] == OccupiedSeat) {
+          auto const n = sizesToVector(i, j).add(DirectionVectors[k].scale(distanceToNeighbors[i][j][k]));
+          assert(iInterval.contains(n[0]) && jInterval.contains(n[1]));
+          assert(lines[n[0]][n[1]] != EmptySpace);
+          if (lines[n[0]][n[1]] == OccupiedSeat) {
             count++;
           }
         }
@@ -70,21 +65,16 @@ int main(int argc, char **argv) {
       return count;
     };
     if (part == 2) {
-      auto const findDistanceToNeighbor = [&lines](std::size_t const i, std::size_t const j, Vector const d) noexcept {
-        auto const iInterval = Interval<S64>(0, static_cast<S64>(lines.size()) - 1);
-        auto const jInterval = Interval<S64>(0, static_cast<S64>(lines.front().size()) - 1);
-        auto ni = static_cast<S64>(i);
-        auto nj = static_cast<S64>(j);
-        ni += d.y;
-        nj += d.x;
+      auto const findDistanceToNeighbor = [&lines, iInterval, jInterval](Vector<S64, 2> const p,
+                                                                         Vector<S64, 2> const d) noexcept {
+        auto n = p.add(d);
         std::size_t distance = 1;
-        while (iInterval.contains(ni) && jInterval.contains(nj) && lines[ni][nj] == EmptySpace) {
-          ni += d.y;
-          nj += d.x;
+        while (iInterval.contains(n[0]) && jInterval.contains(n[1]) && lines[n[0]][n[1]] == EmptySpace) {
+          n = n.add(d);
           distance++;
         }
-        if (iInterval.contains(ni) && jInterval.contains(nj)) {
-          assert(lines[ni][nj] != EmptySpace);
+        if (iInterval.contains(n[0]) && jInterval.contains(n[1])) {
+          assert(lines[n[0]][n[1]] != EmptySpace);
           return distance;
         }
         return Undefined;
@@ -93,7 +83,7 @@ int main(int argc, char **argv) {
         for (std::size_t j = 0; j < lines.front().size(); j++) {
           if (lines[i][j] != EmptySpace) {
             for (std::size_t k = 0; k < DirectionVectors.size(); k++) {
-              distanceToNeighbors[i][j][k] = findDistanceToNeighbor(i, j, DirectionVectors[k]);
+              distanceToNeighbors[i][j][k] = findDistanceToNeighbor(sizesToVector(i, j), DirectionVectors[k]);
             }
           }
         }

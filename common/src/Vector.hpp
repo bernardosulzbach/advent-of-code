@@ -1,7 +1,9 @@
 #pragma once
 
+#include <algorithm>
 #include <array>
 #include <cmath>
+#include <ranges>
 #include <stdexcept>
 
 #include <boost/functional/hash/hash.hpp>
@@ -14,12 +16,28 @@ public:
 
   [[nodiscard]] Vector add(const Vector &rhs) const;
   [[nodiscard]] Vector subtract(const Vector &rhs) const;
+  [[nodiscard]] Vector scale(const T t) const noexcept {
+    Vector copy = *this;
+    std::ranges::transform(copy.components, std::ranges::begin(copy.components),
+                           [t](auto const &value) { return t * value; });
+    return copy;
+  }
 
   [[nodiscard]] F64 getNorm() const;
   [[nodiscard]] F64 getL1Norm() const;
 
+  [[nodiscard]] T &operator[](std::size_t const i) &noexcept {
+    return components[i];
+  }
+  [[nodiscard]] T const &operator[](std::size_t const i) const &noexcept {
+    return components[i];
+  }
+
   [[nodiscard]] Vector normalize() const;
 };
+
+inline constexpr std::array<Vector<S64, 2>, 8> DirectionVectors = {
+    {{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}};
 
 template <typename T, std::size_t N> Vector<T, N> Vector<T, N>::add(const Vector<T, N> &rhs) const {
   Vector<T, N> result;
