@@ -14,8 +14,8 @@ template <typename T, std::size_t N> class Vector {
 public:
   std::array<T, N> components{};
 
-  [[nodiscard]] Vector add(const Vector &rhs) const;
-  [[nodiscard]] Vector subtract(const Vector &rhs) const;
+  [[nodiscard]] Vector add(const Vector &rhs) const noexcept;
+  [[nodiscard]] Vector subtract(const Vector &rhs) const noexcept;
   [[nodiscard]] Vector scale(const T t) const noexcept {
     Vector copy = *this;
     std::ranges::transform(copy.components, std::ranges::begin(copy.components),
@@ -23,8 +23,8 @@ public:
     return copy;
   }
 
-  [[nodiscard]] F64 getNorm() const;
-  [[nodiscard]] F64 getL1Norm() const;
+  [[nodiscard]] F64 getNorm() const noexcept;
+  [[nodiscard]] F64 getL1Norm() const noexcept;
 
   [[nodiscard]] T &operator[](std::size_t const i) &noexcept {
     return components[i];
@@ -39,7 +39,7 @@ public:
 inline constexpr std::array<Vector<S64, 2>, 8> DirectionVectors = {
     {{0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}, {-1, 0}, {-1, 1}}};
 
-template <typename T, std::size_t N> Vector<T, N> Vector<T, N>::add(const Vector<T, N> &rhs) const {
+template <typename T, std::size_t N> Vector<T, N> Vector<T, N>::add(const Vector<T, N> &rhs) const noexcept {
   Vector<T, N> result;
   for (std::size_t i = 0; i < N; i++) {
     result.components[i] = components[i] + rhs.components[i];
@@ -47,7 +47,7 @@ template <typename T, std::size_t N> Vector<T, N> Vector<T, N>::add(const Vector
   return result;
 }
 
-template <typename T, std::size_t N> Vector<T, N> Vector<T, N>::subtract(const Vector<T, N> &rhs) const {
+template <typename T, std::size_t N> Vector<T, N> Vector<T, N>::subtract(const Vector<T, N> &rhs) const noexcept {
   Vector<T, N> result;
   for (std::size_t i = 0; i < N; i++) {
     result.components[i] = components[i] - rhs.components[i];
@@ -55,7 +55,7 @@ template <typename T, std::size_t N> Vector<T, N> Vector<T, N>::subtract(const V
   return result;
 }
 
-template <typename T, std::size_t N> F64 Vector<T, N>::getNorm() const {
+template <typename T, std::size_t N> F64 Vector<T, N>::getNorm() const noexcept {
   T sumOfSquares{};
   for (std::size_t i = 0; i < N; i++) {
     sumOfSquares += components[i] * components[i];
@@ -63,7 +63,7 @@ template <typename T, std::size_t N> F64 Vector<T, N>::getNorm() const {
   return std::sqrt(sumOfSquares);
 }
 
-template <typename T, std::size_t N> F64 Vector<T, N>::getL1Norm() const {
+template <typename T, std::size_t N> F64 Vector<T, N>::getL1Norm() const noexcept {
   T total{};
   for (std::size_t i = 0; i < N; i++) {
     total += std::abs(components[i]);
