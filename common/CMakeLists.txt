@@ -46,9 +46,9 @@ add_library(
   src/OrbitGraph.hpp
   src/Path.hpp
   src/Point.hpp
+  src/Pose.cpp
+  src/Pose.hpp
   src/Ranges.hpp
-  src/Robot.cpp
-  src/Robot.hpp
   src/Screen.hpp
   src/Text.cpp
   src/Text.hpp

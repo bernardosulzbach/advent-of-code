@@ -1,8 +1,8 @@
 #include "ArgumentParser.hpp"
 #include "Direction.hpp"
 #include "IO.hpp"
+#include "Pose.hpp"
 #include "Ranges.hpp"
-#include "Robot.hpp"
 #include "Types.hpp"
 
 #include <fstream>
@@ -16,7 +16,7 @@ int main(int argc, char **argv) {
     auto const part = argumentParser.getAdditionalArgument(0);
     auto stream = std::ifstream(argumentParser.getPath());
     auto const lines = AoC::readVector<std::string>(stream);
-    auto ship = Robot(Direction::East);
+    auto ship = Pose(Direction::East);
     if (part == 1) {
       for (auto const &line : lines) {
         std::stringstream lineStream(line);
@@ -34,7 +34,7 @@ int main(int argc, char **argv) {
         }
       }
     } else if (part == 2) {
-      auto waypoint = Robot();
+      auto waypoint = Pose();
       waypoint.goInDirection(Direction::East, 10);
       waypoint.goInDirection(Direction::North, 1);
       for (auto const &line : lines) {

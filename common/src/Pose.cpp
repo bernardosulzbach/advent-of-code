@@ -1,9 +1,9 @@
-#include "Robot.hpp"
+#include "Pose.hpp"
 
-Robot::Robot(Direction initialDirection) : direction(initialDirection) {
+Pose::Pose(Direction initialDirection) : direction(initialDirection) {
 }
 
-void Robot::rotateRight(RobotCoordinateType angle) {
+void Pose::rotateRight(RobotCoordinateType angle) {
   static_assert(std::is_signed_v<RobotCoordinateType>, "Needs to be able to use negative angles.");
   assert(angle % 90 == 0);
   auto const counterClockwise = angle < 0;
@@ -16,31 +16,31 @@ void Robot::rotateRight(RobotCoordinateType angle) {
   }
 }
 
-void Robot::rotateLeft(RobotCoordinateType angle) {
+void Pose::rotateLeft(RobotCoordinateType angle) {
   static_assert(std::is_signed_v<RobotCoordinateType>, "Needs to be able to use negative angles.");
   rotateRight(-angle);
 }
 
-void Robot::goForward(RobotCoordinateType const amount) {
+void Pose::goForward(RobotCoordinateType const amount) {
   p = p.move(direction, amount);
 }
 
-void Robot::goInDirection(Direction const movementDirection, RobotCoordinateType const amount) {
+void Pose::goInDirection(Direction const movementDirection, RobotCoordinateType const amount) {
   p = p.move(movementDirection, amount);
 }
 
-Point<RobotCoordinateType> Robot::getPosition() const {
+Point<RobotCoordinateType> Pose::getPosition() const {
   return p;
 }
 
-void Robot::setPosition(Point<RobotCoordinateType> const newPosition) {
+void Pose::setPosition(Point<RobotCoordinateType> const newPosition) {
   p = newPosition;
 }
 
-Direction Robot::getDirection() const {
+Direction Pose::getDirection() const {
   return direction;
 }
 
-void Robot::setDirection(Direction const newDirection) {
+void Pose::setDirection(Direction const newDirection) {
   direction = newDirection;
 }

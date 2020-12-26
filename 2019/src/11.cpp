@@ -2,7 +2,7 @@
 #include "Intcode.hpp"
 #include "Math.hpp"
 #include "Point.hpp"
-#include "Robot.hpp"
+#include "Pose.hpp"
 #include "Vector.hpp"
 
 #include <fstream>
@@ -22,7 +22,7 @@ int main(int argc, char **argv) {
   if (part != 1 && part != 2) {
     throw std::invalid_argument("Part should be 1 or 2.");
   }
-  Robot robot;
+  Pose robot;
   std::unordered_map<Point<S32>, bool> hull;
   std::unordered_set<Point<S32>> painted;
   if (part == 2) {

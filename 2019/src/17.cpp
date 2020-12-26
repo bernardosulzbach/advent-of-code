@@ -2,7 +2,7 @@
 #include "Cycle.hpp"
 #include "Intcode.hpp"
 #include "Point.hpp"
-#include "Robot.hpp"
+#include "Pose.hpp"
 #include "Text.hpp"
 
 #include <cassert>
@@ -58,10 +58,10 @@ using RobotMovementSequence = std::vector<RobotMovement>;
 class Map {
 public:
   std::vector<std::vector<char>> grid;
-  std::optional<Robot> robot;
+  std::optional<Pose> robot;
   RobotMovementSequence robotMovementSequence;
 
-  void setRobot(Robot newRobot) {
+  void setRobot(Pose newRobot) {
     robot = newRobot;
   }
 
@@ -172,7 +172,7 @@ std::ostream &operator<<(std::ostream &stream, const Map &map) {
 
 Map readMap(Intcode &intcode) {
   intcode.run();
-  Robot robot;
+  Pose robot;
   std::optional<Point<S32>> robotOffset;
   Map map;
   map.grid.emplace_back();

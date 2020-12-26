@@ -7,17 +7,17 @@
 using RobotCoordinateType = S32;
 
 /**
- * This class represents a robot with position and orientation on a plane.
+ * This class represents a pose (the position of an object on a plane and the direction it's facing (its orientation)).
  */
-class Robot {
+class Pose {
   Point<RobotCoordinateType> p{0, 0};
 
   Direction direction = Direction::North;
 
 public:
-  Robot() = default;
+  Pose() = default;
 
-  explicit Robot(Direction initialDirection);
+  explicit Pose(Direction initialDirection);
 
   void rotateRight(RobotCoordinateType angle = 90);
 

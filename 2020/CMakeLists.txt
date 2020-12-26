@@ -20,7 +20,7 @@ if(CMAKE_BUILD_TYPE MATCHES "Debug")
   set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_CXX_FLAGS} -fsanitize=address -fsanitize=undefined -fsanitize=leak")
 endif()
 
-add_library(advent-of-code-common OBJECT ../common/src/ArgumentParser.cpp ../common/src/Direction.cpp ../common/src/Robot.cpp ../common/src/Text.cpp)
+add_library(advent-of-code-common OBJECT ../common/src/ArgumentParser.cpp ../common/src/Direction.cpp ../common/src/Pose.cpp ../common/src/Text.cpp)
 
 include_directories("../common/src")
 

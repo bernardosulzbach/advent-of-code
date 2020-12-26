@@ -5,7 +5,6 @@
 #include "Intcode.hpp"
 #include "Math.hpp"
 #include "Point.hpp"
-#include "Robot.hpp"
 #include "Screen.hpp"
 #include "Text.hpp"
 #include "Vector.hpp"

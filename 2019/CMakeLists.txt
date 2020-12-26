@@ -42,8 +42,7 @@ add_library(
   ../common/src/OrbitGraph.hpp
   ../common/src/Path.hpp
   ../common/src/Point.hpp
-  ../common/src/Robot.cpp
-  ../common/src/Robot.hpp
+  ../common/src/Pose.cpp
   ../common/src/Screen.hpp
   ../common/src/Text.cpp
   ../common/src/Text.hpp
