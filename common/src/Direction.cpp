@@ -34,6 +34,20 @@ char directionToCharacter(Direction direction) {
   throw std::runtime_error("Should never happen.");
 }
 
+Direction characterToDirection(char const character) {
+  switch (character) {
+  case 'N':
+    return Direction::North;
+  case 'E':
+    return Direction::East;
+  case 'S':
+    return Direction::South;
+  case 'W':
+    return Direction::West;
+  }
+  throw std::runtime_error("Should never happen.");
+}
+
 char directionToArrowCharacter(Direction direction) {
   switch (direction) {
   case Direction::North:

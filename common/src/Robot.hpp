@@ -4,21 +4,32 @@
 #include "Point.hpp"
 #include "Types.hpp"
 
+using RobotCoordinateType = S32;
+
+/**
+ * This class represents a robot with position and orientation on a plane.
+ */
 class Robot {
-  Point<S32> p{0, 0};
+  Point<RobotCoordinateType> p{0, 0};
 
   Direction direction = Direction::North;
 
 public:
-  void rotateRight();
+  Robot() = default;
 
-  void rotateLeft();
+  explicit Robot(Direction initialDirection);
 
-  void goForward();
+  void rotateRight(RobotCoordinateType angle = 90);
 
-  [[nodiscard]] Point<S32> getPosition() const;
+  void rotateLeft(RobotCoordinateType angle = 90);
 
-  void setPosition(Point<S32> newPosition);
+  void goForward(RobotCoordinateType amount = 1);
+
+  void goInDirection(Direction movementDirection, RobotCoordinateType amount);
+
+  [[nodiscard]] Point<RobotCoordinateType> getPosition() const;
+
+  void setPosition(Point<RobotCoordinateType> newPosition);
 
   [[nodiscard]] Direction getDirection() const;
 

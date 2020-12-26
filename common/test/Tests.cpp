@@ -2,7 +2,11 @@
 #define BOOST_TEST_DYN_LINK
 #include <boost/test/unit_test.hpp>
 
+#include <iostream>
+
+#include "../src/Direction.hpp"
 #include "../src/IO.hpp"
+#include "../src/Point.hpp"
 #include "../src/Ranges.hpp"
 #include "../src/Text.hpp"
 
@@ -69,5 +73,24 @@ BOOST_AUTO_TEST_CASE(printTest) {
     std::vector<bool> vector{false, true};
     AoC::print(stream, vector, ", ");
     BOOST_CHECK(stream.str() == "0, 1\n");
+  }
+}
+
+BOOST_AUTO_TEST_CASE(directionConversionTest) {
+  for (auto const character : {'N', 'E', 'S', 'W'}) {
+    BOOST_CHECK(character == directionToCharacter(characterToDirection(character)));
+  }
+}
+
+BOOST_AUTO_TEST_CASE(rotateAroundTest) {
+  {
+    auto const point = Point<S32>{2, 0};
+    auto const pivot = Point<S32>{1, 0};
+    BOOST_CHECK(Point<S32>(1, 1) == point.rotateAround(pivot, 90));
+  }
+  {
+    auto const point = Point<S32>{3, 3};
+    auto const pivot = Point<S32>{2, 1};
+    BOOST_CHECK(Point<S32>(4, 0) == point.rotateAround(pivot, -90));
   }
 }
