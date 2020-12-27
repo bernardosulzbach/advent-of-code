@@ -6,6 +6,7 @@
 
 #include "../src/Direction.hpp"
 #include "../src/IO.hpp"
+#include "../src/Math.hpp"
 #include "../src/Point.hpp"
 #include "../src/Ranges.hpp"
 #include "../src/Text.hpp"
@@ -93,4 +94,15 @@ BOOST_AUTO_TEST_CASE(rotateAroundTest) {
     auto const pivot = Point<S32>{2, 1};
     BOOST_CHECK(Point<S32>(4, 0) == point.rotateAround(pivot, -90));
   }
+}
+
+BOOST_AUTO_TEST_CASE(euclideanModuloTest) {
+  auto const lowest = std::numeric_limits<S64>::lowest();
+  BOOST_CHECK(AoC::euclideanModulo(static_cast<S64>(-1), lowest) == -(lowest + 1));
+  BOOST_CHECK(AoC::euclideanModulo(static_cast<S64>(0), lowest) == 0);
+  BOOST_CHECK(AoC::euclideanModulo(static_cast<S64>(1), lowest) == 1);
+  auto const max = std::numeric_limits<S64>::max();
+  BOOST_CHECK(AoC::euclideanModulo(static_cast<S64>(-1), max) == max - 1);
+  BOOST_CHECK(AoC::euclideanModulo(static_cast<S64>(0), max) == 0);
+  BOOST_CHECK(AoC::euclideanModulo(static_cast<S64>(1), max) == 1);
 }
