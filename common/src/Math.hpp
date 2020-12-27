@@ -7,10 +7,10 @@
 constexpr F64 Pi = 3.141592653589793238462643383279502884;
 
 template <typename T> T greatestCommonDivisor(T a, T b) {
-  if (a == 0) {
-    return b;
+  while (b != 0) {
+    std::tie(a, b) = std::make_tuple(b, a % b);
   }
-  return greatestCommonDivisor(b % a, a);
+  return a;
 }
 
 template <typename T> T leastCommonMultiple(T a, T b) {
