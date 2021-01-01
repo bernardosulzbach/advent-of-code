@@ -1,5 +1,6 @@
 #pragma once
 
+#include <bit>
 #include <cmath>
 #include <execution>
 #include <iostream>
@@ -77,6 +78,11 @@ template <typename T> [[nodiscard]] T solveCongruenceSystem(std::vector<T> const
     sm += a[i] * multiplicativeInverse(p, n[i]) * p;
   }
   return sm % prod;
+}
+
+template <typename T> [[nodiscard]] constexpr bool isPowerOfTwo(T const t) noexcept {
+  static_assert(std::is_integral_v<T>);
+  return t >= 1 && std::popcount(t) == 1;
 }
 } // namespace AoC
 

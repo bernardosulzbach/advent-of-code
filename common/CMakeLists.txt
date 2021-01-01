@@ -28,6 +28,9 @@ add_library(
   advent-of-code OBJECT
   src/ArgumentParser.cpp
   src/ArgumentParser.hpp
+  src/Bit.hpp
+  src/BitMask.cpp
+  src/BitMask.hpp
   src/Body.cpp
   src/Body.hpp
   src/BugScan.hpp

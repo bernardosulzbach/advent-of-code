@@ -130,4 +130,9 @@ void mapOverAdjacentPairs(Range const &range,
     callable(*itA, *std::next(itA));
   }
 }
+
+template <typename Range> decltype(auto) only(Range const &range) {
+  assert(std::ranges::size(range) == 1);
+  return *std::ranges::begin(range);
+}
 } // namespace AoC
