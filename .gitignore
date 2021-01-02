@@ -11,4 +11,5 @@ out/
 
 # C++
 build/
+build-*/
 cmake-build-debug/
