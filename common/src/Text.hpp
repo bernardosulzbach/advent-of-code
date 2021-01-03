@@ -1,4 +1,5 @@
 #include <string>
+#include <string_view>
 #include <vector>
 
-std::vector<std::string> splitAt(const std::string &string, const std::string &separator);
+std::vector<std::string> splitAt(std::string_view const string, std::string_view const separator);

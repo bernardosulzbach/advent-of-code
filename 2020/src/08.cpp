@@ -1,4 +1,5 @@
 #include "ArgumentParser.hpp"
+#include "Interval.hpp"
 #include "Math.hpp"
 #include "Types.hpp"
 
@@ -20,7 +21,7 @@ ExecutionResult execute(std::vector<std::string> const &operations, std::vector<
   int accumulator = 0;
   S64 i = 0;
   auto const size = static_cast<decltype(i)>(operations.size());
-  auto const interval = Interval<decltype(i)>(0, size - 1);
+  auto const interval = AoC::Interval<decltype(i)>(0, size);
   while (interval.contains(i) && !executed[i]) {
     executed[i] = true;
     if (operations[i] == "jmp") {

@@ -1,6 +1,6 @@
 #include "ArgumentParser.hpp"
 #include "IO.hpp"
-#include "Math.hpp"
+#include "Interval.hpp"
 #include "Ranges.hpp"
 #include "Types.hpp"
 #include "Vector.hpp"
@@ -33,8 +33,8 @@ int main(int argc, char **argv) {
     auto const part = argumentParser.getAdditionalArgument(0);
     auto stream = std::ifstream(argumentParser.getPath());
     auto lines = AoC::readVector<std::string>(stream);
-    auto const iInterval = Interval<S64>(0, static_cast<S64>(lines.size()) - 1);
-    auto const jInterval = Interval<S64>(0, static_cast<S64>(lines.front().size()) - 1);
+    auto const iInterval = AoC::Interval<S64>(0, static_cast<S64>(lines.size()));
+    auto const jInterval = AoC::Interval<S64>(0, static_cast<S64>(lines.front().size()));
     auto updatedLines = lines;
     std::vector<std::vector<DistanceArray>> distanceToNeighbors(lines.size(),
                                                                 std::vector<DistanceArray>(lines.front().size()));

@@ -85,16 +85,3 @@ template <typename T> [[nodiscard]] constexpr bool isPowerOfTwo(T const t) noexc
   return t >= 1 && std::popcount(t) == 1;
 }
 } // namespace AoC
-
-template <typename T> struct Interval {
-  Interval(T const intervalMin, T const intervalMax) noexcept : min(intervalMin), max(intervalMax) {
-  }
-
-  [[nodiscard]] bool contains(T const value) const noexcept {
-    return min <= value && value <= max;
-  }
-
-private:
-  T min;
-  T max;
-};

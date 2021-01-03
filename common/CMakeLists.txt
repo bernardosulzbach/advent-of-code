@@ -45,6 +45,7 @@ add_library(
   src/Intcode.cpp
   src/Intcode.hpp
   src/IntcodeState.hpp
+  src/Interval.hpp
   src/Math.hpp
   src/OrbitGraph.hpp
   src/Path.hpp
