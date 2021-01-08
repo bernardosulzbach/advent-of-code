@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <numeric>
 #include <ranges>
 #include <stdexcept>
 
@@ -64,11 +65,8 @@ template <typename T, std::size_t N> F64 Vector<T, N>::getNorm() const noexcept 
 }
 
 template <typename T, std::size_t N> F64 Vector<T, N>::getL1Norm() const noexcept {
-  T total{};
-  for (std::size_t i = 0; i < N; i++) {
-    total += std::abs(components[i]);
-  }
-  return total;
+  return std::accumulate(std::begin(components), std::end(components), T{},
+                         [](auto const accumulated, auto const value) { return accumulated + std::abs(value); });
 }
 
 template <typename T, std::size_t N> Vector<T, N> Vector<T, N>::normalize() const {
