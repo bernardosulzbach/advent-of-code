@@ -4,6 +4,17 @@ My solutions for the [Advent of Code](https://adventofcode.com) (AoC) events.
 
 One of my goals is to use a different programming language each year.
 
+## 2020
+
+Using C++ (again).
+
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+```
+
 ## 2019
 
 Using C++.
@@ -11,9 +22,21 @@ Using C++.
 ```bash
 mkdir build
 cd build
-cmake .. && make
-./tests
+cmake ..
+cmake --build .
 ./runner
+```
+
+### Common C++ code
+
+Tests for the common C++ code can be ran the following way.
+
+```bash
+mkdir build
+cd build
+cmake ..
+cmake --build .
+./tests
 ```
 
 ## 2018
