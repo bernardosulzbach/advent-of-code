@@ -4,6 +4,10 @@ project(advent-of-code-common-test)
 
 include(CMake/base.cmake)
 
+if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
+  message(FATAL_ERROR "${CMAKE_PROJECT_NAME} should only be built in Debug mode. We want all asserts() and sanitizers to be on.")
+endif()
+
 add_library(
   advent-of-code OBJECT
   src/ArgumentParser.cpp
