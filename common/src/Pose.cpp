@@ -29,11 +29,11 @@ void Pose::goInDirection(Direction const movementDirection, RobotCoordinateType 
   p = p.move(movementDirection, amount);
 }
 
-Point<RobotCoordinateType> Pose::getPosition() const {
+Point<RobotCoordinateType, 2> Pose::getPosition() const {
   return p;
 }
 
-void Pose::setPosition(Point<RobotCoordinateType> const newPosition) {
+void Pose::setPosition(Point<RobotCoordinateType, 2> const newPosition) {
   p = newPosition;
 }
 

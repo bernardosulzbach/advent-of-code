@@ -44,7 +44,7 @@ int main(int argc, char **argv) {
       std::size_t count = 0;
       if (part == 1) {
         for (auto const vector : DirectionVectors) {
-          auto const n = sizesToVector(i, j).add(vector);
+          auto const n = sizesToVector(i, j) + vector;
           if (iInterval.contains(n[0]) && jInterval.contains(n[1]) && lines[n[0]][n[1]] == OccupiedSeat) {
             count++;
           }
@@ -54,7 +54,7 @@ int main(int argc, char **argv) {
           if (distanceToNeighbors[i][j][k] == Undefined) {
             continue;
           }
-          auto const n = sizesToVector(i, j).add(DirectionVectors[k].scale(distanceToNeighbors[i][j][k]));
+          auto const n = sizesToVector(i, j) + DirectionVectors[k].scale(distanceToNeighbors[i][j][k]);
           assert(iInterval.contains(n[0]) && jInterval.contains(n[1]));
           assert(lines[n[0]][n[1]] != EmptySpace);
           if (lines[n[0]][n[1]] == OccupiedSeat) {
@@ -67,10 +67,10 @@ int main(int argc, char **argv) {
     if (part == 2) {
       auto const findDistanceToNeighbor = [&lines, iInterval, jInterval](Vector<S64, 2> const p,
                                                                          Vector<S64, 2> const d) noexcept {
-        auto n = p.add(d);
+        auto n = p + d;
         std::size_t distance = 1;
         while (iInterval.contains(n[0]) && jInterval.contains(n[1]) && lines[n[0]][n[1]] == EmptySpace) {
-          n = n.add(d);
+          n += d;
           distance++;
         }
         if (iInterval.contains(n[0]) && jInterval.contains(n[1])) {

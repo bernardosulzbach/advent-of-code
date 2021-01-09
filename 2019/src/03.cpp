@@ -9,9 +9,9 @@
 #include "Point.hpp"
 #include "Types.hpp"
 
-Path<S32> pathFromString(const std::string &string) {
+Path<S32> pathFromString(std::string &string) {
   Path<S32> path;
-  Point<S32> lastPoint(0, 0);
+  Point<S32, 2> lastPoint{};
   U32 t = 0;
   path.addPoint(lastPoint, t++);
   std::stringstream stream(string);
@@ -22,16 +22,16 @@ Path<S32> pathFromString(const std::string &string) {
     for (S32 i = 0; i < amount; i++) {
       switch (direction) {
       case 'U':
-        lastPoint.y++;
+        lastPoint.getY()++;
         break;
       case 'R':
-        lastPoint.x++;
+        lastPoint.getX()++;
         break;
       case 'D':
-        lastPoint.y--;
+        lastPoint.getY()--;
         break;
       case 'L':
-        lastPoint.x--;
+        lastPoint.getX()--;
         break;
       default:
         std::cerr << "Unknown direction: '" << direction << "'." << '\n';
@@ -44,10 +44,6 @@ Path<S32> pathFromString(const std::string &string) {
   return path;
 }
 
-S32 distance(Point<S32> point) {
-  return std::abs(point.x) + std::abs(point.y);
-}
-
 void solve(const std::string &inputPath, int part) {
   std::ifstream stream(inputPath);
   std::string pathStringA;
@@ -56,21 +52,21 @@ void solve(const std::string &inputPath, int part) {
   const auto pathA = pathFromString(pathStringA);
   const auto pathB = pathFromString(pathStringB);
   if (part == 1) {
-    std::optional<Point<S32>> nearestIntersection;
+    std::optional<Point<S32, 2>> nearestIntersection;
     for (const auto point : pathA.computeIntersection(pathB)) {
-      if (point == Point<S32>(0, 0)) {
+      if (point == Point<S32, 2>(0, 0)) {
         continue;
       }
-      if (!nearestIntersection || distance(point) < distance(nearestIntersection.value())) {
+      if (!nearestIntersection || point.toOrigin().getL1Norm() < nearestIntersection->toOrigin().getL1Norm()) {
         nearestIntersection = point;
       }
     }
-    std::cout << distance(nearestIntersection.value()) << '\n';
+    std::cout << nearestIntersection->toOrigin().getL1Norm() << '\n';
   } else if (part == 2) {
-    std::optional<Point<S32>> nearestIntersection;
+    std::optional<Point<S32, 2>> nearestIntersection;
     auto nearestIntersectionCost = std::numeric_limits<U32>::max();
     for (const auto point : pathA.computeIntersection(pathB)) {
-      if (point == Point<S32>(0, 0)) {
+      if (point == Point<S32, 2>(0, 0)) {
         continue;
       }
       if (!nearestIntersection || pathA.getVisits(point)[0] + pathB.getVisits(point)[0] < nearestIntersectionCost) {

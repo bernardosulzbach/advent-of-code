@@ -63,24 +63,24 @@ int main(int argc, char **argv) {
         }
       }
     }
-    std::optional<Point<U32>> closestPoint = std::nullopt;
-    const auto getPointDistanceSquare = [](const std::optional<Point<U32>> &point) {
+    std::optional<Point<U32, 2>> closestPoint;
+    const auto getPointDistanceSquare = [](std::optional<Point<U32, 2>> const &point) {
       if (!point) {
         return std::numeric_limits<U32>::max();
       }
-      return point->x * point->x + point->y * point->y;
+      return point->toOrigin().getL2NormSquare();
     };
     for (Intcode::ValueType i = 0; i < size; i++) {
       for (Intcode::ValueType j = 0; j < size; j++) {
         if (lengthRight[i][j] >= 100 && lengthDown[i][j] >= 100) {
-          const auto point = Point<U32>(j, i);
+          const auto point = Point<U32, 2>(j, i);
           if (getPointDistanceSquare(point) < getPointDistanceSquare(closestPoint)) {
             closestPoint = point;
           }
         }
       }
     }
-    std::cout << 10000 * closestPoint->x + closestPoint->y << '\n';
+    std::cout << 10000 * closestPoint->getX() + closestPoint->getY() << '\n';
     assert(closestPoint.has_value());
   }
   return 0;

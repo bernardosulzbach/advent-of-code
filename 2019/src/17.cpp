@@ -65,26 +65,26 @@ public:
     robot = newRobot;
   }
 
-  [[nodiscard]] char getCharacter(Point<S32> point) const {
+  [[nodiscard]] char getCharacter(Point<S32, 2> point) const {
     if (robot && robot->getPosition() == point) {
       return directionToArrowCharacter(robot->getDirection());
     }
-    return grid[static_cast<S32>(grid.size()) - 1 - point.y][point.x];
+    return grid[static_cast<S32>(grid.size()) - 1 - point.getY()][point.getX()];
   }
 
-  [[nodiscard]] bool hasSupport(Point<S32> point) const {
+  [[nodiscard]] bool hasSupport(Point<S32, 2> point) const {
     const auto n = static_cast<S32>(grid.size());
     const auto m = static_cast<S32>(grid.front().size());
-    if (point.x < 0 || point.x >= m || point.y < 0 || point.y >= n) {
+    if (point.getX() < 0 || point.getX() >= m || point.getY() < 0 || point.getY() >= n) {
       return false;
     }
     return getCharacter(point) == '#';
   }
 
-  [[nodiscard]] bool hasIntersection(Point<S32> point) const {
+  [[nodiscard]] bool hasIntersection(Point<S32, 2> point) const {
     const auto n = static_cast<S32>(grid.size());
     const auto m = static_cast<S32>(grid.front().size());
-    if (point.x < 1 || point.x >= m - 1 || point.y < 1 || point.y >= n - 1) {
+    if (point.getX() < 1 || point.getX() >= m - 1 || point.getY() < 1 || point.getY() >= n - 1) {
       return false;
     }
     auto result = hasSupport(point);
@@ -95,13 +95,13 @@ public:
     return result;
   }
 
-  [[nodiscard]] std::vector<Point<S32>> getIntersections() const {
-    std::vector<Point<S32>> intersections;
+  [[nodiscard]] std::vector<Point<S32, 2>> getIntersections() const {
+    std::vector<Point<S32, 2>> intersections;
     const auto n = static_cast<S32>(grid.size());
     const auto m = static_cast<S32>(grid.front().size());
     for (S32 y = 0; y < n; y++) {
       for (S32 x = 0; x < m; x++) {
-        if (hasIntersection(Point<S32>(x, y))) {
+        if (hasIntersection(Point<S32, 2>(x, y))) {
           intersections.emplace_back(x, y);
         }
       }
@@ -164,7 +164,7 @@ std::ostream &operator<<(std::ostream &stream, const Map &map) {
       stream << '\n';
     }
     for (S32 x = 0; x < m; x++) {
-      stream << map.getCharacter(Point<S32>(x, y));
+      stream << map.getCharacter(Point<S32, 2>(x, y));
     }
   }
   return stream;
@@ -173,7 +173,7 @@ std::ostream &operator<<(std::ostream &stream, const Map &map) {
 Map readMap(Intcode &intcode) {
   intcode.run();
   Pose robot;
-  std::optional<Point<S32>> robotOffset;
+  std::optional<Point<S32, 2>> robotOffset;
   Map map;
   map.grid.emplace_back();
   auto running = true;
@@ -203,7 +203,7 @@ Map readMap(Intcode &intcode) {
       map.grid.back().push_back('#');
       const auto y = static_cast<S32>(map.grid.size());
       const auto x = static_cast<S32>(map.grid.back().size() - 1);
-      robotOffset = Point<S32>(x, y);
+      robotOffset = Point<S32, 2>(x, y);
       if (value == '^') {
         robot.setDirection(Direction::North);
       } else if (value == 'v') {
@@ -225,7 +225,7 @@ Map readMap(Intcode &intcode) {
   }
   map.grid.pop_back();
   assert(robotOffset.has_value());
-  const auto robotPosition = Point<S32>(robotOffset->x, map.grid.size() - robotOffset->y);
+  const auto robotPosition = Point<S32, 2>(robotOffset->getX(), map.grid.size() - robotOffset->getY());
   robot.setPosition(robotPosition);
   map.setRobot(robot);
   return map;
@@ -366,7 +366,7 @@ int main(int argc, char **argv) {
     assert(!intcode.hasOutput());
     S32 total = 0;
     for (const auto intersection : map.getIntersections()) {
-      total += (static_cast<S32>(map.grid.size()) - 1 - intersection.y) * intersection.x;
+      total += (static_cast<S32>(map.grid.size()) - 1 - intersection.getY()) * intersection.getX();
     }
     std::cout << total << '\n';
   } else {

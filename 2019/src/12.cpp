@@ -29,13 +29,14 @@ Vector<S64, 3> computeGravity(const std::vector<Body> &bodies, Vector<S64, 3> po
 
 void updateBodies(std::vector<Body> &bodies) {
   std::vector<Vector<S64, 3>> gravities;
+  gravities.reserve(bodies.size());
   for (const auto body : bodies) {
     gravities.push_back(computeGravity(bodies, body.position));
   }
   for (std::size_t i = 0; i < bodies.size(); i++) {
     auto &body = bodies[i];
-    body.velocity = body.velocity.add(gravities[i]);
-    body.position = body.position.add(body.velocity);
+    body.velocity = body.velocity + gravities[i];
+    body.position = body.position + body.velocity;
   }
 }
 
@@ -43,12 +44,8 @@ std::array<Cycle, 3> findCycles(const std::vector<Body> &initialBodies) {
   const auto Unknown = std::numeric_limits<S64>::max();
   std::array<Cycle, 3> cycles{Cycle{Unknown, Unknown}, Cycle{Unknown, Unknown}, Cycle{Unknown, Unknown}};
   const auto hasUnknownValues = [&cycles]() {
-    for (const auto &cycle : cycles) {
-      if (cycle.offset == Unknown || cycle.period == Unknown) {
-        return true;
-      }
-    }
-    return false;
+    return std::ranges::any_of(cycles,
+                               [](auto const cycle) { return cycle.offset == Unknown || cycle.period == Unknown; });
   };
   auto bodies = initialBodies;
   for (S64 t = 0; hasUnknownValues(); t++) {

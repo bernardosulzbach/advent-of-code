@@ -7,6 +7,7 @@
 #include <numeric>
 #include <tuple>
 
+#include "Concepts.hpp"
 #include "Ranges.hpp"
 #include "Types.hpp"
 
@@ -24,6 +25,11 @@ template <typename T> T leastCommonMultiple(T a, T b) {
 }
 
 namespace AoC {
+template <Integral ResultType, UnsignedIntegral ExponentType>
+constexpr ResultType pow(ResultType const base, ExponentType const exponent, ResultType const result = 1) {
+  return exponent == 0 ? result : pow(base * base, exponent / 2, (exponent % 2) ? result * base : result);
+}
+
 /**
  * Computes a % b, but the result is never negative.
  */

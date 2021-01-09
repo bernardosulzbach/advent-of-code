@@ -14,6 +14,8 @@ using S64 = int64_t;
 using F32 = float;
 using F64 = double;
 
+using Size = std::size_t;
+
 namespace AoC {
 template <typename T> decltype(auto) toUnsigned(T const t) noexcept {
   static_assert(std::is_signed_v<T>);

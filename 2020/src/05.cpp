@@ -26,11 +26,11 @@
 [[nodiscard]] auto findSeatPoint(std::string const &string) noexcept {
   auto const y = binaryPartition(0, 128, string.substr(0, 7), 'B');
   auto const x = binaryPartition(0, 8, string.substr(7), 'R');
-  return Point(x, y);
+  return Point<S32, 2>(x, y);
 }
 
-[[nodiscard]] auto seatId(Point<int> const point) noexcept {
-  return point.y * 8 + point.x;
+[[nodiscard]] auto seatId(Point<S32, 2> const point) noexcept {
+  return point.getY() * 8 + point.getX();
 }
 
 int main(int argc, char **argv) {
@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
     argumentParser.parseArguments(argc, argv);
     auto const part = argumentParser.getAdditionalArgument(0);
     auto stream = std::ifstream(argumentParser.getPath());
-    assert(findSeatPoint("FBFBBFFRLR") == Point(5, 44));
+    assert((findSeatPoint("FBFBBFFRLR") == Point<S32, 2>(5, 44)));
     assert(seatId(findSeatPoint("FBFBBFFRLR")) == 357);
     std::vector<int> seatIds;
     {

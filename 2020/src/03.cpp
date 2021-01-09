@@ -16,14 +16,14 @@ int main(int argc, char **argv) {
     auto const lines = AoC::readVector<std::string>(stream);
     auto const countTrees = [&lines](std::size_t const right, std::size_t const down) {
       std::size_t trees = 0;
-      Point<std::size_t> point{0, 0};
+      Point<std::size_t, 2> point{0, 0};
       while (true) {
         point = point.move(Direction::Right, right).move(Direction::Up, down); // Up is positive.
-        if (lines.size() <= point.y) {
+        if (lines.size() <= point.getY()) {
           break;
         }
-        point.x %= lines[point.y].size();
-        if (lines[point.y][point.x] == '#') {
+        point.getX() %= lines[point.getY()].size();
+        if (lines[point.getY()][point.getX()] == '#') {
           trees++;
         }
       }

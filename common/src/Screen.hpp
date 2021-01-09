@@ -33,11 +33,11 @@ public:
     return score;
   }
 
-  [[nodiscard]] Point<S64> getPosition(char symbol) const {
+  [[nodiscard]] Point<S64, 2> getPosition(char symbol) const {
     for (std::size_t i = 0; i < height; i++) {
       for (std::size_t j = 0; j < width; j++) {
         if (pixels[i][j] == symbol) {
-          return Point<S64>(j, i);
+          return Point<S64, 2>(j, i);
         }
       }
     }

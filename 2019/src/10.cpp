@@ -55,7 +55,7 @@ std::vector<VisibleAsteroid> computeVisibleAsteroids(const AsteroidField &astero
       const auto None = std::numeric_limits<std::size_t>::max();
       auto kForDirection = None;
       for (std::size_t k = 0; k < visibleAsteroids.size(); k++) {
-        if (visibleAsteroids[k].direction.subtract(directionVector).getNorm() < Epsilon) {
+        if ((visibleAsteroids[k].direction - directionVector).getL2Norm() < Epsilon) {
           kForDirection = k;
         }
       }

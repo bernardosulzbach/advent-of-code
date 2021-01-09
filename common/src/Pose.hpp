@@ -10,7 +10,7 @@ using RobotCoordinateType = S32;
  * This class represents a pose (the position of an object on a plane and the direction it's facing (its orientation)).
  */
 class Pose {
-  Point<RobotCoordinateType> p{0, 0};
+  Point<RobotCoordinateType, 2> p{0, 0};
 
   Direction direction = Direction::North;
 
@@ -27,9 +27,9 @@ public:
 
   void goInDirection(Direction movementDirection, RobotCoordinateType amount);
 
-  [[nodiscard]] Point<RobotCoordinateType> getPosition() const;
+  [[nodiscard]] Point<RobotCoordinateType, 2> getPosition() const;
 
-  void setPosition(Point<RobotCoordinateType> newPosition);
+  void setPosition(Point<RobotCoordinateType, 2> newPosition);
 
   [[nodiscard]] Direction getDirection() const;
 

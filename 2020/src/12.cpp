@@ -45,15 +45,15 @@ int main(int argc, char **argv) {
         if (command == 'N' || command == 'E' || command == 'S' || command == 'W') {
           waypoint.goInDirection(characterToDirection(command), amount);
         } else if (command == 'L') {
-          waypoint.setPosition(waypoint.getPosition().rotateAround(Point<S32>(), amount));
+          waypoint.setPosition(waypoint.getPosition().rotateAround(Point<S32, 2>(), amount));
         } else if (command == 'R') {
-          waypoint.setPosition(waypoint.getPosition().rotateAround(Point<S32>(), -amount));
+          waypoint.setPosition(waypoint.getPosition().rotateAround(Point<S32, 2>(), -amount));
         } else if (command == 'F') {
-          ship.setPosition(ship.getPosition().shift(waypoint.getPosition().subtract(Point<S32>()).scale(amount)));
+          ship.setPosition(ship.getPosition() + Point<S32, 2>{}.to(waypoint.getPosition()).scale(amount));
         }
       }
     }
-    std::cout << ship.getPosition().subtract(Point<S32>{}).getL1Norm() << '\n';
+    std::cout << ship.getPosition().toOrigin().getL1Norm() << '\n';
   } catch (const std::exception &exception) {
     std::cout << "Threw: " << exception.what() << '\n';
     return EXIT_FAILURE;

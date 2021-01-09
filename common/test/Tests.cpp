@@ -77,6 +77,49 @@ BOOST_AUTO_TEST_CASE(printTest) {
   }
 }
 
+BOOST_AUTO_TEST_CASE(vectorNormsTest) {
+  BOOST_CHECK((Vector<S32, 2>{0, 0}.getL1Norm() == 0));
+  BOOST_CHECK((Vector<S32, 2>{0, 1}.getL1Norm() == 1));
+  BOOST_CHECK((Vector<S32, 2>{1, 0}.getL1Norm() == 1));
+  BOOST_CHECK((Vector<S32, 2>{1, 1}.getL1Norm() == 2));
+  BOOST_CHECK((Vector<S32, 2>{1, 2}.getL1Norm() == 3));
+
+  BOOST_CHECK((Vector<S32, 2>{0, 0}.getL2NormSquare() == 0));
+  BOOST_CHECK((Vector<S32, 2>{0, 1}.getL2NormSquare() == 1));
+  BOOST_CHECK((Vector<S32, 2>{1, 0}.getL2NormSquare() == 1));
+  BOOST_CHECK((Vector<S32, 2>{1, 1}.getL2NormSquare() == 2));
+  BOOST_CHECK((Vector<S32, 2>{1, 2}.getL2NormSquare() == 5));
+
+  BOOST_CHECK((Vector<S32, 2>{0, 0}.getL2Norm() == 0));
+  BOOST_CHECK((Vector<S32, 2>{0, 1}.getL2Norm() == 1));
+  BOOST_CHECK((Vector<S32, 2>{1, 0}.getL2Norm() == 1));
+  BOOST_CHECK((Vector<S32, 2>{1, 1}.getL2Norm() == std::sqrt(2)));
+  BOOST_CHECK((Vector<S32, 2>{1, 2}.getL2Norm() == std::sqrt(5)));
+}
+
+BOOST_AUTO_TEST_CASE(pointDirectNeighorsTest) {
+  auto const checkDirectNeighborsInvariants = [](auto const point) {
+    const auto directNeighbors = point.getDirectNeighbors();
+    std::ranges::is_sorted(directNeighbors);
+    for (auto const neighbor : directNeighbors) {
+      BOOST_CHECK_EQUAL(point.to(neighbor).getL1Norm(), 1);
+    }
+  };
+  checkDirectNeighborsInvariants(Point<S32, 2>{});
+  checkDirectNeighborsInvariants(Point<S32, 3>{});
+  checkDirectNeighborsInvariants(Point<S32, 4>{});
+}
+
+BOOST_AUTO_TEST_CASE(pointNeighorsTest) {
+  auto const checkNeighborsInvariants = [](auto const point) {
+    const auto neighbors = point.getNeighbors();
+    std::ranges::is_sorted(neighbors);
+  };
+  checkNeighborsInvariants(Point<S32, 2>{});
+  checkNeighborsInvariants(Point<S32, 3>{});
+  checkNeighborsInvariants(Point<S32, 4>{});
+}
+
 BOOST_AUTO_TEST_CASE(directionConversionTest) {
   for (auto const character : {'N', 'E', 'S', 'W'}) {
     BOOST_CHECK(character == directionToCharacter(characterToDirection(character)));
@@ -85,14 +128,14 @@ BOOST_AUTO_TEST_CASE(directionConversionTest) {
 
 BOOST_AUTO_TEST_CASE(rotateAroundTest) {
   {
-    auto const point = Point<S32>{2, 0};
-    auto const pivot = Point<S32>{1, 0};
-    BOOST_CHECK(Point<S32>(1, 1) == point.rotateAround(pivot, 90));
+    auto const point = Point<S32, 2>{2, 0};
+    auto const pivot = Point<S32, 2>{1, 0};
+    BOOST_CHECK((Point<S32, 2>(1, 1) == point.rotateAround(pivot, 90)));
   }
   {
-    auto const point = Point<S32>{3, 3};
-    auto const pivot = Point<S32>{2, 1};
-    BOOST_CHECK(Point<S32>(4, 0) == point.rotateAround(pivot, -90));
+    auto const point = Point<S32, 2>{3, 3};
+    auto const pivot = Point<S32, 2>{2, 1};
+    BOOST_CHECK((Point<S32, 2>(4, 0) == point.rotateAround(pivot, -90)));
   }
 }
 

@@ -8,24 +8,23 @@
 #include "Types.hpp"
 
 template <typename T> class Path {
-  std::unordered_map<Point<T>, std::vector<U32>> visited;
+  std::unordered_map<Point<T, 2>, std::vector<U32>> visited;
 
 public:
-  Path() = default;
-
-  void addPoint(Point<T> p, U32 t) {
+  void addPoint(Point<T, 2> const p, U32 const t) noexcept {
     visited[p].push_back(t);
   }
 
-  std::vector<U32> getVisits(const Point<T> point) const {
-    if (visited.find(point) == visited.end()) {
+  std::vector<U32> getVisits(Point<T, 2> const point) const noexcept {
+    const auto iterator = visited.find(point);
+    if (iterator == visited.end()) {
       return {};
     }
-    return visited.find(point)->second;
+    return iterator->second;
   }
 
-  std::unordered_set<Point<T>> computeIntersection(const Path &rhs) const {
-    std::unordered_set<Point<T>> intersection;
+  std::unordered_set<Point<T, 2>> computeIntersection(Path const &rhs) const noexcept {
+    std::unordered_set<Point<T, 2>> intersection;
     for (const auto &value : visited) {
       if (rhs.visited.find(value.first) != rhs.visited.end()) {
         intersection.insert(value.first);

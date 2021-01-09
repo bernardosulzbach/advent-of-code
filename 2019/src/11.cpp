@@ -23,8 +23,8 @@ int main(int argc, char **argv) {
     throw std::invalid_argument("Part should be 1 or 2.");
   }
   Pose robot;
-  std::unordered_map<Point<S32>, bool> hull;
-  std::unordered_set<Point<S32>> painted;
+  std::unordered_map<Point<S32, 2>, bool> hull;
+  std::unordered_set<Point<S32, 2>> painted;
   if (part == 2) {
     hull[robot.getPosition()] = true;
   }
@@ -52,15 +52,15 @@ int main(int argc, char **argv) {
     auto minY = std::numeric_limits<S32>::max();
     auto maxY = std::numeric_limits<S32>::min();
     for (const auto &point : painted) {
-      minX = std::min(minX, point.x);
-      maxX = std::max(maxX, point.x);
-      minY = std::min(minY, point.y);
-      maxY = std::max(maxY, point.y);
+      minX = std::min(minX, point.getX());
+      maxX = std::max(maxX, point.getX());
+      minY = std::min(minY, point.getY());
+      maxY = std::max(maxY, point.getY());
     }
     std::vector<std::string> lines(maxY - minY + 1, std::string(maxX - minX + 1, ' '));
     for (const auto &hullEntry : hull) {
-      const auto i = maxY - hullEntry.first.y;
-      const auto j = hullEntry.first.x - minX;
+      const auto i = maxY - hullEntry.first.getY();
+      const auto j = hullEntry.first.getX() - minX;
       lines[i][j] = hullEntry.second ? 'X' : ' ';
     }
     for (const auto &line : lines) {

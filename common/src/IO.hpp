@@ -34,7 +34,8 @@ template <typename T, typename Stream> std::vector<T> readVector(Stream &s) {
   return vector;
 }
 
-template <typename Stream, typename Range> void print(Stream &s, Range const &range, std::string_view const separator) {
+template <typename Stream, typename Range>
+void print(Stream &s, Range const &range, std::string_view const separator, bool const newline = true) {
   auto first = true;
   for (auto const &value : range) {
     if (!first) {
@@ -43,6 +44,8 @@ template <typename Stream, typename Range> void print(Stream &s, Range const &ra
     s << value;
     first = false;
   }
-  s << '\n';
+  if (newline) {
+    s << '\n';
+  }
 }
 } // namespace AoC
