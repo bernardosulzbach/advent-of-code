@@ -6,7 +6,10 @@
 #include "Types.hpp"
 #include "Vector.hpp"
 
-template <typename T, Size Dimensions> struct Point {
+template <typename T, Size DimensionCount> struct Point {
+  using CoordinateType = T;
+  static constexpr auto Dimensions = DimensionCount;
+
   static_assert(Dimensions >= 2);
 
   [[nodiscard]] constexpr Point() noexcept = default;
@@ -21,6 +24,10 @@ template <typename T, Size Dimensions> struct Point {
 
   [[nodiscard]] constexpr Point(T const x, T const y, T const z) noexcept : fromOrigin({x, y, z}) {
     static_assert(Dimensions == 3);
+  }
+
+  [[nodiscard]] constexpr Point(T const x, T const y, T const z, T const w) noexcept : fromOrigin({x, y, z, w}) {
+    static_assert(Dimensions == 4);
   }
 
   [[nodiscard]] constexpr Point(Vector<T, Dimensions> const vector) noexcept : fromOrigin(vector){};
