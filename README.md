@@ -39,6 +39,16 @@ cmake --build .
 ./tests
 ```
 
+### C++ style guidelines
+
+Unfortunately, these guidelines are currently often violated.
+This is because they reflect what I consider to be good C++ today, not when I wrote most of the solutions.
+Some of these rules are not objective, and exist only to ensure consistency.
+
+Define only what you need.
+
+Hashes should use `AoC::Hash`.
+
 ## 2018
 
 Using Rust.
