@@ -7,6 +7,8 @@
 #include <numeric>
 #include <tuple>
 
+#include <boost/numeric/conversion/cast.hpp>
+
 #include "Concepts.hpp"
 #include "Ranges.hpp"
 #include "Types.hpp"
@@ -25,6 +27,13 @@ template <typename T> T leastCommonMultiple(T a, T b) {
 }
 
 namespace AoC {
+/**
+ * Checks if the cast preserves the value before performing it.
+ */
+template <Integral Target, Integral Source> constexpr Target checkedCast(Source const source) {
+  return boost::numeric_cast<Target>(source);
+}
+
 template <Integral ResultType, UnsignedIntegral ExponentType>
 constexpr ResultType pow(ResultType const base, ExponentType const exponent, ResultType const result = 1) {
   return exponent == 0 ? result : pow(base * base, exponent / 2, (exponent % 2) ? result * base : result);

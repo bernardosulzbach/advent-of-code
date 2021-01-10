@@ -72,7 +72,7 @@ public:
 
   ValueType getOutput();
 
-  void setInstructionPointer(std::size_t newInstructionPointer);
+  void setInstructionPointer(IndexType newInstructionPointer) noexcept;
 
   IntcodeState run();
 };

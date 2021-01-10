@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.11)
 project(advent-of-code-common-test)
 
 include(CMake/base.cmake)
+include(CMake/MoreWarnings.cmake)
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
   message(FATAL_ERROR "${CMAKE_PROJECT_NAME} should only be built in Debug mode. We want all asserts() and sanitizers to be on.")

@@ -66,7 +66,7 @@ template <typename T, Size DimensionCount> struct Point {
     return (*this)[2];
   }
 
-  using DirectNeighborsArray = std::array<Point, 2 * Dimensions>;
+  using DirectNeighborsArray = std::array<Point, 2u * Dimensions>;
   [[nodiscard]] constexpr DirectNeighborsArray getDirectNeighbors() const noexcept {
     static_assert(std::is_integral_v<T>,
                   "This function offsets fromOrigin by 1. This doesn't make sense with floating point points.");
@@ -86,7 +86,7 @@ template <typename T, Size DimensionCount> struct Point {
     return neighbors;
   }
 
-  using NeighborsArray = std::array<Point, AoC::pow(3, Dimensions) - 1>;
+  using NeighborsArray = std::array<Point, AoC::pow(3u, Dimensions) - 1u>;
   [[nodiscard]] constexpr NeighborsArray getNeighbors() const noexcept {
     static_assert(std::is_integral_v<T>,
                   "This function offsets fromOrigin by 1. This doesn't make sense with floating point points.");
