@@ -6,6 +6,7 @@
 
 #include "IO.hpp"
 #include "IntcodeState.hpp"
+#include "Math.hpp"
 
 void Intcode::printMemory() const {
   for (std::size_t i = 0; i < memory.size(); i++) {
@@ -22,7 +23,7 @@ void Intcode::setDebugging(bool value) {
 }
 
 Intcode::Opcode Intcode::getInstructionType() const {
-  const auto instructionOpcode = memory[instructionPointer] % 100;
+  const auto instructionOpcode = memory[AoC::checkedCast<Size>(instructionPointer)] % 100;
   for (const auto opcode : opcodes) {
     if (static_cast<int>(opcode) == instructionOpcode) {
       return opcode;
@@ -37,7 +38,7 @@ void Intcode::resizeMemoryIfNeeded(IndexType index) {
   }
   const auto oldSize = memory.size();
   if (index >= static_cast<S64>(memory.size())) {
-    memory.resize(index + 1);
+    memory.resize(AoC::checkedCast<Size>(index + 1));
   } else {
     return;
   }
@@ -49,17 +50,17 @@ void Intcode::resizeMemoryIfNeeded(IndexType index) {
 
 Intcode::ValueType Intcode::readMemory(IndexType index) {
   resizeMemoryIfNeeded(index);
-  return memory[index];
+  return memory[AoC::checkedCast<Size>(index)];
 }
 
 void Intcode::writeMemory(IndexType index, ValueType value) {
   resizeMemoryIfNeeded(index);
-  memory[index] = value;
+  memory[AoC::checkedCast<Size>(index)] = value;
 }
 
 Intcode::IndexType Intcode::getMemoryIndexOfOperand(IndexType operandIndex) {
-  auto mode = memory.at(instructionPointer) / 100;
-  for (int i = operandIndex; i > 1; i--) {
+  auto mode = memory.at(AoC::checkedCast<Size>(instructionPointer)) / 100;
+  for (auto i = operandIndex; i > 1; i--) {
     mode /= 10;
   }
   mode %= 10;
@@ -108,7 +109,7 @@ Intcode::ValueType Intcode::getOutput() {
   return result;
 }
 
-void Intcode::setInstructionPointer(std::size_t newInstructionPointer) {
+void Intcode::setInstructionPointer(IndexType const newInstructionPointer) noexcept {
   instructionPointer = newInstructionPointer;
 }
 

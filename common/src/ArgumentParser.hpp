@@ -1,17 +1,21 @@
 #pragma once
 
+#include "Types.hpp"
+
 #include <optional>
 #include <string>
 #include <vector>
 
 class ArgumentParser {
+  using AdditionalArgumentType = S64;
+
   std::optional<std::string> path;
-  std::vector<int> additionalArguments;
+  std::vector<AdditionalArgumentType> additionalArguments;
 
 public:
   void parseArguments(int argc, char **argv);
 
-  std::string getPath();
+  [[nodiscard]] std::string getPath() const;
 
-  int getAdditionalArgument(int index) const;
+  [[nodiscard]] AdditionalArgumentType getAdditionalArgument(Size index) const;
 };
