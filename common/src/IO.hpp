@@ -2,6 +2,7 @@
 
 #include <sstream>
 #include <stdexcept>
+#include <string>
 #include <string_view>
 #include <vector>
 
@@ -30,6 +31,18 @@ template <typename T, typename Stream> std::vector<T> readVector(Stream &s) {
   T t;
   while (s >> t) {
     vector.push_back(t);
+  }
+  return vector;
+}
+
+template <typename Stream> std::vector<std::string> readLines(Stream &s) {
+  if (!s) {
+    throw std::runtime_error("Stream is not in a good state.");
+  }
+  std::vector<std::string> vector;
+  std::string line;
+  while (std::getline(s, line)) {
+    vector.push_back(line);
   }
   return vector;
 }

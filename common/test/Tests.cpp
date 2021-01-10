@@ -6,6 +6,7 @@
 
 #include "../src/Direction.hpp"
 #include "../src/IO.hpp"
+#include "../src/Logic.hpp"
 #include "../src/Math.hpp"
 #include "../src/Point.hpp"
 #include "../src/Ranges.hpp"
@@ -148,4 +149,14 @@ BOOST_AUTO_TEST_CASE(euclideanModuloTest) {
   BOOST_CHECK(AoC::euclideanModulo(static_cast<S64>(-1), max) == max - 1);
   BOOST_CHECK(AoC::euclideanModulo(static_cast<S64>(0), max) == 0);
   BOOST_CHECK(AoC::euclideanModulo(static_cast<S64>(1), max) == 1);
+}
+
+BOOST_AUTO_TEST_CASE(isAnyOfTest) {
+  BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 0), true);
+  BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 1), false);
+  BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 0, 0), true);
+  BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 0, 1), true);
+  BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 1, 0), true);
+  BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 1, 1), false);
+  BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 0, 0, 0), true);
 }

@@ -48,6 +48,7 @@ Some of these rules are not objective, and exist only to ensure consistency.
 Define only what you need.
 
 Hashes should use `AoC::Hash`.
+To test if a value is one of a set of values, use `AoC::isAnyOf(x, y, z, ...)` rather than `x == y || x == z || ...`.
 
 ## 2018
 
