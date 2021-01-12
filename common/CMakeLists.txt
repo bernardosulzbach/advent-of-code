@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.13) # We use add_link_options
 
 project(advent-of-code-common-test)
 
-include(CMake/base.cmake)
+include(CMake/Settings.cmake)
 include(CMake/MoreWarnings.cmake)
 
 if(NOT ${CMAKE_BUILD_TYPE} STREQUAL "Debug")
