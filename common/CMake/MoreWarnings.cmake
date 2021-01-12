@@ -1,2 +1,1 @@
-add_definitions(-Wconversion)
-add_definitions(-Wsign-conversion)
+add_compile_options(-Wconversion -Wsign-conversion)
