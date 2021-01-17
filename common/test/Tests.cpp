@@ -4,6 +4,7 @@
 
 #include <iostream>
 
+#include "../src/ContextFreeGrammar.hpp"
 #include "../src/Direction.hpp"
 #include "../src/IO.hpp"
 #include "../src/Logic.hpp"
@@ -159,4 +160,28 @@ BOOST_AUTO_TEST_CASE(isAnyOfTest) {
   BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 1, 0), true);
   BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 1, 1), false);
   BOOST_CHECK_EQUAL(AoC::isAnyOf(0, 0, 0, 0), true);
+}
+
+BOOST_AUTO_TEST_CASE(contextFreeGrammarRecognizerTest) {
+  std::vector<AoC::Production> productions;
+  productions.emplace_back("P", std::vector<std::string>{"S"});
+  productions.emplace_back("S", std::vector<std::string>{"S", "+", "M"});
+  productions.emplace_back("S", std::vector<std::string>{"M"});
+  productions.emplace_back("M", std::vector<std::string>{"M", "*", "T"});
+  productions.emplace_back("M", std::vector<std::string>{"T"});
+  productions.emplace_back("T", std::vector<std::string>{"x"});
+  productions.emplace_back("T", std::vector<std::string>{"y"});
+  productions.emplace_back("T", std::vector<std::string>{"z"});
+  AoC::ContextFreeGrammar contextFreeGrammar(productions);
+  AoC::ContextFreeGrammarRecognizer recognizer(contextFreeGrammar, 0);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"x"}), true);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"w"}), false);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"x", "y"}), false);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"x", "+"}), false);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"x", "+", "y"}), true);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"x", "+", "*"}), false);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"x", "+", "y", "*"}), false);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"x", "+", "y", "*", "z"}), true);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"x", "+", "y", "*", "z", "*"}), false);
+  BOOST_CHECK_EQUAL(recognizer.isRecognized(std::vector<std::string>{"x", "+", "y", "*", "z", "*", "x"}), true);
 }
