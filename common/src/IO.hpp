@@ -61,4 +61,20 @@ void print(Stream &s, Range const &range, std::string_view const separator, bool
     s << '\n';
   }
 }
+
+template <typename Stream, typename Range>
+void print(Stream &s, Range const &range, std::string_view const firstLevelSeparator,
+           std::string_view const secondLevelSeparator, bool const newline = true) {
+  auto first = true;
+  for (auto const &subRange : range) {
+    if (!first) {
+      s << firstLevelSeparator;
+    }
+    print(s, subRange, secondLevelSeparator, false);
+    first = false;
+  }
+  if (newline) {
+    s << '\n';
+  }
+}
 } // namespace AoC
