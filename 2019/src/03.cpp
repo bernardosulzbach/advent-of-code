@@ -1,14 +1,15 @@
+#include "ArgumentParser.hpp"
+#include "Path.hpp"
+#include "Point.hpp"
+#include "Types.hpp"
+
 #include <cmath>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <vector>
 
-#include "ArgumentParser.hpp"
-#include "Path.hpp"
-#include "Point.hpp"
-#include "Types.hpp"
-
+namespace AoC {
 Path<S32> pathFromString(std::string &string) {
   Path<S32> path;
   Point<S32, 2> lastPoint{};
@@ -44,14 +45,14 @@ Path<S32> pathFromString(std::string &string) {
   return path;
 }
 
-void solve(const std::string &inputPath, int part) {
-  std::ifstream stream(inputPath);
+void main(ArgumentParser const &argumentParser) {
+  std::ifstream stream(argumentParser.getPath());
   std::string pathStringA;
   std::string pathStringB;
   stream >> pathStringA >> pathStringB;
   const auto pathA = pathFromString(pathStringA);
   const auto pathB = pathFromString(pathStringB);
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     std::optional<Point<S32, 2>> nearestIntersection;
     for (const auto point : pathA.computeIntersection(pathB)) {
       if (point == Point<S32, 2>(0, 0)) {
@@ -62,7 +63,7 @@ void solve(const std::string &inputPath, int part) {
       }
     }
     std::cout << nearestIntersection->toOrigin().getL1Norm() << '\n';
-  } else if (part == 2) {
+  } else {
     std::optional<Point<S32, 2>> nearestIntersection;
     auto nearestIntersectionCost = std::numeric_limits<U32>::max();
     for (const auto point : pathA.computeIntersection(pathB)) {
@@ -77,15 +78,6 @@ void solve(const std::string &inputPath, int part) {
     std::cout << nearestIntersectionCost << '\n';
   }
 }
+} // namespace AoC
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part == 1 || part == 2) {
-    solve(argumentParser.getPath(), part);
-  } else {
-    throw std::runtime_error("Part should be 1 or 2.");
-  }
-  return 0;
-}
+#include "Main.inl"

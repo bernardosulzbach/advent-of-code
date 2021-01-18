@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 
+namespace AoC {
 enum ResultType { Terminated, OutOfBounds, Loop };
 
 struct ExecutionResult {
@@ -44,42 +45,37 @@ ExecutionResult execute(std::vector<std::string> const &operations, std::vector<
   return ExecutionResult{ResultType::OutOfBounds, accumulator};
 }
 
-int main(int argc, char **argv) {
-  try {
-    ArgumentParser argumentParser;
-    argumentParser.parseArguments(argc, argv);
-    auto const part = argumentParser.getAdditionalArgument(0);
-    auto stream = std::ifstream(argumentParser.getPath());
-    std::vector<std::string> operations;
-    std::vector<int> arguments;
-    {
-      std::string operation;
-      int argument;
-      while (stream >> operation >> argument) {
-        operations.push_back(operation);
-        arguments.push_back(argument);
-      }
+void main(ArgumentParser const &argumentParser) {
+  auto const part = argumentParser.getPart();
+  auto stream = std::ifstream(argumentParser.getPath());
+  std::vector<std::string> operations;
+  std::vector<int> arguments;
+  {
+    std::string operation;
+    int argument;
+    while (stream >> operation >> argument) {
+      operations.push_back(operation);
+      arguments.push_back(argument);
     }
-    if (part == 1) {
-      auto const executionResult = execute(operations, arguments);
-      std::cout << executionResult.accumulator << '\n';
-    } else {
-      for (auto it = begin(operations); it != end(operations); ++it) {
-        if (*it == "acc") {
-          continue;
-        }
-        std::string replacement = *it == "nop" ? "jmp" : "nop";
-        it->swap(replacement);
-        if (auto const result = execute(operations, arguments); result.resultType == ResultType::Terminated) {
-          std::cout << result.accumulator << '\n';
-          break;
-        }
-        it->swap(replacement);
-      }
-    }
-  } catch (const std::exception &exception) {
-    std::cout << "Threw: " << exception.what() << '\n';
-    return EXIT_FAILURE;
   }
-  return EXIT_SUCCESS;
+  if (part == 1) {
+    auto const executionResult = execute(operations, arguments);
+    std::cout << executionResult.accumulator << '\n';
+  } else {
+    for (auto it = begin(operations); it != end(operations); ++it) {
+      if (*it == "acc") {
+        continue;
+      }
+      std::string replacement = *it == "nop" ? "jmp" : "nop";
+      it->swap(replacement);
+      if (auto const result = execute(operations, arguments); result.resultType == ResultType::Terminated) {
+        std::cout << result.accumulator << '\n';
+        break;
+      }
+      it->swap(replacement);
+    }
+  }
 }
+} // namespace AoC
+
+#include "Main.inl"

@@ -13,6 +13,7 @@
 #include <unordered_set>
 #include <vector>
 
+namespace AoC {
 Vector<S64, 3> computeGravity(const std::vector<Body> &bodies, Vector<S64, 3> position) {
   Vector<S64, 3> gravity;
   for (const auto &body : bodies) {
@@ -68,16 +69,9 @@ std::array<Cycle, 3> findCycles(const std::vector<Body> &initialBodies) {
   return cycles;
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  auto bodies = readBodies(path);
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part != 1 && part != 2) {
-    throw std::invalid_argument("Part should be 1 or 2.");
-  }
-  if (part == 1) {
+void main(ArgumentParser const &argumentParser) {
+  auto bodies = readBodies(argumentParser.getPath());
+  if (argumentParser.getPart() == 1) {
     for (U32 it = 1; it <= 1000; it++) {
       updateBodies(bodies);
     }
@@ -90,5 +84,7 @@ int main(int argc, char **argv) {
     const auto cycles = findCycles(bodies);
     std::cout << leastCommonMultiple(leastCommonMultiple(cycles[0].period, cycles[1].period), cycles[2].period) << '\n';
   }
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

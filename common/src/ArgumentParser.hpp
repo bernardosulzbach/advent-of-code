@@ -6,16 +6,21 @@
 #include <string>
 #include <vector>
 
+namespace AoC {
 class ArgumentParser {
-  using AdditionalArgumentType = S64;
+  using AdditionalArgumentType = std::string;
 
-  std::optional<std::string> path;
+  std::string path;
+  U32 part;
   std::vector<AdditionalArgumentType> additionalArguments;
 
 public:
   void parseArguments(int argc, char **argv);
 
-  [[nodiscard]] std::string getPath() const;
+  [[nodiscard]] std::string getPath() const noexcept;
 
-  [[nodiscard]] AdditionalArgumentType getAdditionalArgument(Size index) const;
+  [[nodiscard]] U32 getPart() const noexcept;
+
+  [[nodiscard]] std::string getAdditionalArgument(Size index) const;
 };
+} // namespace AoC

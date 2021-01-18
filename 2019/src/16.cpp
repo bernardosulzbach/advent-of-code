@@ -18,7 +18,8 @@
 #include <unordered_set>
 #include <vector>
 
-void fftPhase(std::vector<S32> &input, std::vector<S32> &output) {
+namespace AoC {
+void fftPhase(std::vector<S32> const &input, std::vector<S32> &output) noexcept {
   const std::array<S32, 4> coefficients = {0, 1, 0, -1};
   for (std::size_t i = 0; i < input.size(); i++) {
     output[i] = 0;
@@ -30,24 +31,16 @@ void fftPhase(std::vector<S32> &input, std::vector<S32> &output) {
   }
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part != 1 && part != 2) {
-    throw std::invalid_argument("Part should be 1 or 2.");
-  }
-
+void main(ArgumentParser const &argumentParser) {
   std::vector<S32> sequence;
   {
-    std::ifstream stream(path);
+    std::ifstream stream(argumentParser.getPath());
     char x;
     while (stream >> x) {
       sequence.push_back(x - '0');
     }
   }
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     std::vector<S32> output(sequence.size());
     for (U32 phase = 1; phase <= 100; phase++) {
       fftPhase(sequence, output);
@@ -60,6 +53,7 @@ int main(int argc, char **argv) {
   } else {
     throw std::runtime_error("Not implemented.");
   }
-
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

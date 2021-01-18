@@ -5,13 +5,11 @@
 #include <iostream>
 #include <string>
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
+namespace AoC {
+void main(ArgumentParser const &argumentParser) {
   OrbitGraph orbitGraph;
   {
-    std::ifstream stream(path);
+    std::ifstream stream(argumentParser.getPath());
     std::string line;
     while (stream >> line) {
       const auto operatorPosition = line.find(')');
@@ -20,13 +18,13 @@ int main(int argc, char **argv) {
       orbitGraph.addOrbit(a, b);
     }
   }
-  const auto part = argumentParser.getAdditionalArgument(0);
+  const auto part = argumentParser.getPart();
   if (part == 1) {
     std::cout << orbitGraph.getTotalOrbits() << '\n';
-  } else if (part == 2) {
-    std::cout << orbitGraph.distanceBetween("YOU", "SAN") - 2 << '\n';
   } else {
-    throw std::runtime_error("Part should be 1 or 2.");
+    std::cout << orbitGraph.distanceBetween("YOU", "SAN") - 2 << '\n';
   }
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

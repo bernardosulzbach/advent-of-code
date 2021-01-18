@@ -9,6 +9,7 @@
 #include <string>
 #include <unordered_map>
 
+namespace AoC {
 [[nodiscard]] int binaryPartition(int a, int b, std::string const &string, char const upperChar) noexcept {
   auto skip = (b - a) / 2;
   for (auto const c : string) {
@@ -33,32 +34,26 @@
   return point.getY() * 8 + point.getX();
 }
 
-int main(int argc, char **argv) {
-  try {
-    ArgumentParser argumentParser;
-    argumentParser.parseArguments(argc, argv);
-    auto const part = argumentParser.getAdditionalArgument(0);
-    auto stream = std::ifstream(argumentParser.getPath());
-    assert((findSeatPoint("FBFBBFFRLR") == Point<S32, 2>(5, 44)));
-    assert(seatId(findSeatPoint("FBFBBFFRLR")) == 357);
-    std::vector<int> seatIds;
-    {
-      std::string string;
-      while (stream >> string) {
-        seatIds.push_back(seatId(findSeatPoint(string)));
-      }
+void main(ArgumentParser const &argumentParser) {
+  auto stream = std::ifstream(argumentParser.getPath());
+  assert((findSeatPoint("FBFBBFFRLR") == Point<S32, 2>(5, 44)));
+  assert(seatId(findSeatPoint("FBFBBFFRLR")) == 357);
+  std::vector<int> seatIds;
+  {
+    std::string string;
+    while (stream >> string) {
+      seatIds.push_back(seatId(findSeatPoint(string)));
     }
-    if (part == 1) {
-      std::cout << *std::ranges::max_element(seatIds) << '\n';
-    } else {
-      std::ranges::sort(seatIds);
-      auto const it = std::ranges::adjacent_find(seatIds, [](auto const a, auto const b) { return a + 2 == b; });
-      assert(it != std::ranges::end(seatIds));
-      std::cout << *it + 1 << '\n';
-    }
-  } catch (const std::exception &exception) {
-    std::cout << "Threw: " << exception.what() << '\n';
-    return EXIT_FAILURE;
   }
-  return EXIT_SUCCESS;
+  if (argumentParser.getPart() == 1) {
+    std::cout << *std::ranges::max_element(seatIds) << '\n';
+  } else {
+    std::ranges::sort(seatIds);
+    auto const it = std::ranges::adjacent_find(seatIds, [](auto const a, auto const b) { return a + 2 == b; });
+    assert(it != std::ranges::end(seatIds));
+    std::cout << *it + 1 << '\n';
+  }
 }
+} // namespace AoC
+
+#include "Main.inl"

@@ -11,6 +11,7 @@
 #include <sstream>
 #include <stack>
 
+namespace AoC {
 enum class TokenType : U8 { None, OpenParenthesis, CloseParenthesis, Plus, Times, Number };
 
 using IntegerType = S64;
@@ -116,39 +117,34 @@ void reduce(std::vector<Token> &tokens, Size const start, bool const additionsFi
   tokens.erase(tokens.begin() + start + 1, tokens.end());
 }
 
-int main(int argc, char **argv) {
-  try {
-    ArgumentParser argumentParser;
-    argumentParser.parseArguments(argc, argv);
-    auto const part = argumentParser.getAdditionalArgument(0);
-    auto stream = std::ifstream(argumentParser.getPath());
-    IntegerType total = 0;
-    for (auto const &line : AoC::readLines(stream)) {
-      Token token;
-      std::stringstream lineStream(line);
-      std::vector<Token> tokens;
-      std::stack<Size> openingBrackets;
-      while ((token = readToken(lineStream))) {
-        if (token.type == TokenType::CloseParenthesis) {
-          assert(!openingBrackets.empty());
-          reduce(tokens, AoC::extractTop(openingBrackets) + 1, part == 2);
-          tokens.back() = AoC::extractBack(tokens);
-        } else if (AoC::isAnyOf(token.type, TokenType::OpenParenthesis, TokenType::Number) || token.isOperator()) {
-          if (token.type == TokenType::OpenParenthesis) {
-            openingBrackets.push(tokens.size());
-          }
-          tokens.push_back(token);
+void main(ArgumentParser const &argumentParser) {
+  auto const part = argumentParser.getPart();
+  auto stream = std::ifstream(argumentParser.getPath());
+  IntegerType total = 0;
+  for (auto const &line : AoC::readLines(stream)) {
+    Token token;
+    std::stringstream lineStream(line);
+    std::vector<Token> tokens;
+    std::stack<Size> openingBrackets;
+    while ((token = readToken(lineStream))) {
+      if (token.type == TokenType::CloseParenthesis) {
+        assert(!openingBrackets.empty());
+        reduce(tokens, AoC::extractTop(openingBrackets) + 1, part == 2);
+        tokens.back() = AoC::extractBack(tokens);
+      } else if (AoC::isAnyOf(token.type, TokenType::OpenParenthesis, TokenType::Number) || token.isOperator()) {
+        if (token.type == TokenType::OpenParenthesis) {
+          openingBrackets.push(tokens.size());
         }
+        tokens.push_back(token);
       }
-      assert(openingBrackets.empty());
-      reduce(tokens, 0, part == 2);
-      assert(tokens.size() == 1);
-      total += tokens.back().value;
     }
-    std::cout << total << '\n';
-  } catch (const std::exception &exception) {
-    std::cout << "Threw: " << exception.what() << '\n';
-    return EXIT_FAILURE;
+    assert(openingBrackets.empty());
+    reduce(tokens, 0, part == 2);
+    assert(tokens.size() == 1);
+    total += tokens.back().value;
   }
-  return EXIT_SUCCESS;
+  std::cout << total << '\n';
 }
+} // namespace AoC
+
+#include "Main.inl"

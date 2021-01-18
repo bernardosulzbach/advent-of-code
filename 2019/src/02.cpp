@@ -1,10 +1,11 @@
+#include "ArgumentParser.hpp"
+#include "Intcode.hpp"
+
 #include <fstream>
 #include <iostream>
 #include <vector>
 
-#include "ArgumentParser.hpp"
-#include "Intcode.hpp"
-
+namespace AoC {
 void partOne(const std::string &path) {
   auto memory = readMemory(path);
   memory[1] = 12;
@@ -40,16 +41,13 @@ void partTwo(const std::string &path) {
   }
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part == 1) {
+void main(ArgumentParser const &argumentParser) {
+  if (argumentParser.getPart() == 1) {
     partOne(argumentParser.getPath());
-  } else if (part == 2) {
-    partTwo(argumentParser.getPath());
   } else {
-    throw std::runtime_error("Part should be 1 or 2.");
+    partTwo(argumentParser.getPath());
   }
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

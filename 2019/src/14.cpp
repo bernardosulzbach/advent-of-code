@@ -17,6 +17,7 @@
 #include <unordered_set>
 #include <vector>
 
+namespace AoC {
 struct Term {
   U32 coefficient{};
   U32 index{};
@@ -75,17 +76,9 @@ std::vector<Reaction> readReactionsFromFile(const std::string &path, std::unorde
   return reactions;
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part != 1 && part != 2) {
-    throw std::invalid_argument("Part should be 1 or 2.");
-  }
-
+void main(ArgumentParser const &argumentParser) {
   std::unordered_map<std::string, U32> dictionary;
-  const auto reactions = readReactionsFromFile(path, dictionary);
+  const auto reactions = readReactionsFromFile(argumentParser.getPath(), dictionary);
   std::vector<std::string> reverseDictionary(dictionary.size());
   for (const auto &entry : dictionary) {
     reverseDictionary[entry.second] = entry.first;
@@ -121,7 +114,7 @@ int main(int argc, char **argv) {
     return demand[dictionary["ORE"]];
   };
 
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     std::cout << determineOreRequiredToMakeFuel(1) << '\n';
   } else {
     constexpr U64 FuelLimit = 1000000000000ULL;
@@ -138,6 +131,7 @@ int main(int argc, char **argv) {
     assert(determineOreRequiredToMakeFuel(a) <= FuelLimit);
     std::cout << a << '\n';
   }
-
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

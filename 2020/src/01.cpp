@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 
+namespace AoC {
 template <std::size_t N, typename Range> void findCombination(Range const &input) {
   for (auto const combination : AoC::allCombinations<N>(input)) {
     if (AoC::sum(combination) == 2020) {
@@ -15,21 +16,15 @@ template <std::size_t N, typename Range> void findCombination(Range const &input
   }
 }
 
-int main(int argc, char **argv) {
-  try {
-    ArgumentParser argumentParser;
-    argumentParser.parseArguments(argc, argv);
-    auto const part = argumentParser.getAdditionalArgument(0);
-    std::ifstream stream(argumentParser.getPath());
-    auto const input = AoC::readVector<S64>(stream);
-    if (part == 1) {
-      findCombination<2>(input);
-    } else {
-      findCombination<3>(input);
-    }
-  } catch (const std::exception &exception) {
-    std::cout << "Threw: " << exception.what() << '\n';
-    return EXIT_FAILURE;
+void main(ArgumentParser const &argumentParser) {
+  std::ifstream stream(argumentParser.getPath());
+  auto const input = AoC::readVector<S64>(stream);
+  if (argumentParser.getPart() == 1) {
+    findCombination<2>(input);
+  } else {
+    findCombination<3>(input);
   }
-  return EXIT_SUCCESS;
 }
+} // namespace AoC
+
+#include "Main.inl"

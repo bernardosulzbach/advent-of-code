@@ -19,6 +19,7 @@
 #include <unordered_set>
 #include <vector>
 
+namespace AoC {
 enum class TileState { Unknown, Empty, Wall };
 
 char getTileStateSymbol(TileState tileState) {
@@ -203,16 +204,8 @@ Intcode::ValueType directionToCommand(Direction direction) {
   throw std::runtime_error("Not all cases are handled.");
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part != 1 && part != 2) {
-    throw std::invalid_argument("Part should be 1 or 2.");
-  }
-
-  Intcode intcode(readMemory(path));
+void main(ArgumentParser const &argumentParser) {
+  Intcode intcode(readMemory(argumentParser.getPath()));
   std::optional<Point<S32, 2>> oxygenSystemPosition;
   const Point<S32, 2> startingRobotPosition{0, 0};
   auto robotPosition = startingRobotPosition;
@@ -258,12 +251,12 @@ int main(int argc, char **argv) {
     }
   }
   assert(oxygenSystemPosition.has_value());
-
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     std::cout << map.getDistanceBetween(startingRobotPosition, oxygenSystemPosition.value()) << '\n';
   } else {
     std::cout << map.getStepsToFloodFrom(oxygenSystemPosition.value()) << '\n';
   }
-
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

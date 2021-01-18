@@ -6,6 +6,7 @@
 #include <optional>
 #include <string>
 
+namespace AoC {
 constexpr int Width = 25;
 constexpr int Height = 6;
 
@@ -50,12 +51,8 @@ Layer mergeLayers(const std::vector<Layer> &layers) {
   return layer;
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto part = argumentParser.getAdditionalArgument(0);
-  std::ifstream stream(path);
+void main(ArgumentParser const &argumentParser) {
+  std::ifstream stream(argumentParser.getPath());
   std::vector<Layer> layers;
   while (true) {
     const auto layer = readLayer(stream);
@@ -64,7 +61,7 @@ int main(int argc, char **argv) {
     }
     layers.push_back(layer.value());
   }
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     std::size_t bestLayer = 0;
     int bestLayerZeros = std::numeric_limits<int>::max();
     for (std::size_t i = 0; i < layers.size(); i++) {
@@ -75,7 +72,7 @@ int main(int argc, char **argv) {
       }
     }
     std::cout << count(layers[bestLayer], '1') * count(layers[bestLayer], '2') << '\n';
-  } else if (part == 2) {
+  } else {
     const auto mergedLayer = mergeLayers(layers);
     for (const auto &row : mergedLayer) {
       for (const auto &pixel : row) {
@@ -89,8 +86,8 @@ int main(int argc, char **argv) {
       }
       std::cout << '\n';
     }
-  } else {
-    throw std::invalid_argument("Part should be 1 or 2.");
   }
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

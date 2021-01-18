@@ -12,20 +12,13 @@
 #include <unordered_set>
 #include <vector>
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto memory = readMemory(path);
-  Intcode intcode(memory);
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part != 1 && part != 2) {
-    throw std::invalid_argument("Part should be 1 or 2.");
-  }
+namespace AoC {
+void main(ArgumentParser const &argumentParser) {
+  Intcode intcode(readMemory(argumentParser.getPath()));
   Pose robot;
   std::unordered_map<Point<S32, 2>, bool> hull;
   std::unordered_set<Point<S32, 2>> painted;
-  if (part == 2) {
+  if (argumentParser.getPart() == 2) {
     hull[robot.getPosition()] = true;
   }
   while (intcode.run() != IntcodeState::Halted) {
@@ -44,7 +37,7 @@ int main(int argc, char **argv) {
     }
     robot.goForward();
   }
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     std::cout << painted.size() << '\n';
   } else {
     auto minX = std::numeric_limits<S32>::max();
@@ -67,5 +60,7 @@ int main(int argc, char **argv) {
       std::cout << line << '\n';
     }
   }
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"
