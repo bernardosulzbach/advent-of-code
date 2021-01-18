@@ -1,123 +1,49 @@
-#include <boost/algorithm/string.hpp>
-#include <boost/process.hpp>
+#include "Runner.hpp"
 
-#include <filesystem>
-#include <iomanip>
-#include <iostream>
-#include <sstream>
-#include <string>
-
-#include "Filesystem.hpp"
-
-struct TestsStatistics {
-  int tested = 0;
-  int passed = 0;
-
-  [[nodiscard]] std::string generateSummary() const {
-    std::stringstream stream;
-    stream << "Passed " << passed << " out of " << tested << " tests.";
-    return stream.str();
-  }
-};
-
-std::string getOutput(const std::string &command) {
-  boost::process::ipstream pipeStream;
-  boost::process::child child(command, boost::process::std_out > pipeStream);
-  std::string result;
-  std::string line;
-  while (pipeStream && std::getline(pipeStream, line) && !line.empty()) {
-    result += line + '\n';
-  }
-  child.wait();
-  boost::trim(result);
-  return result;
-}
-
-std::string toPaddedDayString(int day) {
-  std::stringstream stream;
-  stream << std::setfill('0') << std::setw(2) << day;
-  return stream.str();
-}
-
-std::filesystem::path getInputPath(int day, bool isSample, int part, int number) {
-  auto filename = toPaddedDayString(day);
-  if (isSample) {
-    filename += "-" + std::to_string(part) + "-" + std::to_string(number);
-  }
-  filename += ".txt";
-  const auto subdirectory = isSample ? "samples" : "puzzles";
-  const auto inputPath = std::filesystem::path("..") / "input" / subdirectory / filename;
-  return inputPath;
-}
-
-std::filesystem::path getOutputPath(int day, bool isSample, int part, int number) {
-  auto filename = toPaddedDayString(day) + "-" + std::to_string(part);
-  if (isSample) {
-    filename += "-" + std::to_string(number);
-  }
-  filename += ".txt";
-  const auto subdirectory = isSample ? "samples" : "puzzles";
-  const auto outputPath = std::filesystem::path("..") / "output" / subdirectory / filename;
-  return outputPath;
-}
-
-void test(int day, bool isSample, int part, int number, TestsStatistics &testsStatistics) {
-  const auto inputPath = getInputPath(day, isSample, part, number);
-  const auto outputPath = getOutputPath(day, isSample, part, number);
-  const auto command = "./" + toPaddedDayString(day) + " " + inputPath.native() + " " + std::to_string(part);
-  std::cout << "Testing (" << command << ") against (" << outputPath.native() << ")." << '\n';
-  const auto actualOutput = getOutput(command);
-  const auto expectedOutput = readFile(outputPath);
-  if (actualOutput == expectedOutput) {
-    testsStatistics.passed++;
-  } else {
-    std::cout << "Output is wrong: " << actualOutput << " != " << expectedOutput << '\n';
-  }
-  testsStatistics.tested++;
-}
-
-int main() {
-  TestsStatistics testsStatistics;
-
+namespace AoC {
+[[nodiscard]] std::set<RunSpecification> generateRunSpecifications() noexcept {
+  std::set<RunSpecification> runSpecifications;
   for (int part = 1; part <= 2; part++) {
     for (int number = 1; number <= 3; number++) {
-      test(3, true, part, number, testsStatistics);
+      runSpecifications.emplace(3, true, part, number);
     }
   }
 
-  test(6, true, 1, 1, testsStatistics);
-  test(6, true, 2, 1, testsStatistics);
+  runSpecifications.emplace(6, true, 1, 1);
+  runSpecifications.emplace(6, true, 2, 1);
 
-  test(7, true, 1, 1, testsStatistics);
-  test(7, true, 1, 2, testsStatistics);
-  test(7, true, 1, 3, testsStatistics);
-  test(7, true, 2, 1, testsStatistics);
-  test(7, true, 2, 2, testsStatistics);
+  runSpecifications.emplace(7, true, 1, 1);
+  runSpecifications.emplace(7, true, 1, 2);
+  runSpecifications.emplace(7, true, 1, 3);
+  runSpecifications.emplace(7, true, 2, 1);
+  runSpecifications.emplace(7, true, 2, 2);
 
-  test(10, true, 1, 1, testsStatistics);
-  test(10, true, 2, 1, testsStatistics);
+  runSpecifications.emplace(10, true, 1, 1);
+  runSpecifications.emplace(10, true, 2, 1);
 
-  test(12, true, 2, 1, testsStatistics);
-  test(12, true, 2, 2, testsStatistics);
+  runSpecifications.emplace(12, true, 2, 1);
+  runSpecifications.emplace(12, true, 2, 2);
 
   for (int part = 1; part <= 2; part++) {
     for (int number = 1; number <= 4; number++) {
-      test(14, true, part, number, testsStatistics);
+      runSpecifications.emplace(14, true, part, number);
     }
   }
 
   for (int number = 1; number <= 4; number++) {
-    test(16, true, 1, number, testsStatistics);
+    runSpecifications.emplace(16, true, 1, number);
   }
 
   for (int day = 1; day <= 17; day++) {
-    test(day, false, 1, 1, testsStatistics);
+    runSpecifications.emplace(day, false, 1, 1);
     // TODO: remove this once day 13 is solved.
     if (day == 13 || day == 16) {
       continue;
     }
-    test(day, false, 2, 1, testsStatistics);
+    runSpecifications.emplace(day, false, 2, 1);
   }
-
-  std::cout << testsStatistics.generateSummary() << '\n';
+  return runSpecifications;
 }
+} // namespace AoC
+
+#include "Runner.inl"

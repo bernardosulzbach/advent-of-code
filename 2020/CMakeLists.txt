@@ -4,7 +4,7 @@ project(advent-of-code-2020)
 
 include(../common/CMake/Settings.cmake)
 
-add_library(advent-of-code-common OBJECT ../common/src/ArgumentParser.cpp ../common/src/BitMask.cpp ../common/src/Direction.cpp ../common/src/Pose.cpp ../common/src/Text.cpp)
+add_library(advent-of-code-common OBJECT ../common/src/ArgumentParser.cpp ../common/src/BitMask.cpp ../common/src/Direction.cpp ../common/src/Filesystem.cpp ../common/src/Pose.cpp ../common/src/Text.cpp)
 
 include_directories("../common/src")
 
@@ -27,3 +27,5 @@ add_executable(16 src/16.cpp $<TARGET_OBJECTS:advent-of-code-common>)
 add_executable(17 src/17.cpp $<TARGET_OBJECTS:advent-of-code-common>)
 add_executable(18 src/18.cpp $<TARGET_OBJECTS:advent-of-code-common>)
 add_executable(19 src/19.cpp $<TARGET_OBJECTS:advent-of-code-common>)
+
+add_executable(runner src/Runner.cpp $<TARGET_OBJECTS:advent-of-code-common>)
