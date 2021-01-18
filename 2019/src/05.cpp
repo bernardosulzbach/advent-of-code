@@ -3,36 +3,24 @@
 
 #include <iostream>
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto memory = readMemory(path);
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part == 1) {
-    Intcode intcode(memory);
+namespace AoC {
+void main(ArgumentParser const &argumentParser) {
+  const auto memory = readMemory(argumentParser.getPath());
+  Intcode intcode(memory);
+  if (argumentParser.getPart() == 1) {
     intcode.addInput(1);
-    intcode.run();
-    while (intcode.hasOutput()) {
-      std::cout << intcode.getOutput();
-      if (intcode.hasOutput()) {
-        std::cout << ",";
-      }
-    }
-    std::cout << '\n';
-  } else if (part == 2) {
-    Intcode intcode(memory);
-    intcode.addInput(5);
-    intcode.run();
-    while (intcode.hasOutput()) {
-      std::cout << intcode.getOutput();
-      if (intcode.hasOutput()) {
-        std::cout << ",";
-      }
-    }
-    std::cout << '\n';
   } else {
-    throw std::runtime_error("Part should be 1 or 2.");
+    intcode.addInput(5);
   }
-  return 0;
+  intcode.run();
+  while (intcode.hasOutput()) {
+    std::cout << intcode.getOutput();
+    if (intcode.hasOutput()) {
+      std::cout << ",";
+    }
+  }
+  std::cout << '\n';
 }
+} // namespace AoC
+
+#include "Main.inl"

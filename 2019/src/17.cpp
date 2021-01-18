@@ -12,6 +12,7 @@
 #include <variant>
 #include <vector>
 
+namespace AoC {
 class RobotMovement {
 public:
   bool turnedLeft = false;
@@ -351,17 +352,9 @@ CompressedMovementSequence compressMovementSequence(const std::vector<RobotMovem
   return compressedMovementSequence;
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part != 1 && part != 2) {
-    throw std::invalid_argument("Part should be 1 or 2.");
-  }
-
-  Intcode intcode(readMemory(path));
-  if (part == 1) {
+void main(ArgumentParser const &argumentParser) {
+  Intcode intcode(readMemory(argumentParser.getPath()));
+  if (argumentParser.getPart() == 1) {
     const auto map = readMap(intcode);
     assert(!intcode.hasOutput());
     S32 total = 0;
@@ -410,6 +403,7 @@ int main(int argc, char **argv) {
     }
     std::cout << intcode.getOutput() << '\n';
   }
-
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

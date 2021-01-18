@@ -17,6 +17,7 @@
 #include <unordered_set>
 #include <vector>
 
+namespace AoC {
 constexpr auto EmptySpaceSymbol = ' ';
 constexpr auto WallSymbol = '+';
 constexpr auto BlockSymbol = '*';
@@ -73,17 +74,10 @@ DefeatCause findDefeatCause(Intcode intcode, Screen screen) {
   return DefeatCause{screen.getPosition(BallSymbol), turns};
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part != 1 && part != 2) {
-    throw std::invalid_argument("Part should be 1 or 2.");
-  }
-  Intcode intcode(readMemory(path));
+void main(ArgumentParser const &argumentParser) {
+  Intcode intcode(readMemory(argumentParser.getPath()));
   Screen screen;
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     intcode.run();
     updateScreen(intcode, screen);
     const auto string = screen.toString();
@@ -113,5 +107,7 @@ int main(int argc, char **argv) {
       previousBallPosition = currentBallPosition;
     }
   }
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

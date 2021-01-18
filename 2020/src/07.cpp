@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <utility>
 
+namespace AoC {
 inline constexpr char const *ShinyGoldType = "shiny gold";
 
 struct BagTypeAmount {
@@ -92,48 +93,43 @@ using AmountContainedByMap = std::unordered_map<std::string, int>;
   return amountContainedBy[bagType] = bagsContainedByThisBag;
 }
 
-int main(int argc, char **argv) {
-  try {
-    ArgumentParser argumentParser;
-    argumentParser.parseArguments(argc, argv);
-    auto const part = argumentParser.getAdditionalArgument(0);
-    auto stream = std::ifstream(argumentParser.getPath());
-    ContainsMap contains;
-    StatusMap canContainShinyGold;
-    std::string line;
-    while (std::getline(stream, line)) {
-      auto const split = splitAt(line, " bags contain ");
-      assert(split.size() == 2);
-      auto const &left = split[0];
-      auto &vector = contains[left];
-      auto const &right = split[1];
-      if (right == "no other bags.") {
-        canContainShinyGold[left] = Status::False;
-        continue;
-      }
-      canContainShinyGold[left] = Status::Unknown;
-      for (auto const &contained : getBagTypeAmounts(right)) {
-        if (contained.bagType == ShinyGoldType) {
-          canContainShinyGold[left] = Status::True;
-        }
-        vector.push_back(contained);
-      }
+void main(ArgumentParser const &argumentParser) {
+  auto const part = argumentParser.getPart();
+  auto stream = std::ifstream(argumentParser.getPath());
+  ContainsMap contains;
+  StatusMap canContainShinyGold;
+  std::string line;
+  while (std::getline(stream, line)) {
+    auto const split = splitAt(line, " bags contain ");
+    assert(split.size() == 2);
+    auto const &left = split[0];
+    auto &vector = contains[left];
+    auto const &right = split[1];
+    if (right == "no other bags.") {
+      canContainShinyGold[left] = Status::False;
+      continue;
     }
-    if (part == 1) {
-      int count = 0;
-      for (auto const &[bag, contents] : contains) {
-        if (findIfCanContainShinyGold(contains, canContainShinyGold, bag)) {
-          count++;
-        }
+    canContainShinyGold[left] = Status::Unknown;
+    for (auto const &contained : getBagTypeAmounts(right)) {
+      if (contained.bagType == ShinyGoldType) {
+        canContainShinyGold[left] = Status::True;
       }
-      std::cout << count << '\n';
-    } else {
-      AmountContainedByMap amountContainedBy;
-      std::cout << findBagsContainedBy(contains, amountContainedBy, ShinyGoldType) << '\n';
+      vector.push_back(contained);
     }
-  } catch (const std::exception &exception) {
-    std::cout << "Threw: " << exception.what() << '\n';
-    return EXIT_FAILURE;
   }
-  return EXIT_SUCCESS;
+  if (part == 1) {
+    int count = 0;
+    for (auto const &[bag, contents] : contains) {
+      if (findIfCanContainShinyGold(contains, canContainShinyGold, bag)) {
+        count++;
+      }
+    }
+    std::cout << count << '\n';
+  } else {
+    AmountContainedByMap amountContainedBy;
+    std::cout << findBagsContainedBy(contains, amountContainedBy, ShinyGoldType) << '\n';
+  }
 }
+} // namespace AoC
+
+#include "Main.inl"

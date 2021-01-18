@@ -8,6 +8,7 @@
 #include <optional>
 #include <vector>
 
+namespace AoC {
 constexpr F64 Epsilon = 1.0e-6;
 
 using AsteroidField = std::vector<std::vector<bool>>;
@@ -69,13 +70,10 @@ std::vector<VisibleAsteroid> computeVisibleAsteroids(const AsteroidField &astero
   return visibleAsteroids;
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
+void main(ArgumentParser const &argumentParser) {
   AsteroidField asteroids;
   {
-    std::ifstream stream(path);
+    std::ifstream stream(argumentParser.getPath());
     std::string line;
     std::size_t i = 0;
     while (stream >> line) {
@@ -86,7 +84,6 @@ int main(int argc, char **argv) {
       i++;
     }
   }
-  const auto part = argumentParser.getAdditionalArgument(0);
   std::size_t maximumVisible = 0;
   std::size_t iOfBestPosition = std::numeric_limits<std::size_t>::max();
   std::size_t jOfBestPosition = std::numeric_limits<std::size_t>::max();
@@ -102,9 +99,9 @@ int main(int argc, char **argv) {
       }
     }
   }
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     std::cout << maximumVisible << '\n';
-  } else if (part == 2) {
+  } else {
     U32 destroyed = 0;
     std::optional<VisibleAsteroid> lastDestroyed;
     std::vector<VisibleAsteroid> visibleAsteroids;
@@ -122,8 +119,8 @@ int main(int argc, char **argv) {
       destroyed++;
     }
     std::cout << lastDestroyed->i + 100 * lastDestroyed->j << '\n';
-  } else {
-    throw std::invalid_argument("Part should be 1 or 2.");
   }
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

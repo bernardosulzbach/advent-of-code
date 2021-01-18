@@ -7,16 +7,9 @@
 #include <iostream>
 #include <optional>
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part != 1 && part != 2) {
-    throw std::invalid_argument("Part should be 1 or 2.");
-  }
-
-  const auto originalIntcode = Intcode(readMemory(path));
+namespace AoC {
+void main(ArgumentParser const &argumentParser) {
+  const auto originalIntcode = Intcode(readMemory(argumentParser.getPath()));
   const auto test = [&](Intcode::ValueType x, Intcode::ValueType y) {
     auto intcode = originalIntcode;
     const auto firstState = intcode.run();
@@ -28,7 +21,7 @@ int main(int argc, char **argv) {
     assert(intcode.hasOutput());
     return intcode.getOutput();
   };
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     const Intcode::ValueType size = 50;
     S32 count = 0;
     for (Intcode::ValueType i = 0; i < size; i++) {
@@ -83,5 +76,7 @@ int main(int argc, char **argv) {
     std::cout << 10000 * closestPoint->getX() + closestPoint->getY() << '\n';
     assert(closestPoint.has_value());
   }
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

@@ -43,44 +43,37 @@ void parseProductionLine(std::vector<Production> &productions, std::string const
   }
   flush();
 }
+
+void main(ArgumentParser const &argumentParser) {
+  auto stream = std::ifstream(argumentParser.getPath());
+  std::vector<AoC::Production> productions;
+  auto const lines = AoC::readLines(stream);
+  auto lineIterator = std::begin(lines);
+  for (; lineIterator != std::end(lines) && !lineIterator->empty(); ++lineIterator) {
+    AoC::parseProductionLine(productions, *lineIterator);
+  }
+  ++lineIterator; // Skip the blank line.
+  auto const isZeroProduction = [](auto const &production) { return production.getName() == "0"; };
+  assert(std::ranges::count_if(productions, isZeroProduction) == 1);
+  if (argumentParser.getPart() == 2) {
+    std::erase_if(productions, [](auto const &production) { return AoC::isAnyOf(production.getName(), "8", "11"); });
+    productions.emplace_back("8", std::vector<std::string>{"42"});
+    productions.emplace_back("8", std::vector<std::string>{"42", "8"});
+    productions.emplace_back("11", std::vector<std::string>{"42", "31"});
+    productions.emplace_back("11", std::vector<std::string>{"42", "11", "31"});
+  }
+  AoC::ContextFreeGrammar contextFreeGrammar(productions);
+  auto const zeroProductionIterator = std::ranges::find_if(productions, isZeroProduction);
+  auto const zeroProductionIndex = std::ranges::distance(std::ranges::begin(productions), zeroProductionIterator);
+  AoC::ContextFreeGrammarRecognizer recognizer(contextFreeGrammar, zeroProductionIndex);
+  std::cout << std::count_if(lineIterator, std::end(lines), [&recognizer](auto const &it) {
+    std::vector<std::string> words;
+    for (auto const character : it) {
+      words.emplace_back(1, character);
+    }
+    return recognizer.isRecognized(words);
+  }) << '\n';
+}
 } // namespace AoC
 
-int main(int argc, char **argv) {
-  try {
-    ArgumentParser argumentParser;
-    argumentParser.parseArguments(argc, argv);
-    auto const part = argumentParser.getAdditionalArgument(0);
-    auto stream = std::ifstream(argumentParser.getPath());
-    std::vector<AoC::Production> productions;
-    auto const lines = AoC::readLines(stream);
-    auto lineIterator = std::begin(lines);
-    for (; lineIterator != std::end(lines) && !lineIterator->empty(); ++lineIterator) {
-      AoC::parseProductionLine(productions, *lineIterator);
-    }
-    ++lineIterator; // Skip the blank line.
-    auto const isZeroProduction = [](auto const &production) { return production.getName() == "0"; };
-    assert(std::ranges::count_if(productions, isZeroProduction) == 1);
-    if (part == 2) {
-      std::erase_if(productions, [](auto const &production) { return AoC::isAnyOf(production.getName(), "8", "11"); });
-      productions.emplace_back("8", std::vector<std::string>{"42"});
-      productions.emplace_back("8", std::vector<std::string>{"42", "8"});
-      productions.emplace_back("11", std::vector<std::string>{"42", "31"});
-      productions.emplace_back("11", std::vector<std::string>{"42", "11", "31"});
-    }
-    AoC::ContextFreeGrammar contextFreeGrammar(productions);
-    auto const zeroProductionIterator = std::ranges::find_if(productions, isZeroProduction);
-    auto const zeroProductionIndex = std::ranges::distance(std::ranges::begin(productions), zeroProductionIterator);
-    AoC::ContextFreeGrammarRecognizer recognizer(contextFreeGrammar, zeroProductionIndex);
-    std::cout << std::count_if(lineIterator, std::end(lines), [&recognizer](auto const &it) {
-      std::vector<std::string> words;
-      for (auto const character : it) {
-        words.emplace_back(1, character);
-      }
-      return recognizer.isRecognized(words);
-    }) << '\n';
-  } catch (const std::exception &exception) {
-    std::cout << "Threw: " << exception.what() << '\n';
-    return EXIT_FAILURE;
-  }
-  return EXIT_SUCCESS;
-}
+#include "Main.inl"

@@ -6,6 +6,7 @@
 #include <optional>
 #include <string>
 
+namespace AoC {
 constexpr int AmplifierCount = 5;
 
 void solvePartOne(const std::vector<Intcode::ValueType> &memory) {
@@ -70,19 +71,14 @@ void solvePartTwo(const std::vector<Intcode::ValueType> &memory) {
   std::cout << bestOutputLevel.value() << '\n';
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  std::ifstream stream(path);
-  const auto memory = readMemory(path);
-  int part = argumentParser.getAdditionalArgument(0);
-  if (part == 1) {
+void main(ArgumentParser const &argumentParser) {
+  auto const memory = readMemory(argumentParser.getPath());
+  if (argumentParser.getPart() == 1) {
     solvePartOne(memory);
-  } else if (part == 2) {
-    solvePartTwo(memory);
   } else {
-    throw std::invalid_argument("Part should be 1 or 2.");
+    solvePartTwo(memory);
   }
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

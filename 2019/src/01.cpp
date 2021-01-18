@@ -3,29 +3,27 @@
 #include <fstream>
 #include <iostream>
 
+namespace AoC {
 int fuelRequired(int weight) {
   return weight / 3 - 2;
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto part = argumentParser.getAdditionalArgument(0);
+void main(ArgumentParser const &argumentParser) {
   int sum = 0;
   std::ifstream stream(argumentParser.getPath());
   int value;
   while (stream >> value) {
-    if (part == 1) {
+    if (argumentParser.getPart() == 1) {
       sum += fuelRequired(value);
-    } else if (part == 2) {
+    } else {
       while (fuelRequired(value) > 0) {
         value = fuelRequired(value);
         sum += value;
       }
-    } else {
-      throw std::runtime_error("Part should be 1 or 2.");
     }
   }
   std::cout << sum << '\n';
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

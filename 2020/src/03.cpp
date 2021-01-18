@@ -7,36 +7,31 @@
 #include <iostream>
 #include <string>
 
-int main(int argc, char **argv) {
-  try {
-    ArgumentParser argumentParser;
-    argumentParser.parseArguments(argc, argv);
-    auto const part = argumentParser.getAdditionalArgument(0);
-    auto stream = std::ifstream(argumentParser.getPath());
-    auto const lines = AoC::readVector<std::string>(stream);
-    auto const countTrees = [&lines](std::size_t const right, std::size_t const down) {
-      std::size_t trees = 0;
-      Point<std::size_t, 2> point{0, 0};
-      while (true) {
-        point = point.move(Direction::Right, right).move(Direction::Up, down); // Up is positive.
-        if (lines.size() <= point.getY()) {
-          break;
-        }
-        point.getX() %= lines[point.getY()].size();
-        if (lines[point.getY()][point.getX()] == '#') {
-          trees++;
-        }
+namespace AoC {
+void main(ArgumentParser const &argumentParser) {
+  auto stream = std::ifstream(argumentParser.getPath());
+  auto const lines = AoC::readVector<std::string>(stream);
+  auto const countTrees = [&lines](std::size_t const right, std::size_t const down) {
+    std::size_t trees = 0;
+    Point<std::size_t, 2> point{0, 0};
+    while (true) {
+      point = point.move(Direction::Right, right).move(Direction::Up, down); // Up is positive.
+      if (lines.size() <= point.getY()) {
+        break;
       }
-      return trees;
-    };
-    if (part == 1) {
-      std::cout << countTrees(3, 1) << '\n';
-    } else {
-      std::cout << countTrees(1, 1) * countTrees(3, 1) * countTrees(5, 1) * countTrees(7, 1) * countTrees(1, 2) << '\n';
+      point.getX() %= lines[point.getY()].size();
+      if (lines[point.getY()][point.getX()] == '#') {
+        trees++;
+      }
     }
-  } catch (const std::exception &exception) {
-    std::cout << "Threw: " << exception.what() << '\n';
-    return EXIT_FAILURE;
+    return trees;
+  };
+  if (argumentParser.getPart() == 1) {
+    std::cout << countTrees(3, 1) << '\n';
+  } else {
+    std::cout << countTrees(1, 1) * countTrees(3, 1) * countTrees(5, 1) * countTrees(7, 1) * countTrees(1, 2) << '\n';
   }
-  return EXIT_SUCCESS;
 }
+} // namespace AoC
+
+#include "Main.inl"

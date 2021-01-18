@@ -1,9 +1,11 @@
 #include "ArgumentParser.hpp"
+#include "IO.hpp"
 #include "Types.hpp"
 
 #include <fstream>
 #include <iostream>
 
+namespace AoC {
 bool isValid(U32 password, bool exactlyTwoEqual) {
   U32 digit = password % 10;
   password /= 10;
@@ -39,33 +41,20 @@ bool isValid(U32 password, bool exactlyTwoEqual) {
   return repetitionCriterion && neverDecreases;
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
+void main(ArgumentParser const &argumentParser) {
   const auto path = argumentParser.getPath();
   std::ifstream stream(path);
-  U32 a;
-  stream >> a;
+  auto const a = AoC::readValue<U32>(stream);
   stream.ignore();
-  U32 b;
-  stream >> b;
-  U32 validInPartOne = 0;
-  U32 validInPartTwo = 0;
+  auto const b = AoC::readValue<U32>(stream);
+  U32 valid = 0;
   for (U32 i = a; i <= b; i++) {
-    if (isValid(i, false)) {
-      validInPartOne++;
-    }
-    if (isValid(i, true)) {
-      validInPartTwo++;
+    if (isValid(i, argumentParser.getPart() == 2)) {
+      valid++;
     }
   }
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part == 1) {
-    std::cout << validInPartOne << '\n';
-  } else if (part == 2) {
-    std::cout << validInPartTwo << '\n';
-  } else {
-    throw std::runtime_error("Part should be 1 or 2.");
-  }
-  return 0;
+  std::cout << valid << '\n';
 }
+} // namespace AoC
+
+#include "Main.inl"

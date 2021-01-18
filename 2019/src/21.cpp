@@ -9,12 +9,14 @@
 #include <iostream>
 #include <stdexcept>
 
+namespace AoC {
 enum class DesiredOutput : U8 { False, True, Any };
 
 // Bits: (MSB) I H G F E D C B A (LSB)
 constexpr static U32 Bits = 9u;
 constexpr static U32 States = 1u << Bits;
 
+// TODO: try to use Debugging.h to do this.
 #ifdef NDEBUG
 constexpr static bool Debugging = false;
 #else
@@ -77,23 +79,15 @@ bool isSafe(const SafetyTables &safetyTables, const U32 ahead) {
   return isSafeIfJumps(safetyTables, ahead) || isSafeIfDoesNotJump(safetyTables, ahead);
 }
 
-int main(int argc, char **argv) {
-  ArgumentParser argumentParser;
-  argumentParser.parseArguments(argc, argv);
-  const auto path = argumentParser.getPath();
-  const auto part = argumentParser.getAdditionalArgument(0);
-  if (part != 1 && part != 2) {
-    throw std::invalid_argument("Part should be 1 or 2.");
-  }
-
-  auto originalIntcode = Intcode(readMemory(path));
+void main(ArgumentParser const &argumentParser) {
+  auto originalIntcode = Intcode(readMemory(argumentParser.getPath()));
   const auto enterInstruction = [&originalIntcode](const std::string &string) {
     for (const auto c : string) {
       originalIntcode.addInput(c);
     }
     originalIntcode.addInput('\n');
   };
-  if (part == 1) {
+  if (argumentParser.getPart() == 1) {
     // D must be 1.
     enterInstruction("NOT A T");
     enterInstruction("OR T J");
@@ -236,5 +230,7 @@ int main(int argc, char **argv) {
     std::cout << static_cast<char>(originalIntcode.getOutput());
   }
   std::cout << originalIntcode.getOutput() << '\n';
-  return 0;
 }
+} // namespace AoC
+
+#include "Main.inl"

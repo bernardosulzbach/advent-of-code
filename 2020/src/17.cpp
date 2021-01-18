@@ -14,6 +14,7 @@
 #include <sstream>
 #include <unordered_set>
 
+namespace AoC {
 static constexpr auto ActiveSymbol = '#';
 
 template <Size Dimensions> void solve(std::istream &stream) {
@@ -58,20 +59,14 @@ template <Size Dimensions> void solve(std::istream &stream) {
   std::cout << active.size() << '\n';
 }
 
-int main(int argc, char **argv) {
-  try {
-    ArgumentParser argumentParser;
-    argumentParser.parseArguments(argc, argv);
-    auto const part = argumentParser.getAdditionalArgument(0);
-    auto stream = std::ifstream(argumentParser.getPath());
-    if (part == 1) {
-      solve<3>(stream);
-    } else {
-      solve<4>(stream);
-    }
-  } catch (const std::exception &exception) {
-    std::cout << "Threw: " << exception.what() << '\n';
-    return EXIT_FAILURE;
+void main(ArgumentParser const &argumentParser) {
+  auto stream = std::ifstream(argumentParser.getPath());
+  if (argumentParser.getPart() == 1) {
+    solve<3>(stream);
+  } else {
+    solve<4>(stream);
   }
-  return EXIT_SUCCESS;
 }
+} // namespace AoC
+
+#include "Main.inl"
