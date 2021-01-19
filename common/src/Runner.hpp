@@ -9,17 +9,28 @@
 
 #include "Filesystem.hpp"
 #include "Text.hpp"
+#include "Time.hpp"
 
 namespace AoC {
-struct [[nodiscard]] RunStatistics {
+class [[nodiscard]] RunStatistics {
+public:
+  void update(bool const passedTests, Duration const duration) noexcept {
+    tested++;
+    if (passedTests) {
+      passed++;
+    }
+    totalDuration += duration;
+  }
+
+  friend std::ostream &operator<<(std::ostream &stream, RunStatistics const &runStatistics) noexcept {
+    return (stream << "Passed " << runStatistics.passed << " out of " << runStatistics.tested << " tests in "
+                   << runStatistics.totalDuration << ".");
+  }
+
+private:
   U32 tested = 0;
   U32 passed = 0;
-
-  [[nodiscard]] std::string generateSummary() const noexcept {
-    std::stringstream stream;
-    stream << "Passed " << passed << " out of " << tested << " tests.";
-    return stream.str();
-  }
+  Duration totalDuration;
 };
 
 class [[nodiscard]] RunSpecification {
@@ -31,15 +42,17 @@ public:
   void run(RunStatistics &runStatistics) const {
     const auto command = "./" + toZeroPaddedString(day, 2) + " " + getInputPath().native() + " " + std::to_string(part);
     const auto outputPath = getOutputPath();
-    std::cout << "Testing (" << command << ") against (" << outputPath.native() << ")." << '\n';
+    std::cout << "Testing (" << command << ") against (" << outputPath.native() << "). ";
+    Timer timer;
     const auto actualOutput = getOutput(command);
+    const auto duration = timer.getElapsed();
+    std::cout << "Done after " << duration << ".\n";
     const auto expectedOutput = readFile(outputPath);
-    if (actualOutput == expectedOutput) {
-      runStatistics.passed++;
-    } else {
+    const auto passedTests = actualOutput == expectedOutput;
+    if (!passedTests) {
       std::cout << "Output is wrong: " << actualOutput << " != " << expectedOutput << '\n';
     }
-    runStatistics.tested++;
+    runStatistics.update(passedTests, duration);
   }
 
   [[nodiscard]] constexpr auto operator<=>(RunSpecification const &rhs) const noexcept = default;
