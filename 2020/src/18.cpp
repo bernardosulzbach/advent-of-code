@@ -3,6 +3,7 @@
 #include "IO.hpp"
 #include "Logic.hpp"
 #include "Types.hpp"
+#include "Verify.hpp"
 
 #include <cassert>
 #include <fstream>
@@ -80,12 +81,11 @@ struct Token {
   }
   IntegerType value = character - '0';
   while (stream >> character) {
-    if (std::isdigit(character)) {
-      value = 10 * value + (character - '0');
-    } else {
-      assert(stream.unget());
+    if (!std::isdigit(character)) {
+      verify(stream.unget());
       break;
     }
+    value = 10 * value + (character - '0');
   }
   return Token{TokenType::Number, value};
 }
@@ -96,8 +96,9 @@ void reduce(std::vector<Token> &tokens, Size const start, bool const additionsFi
   for (auto read = tokens.begin() + start; read != tokens.end(); read++) {
     if (!reduction.empty() && read->type == TokenType::Number) {
       if (!additionsFirst || reduction.back().type == TokenType::Plus) {
-        auto const operatorToken = AoC::extractBack(reduction);
-        auto const lhs = AoC::extractBack(reduction);
+        assert(reduction.size() >= 2);
+        auto const operatorToken = extractBack(reduction);
+        auto const lhs = extractBack(reduction);
         reduction.push_back(operatorToken.evaluate(lhs, *read));
         continue;
       }
@@ -106,14 +107,15 @@ void reduce(std::vector<Token> &tokens, Size const start, bool const additionsFi
   }
   if (additionsFirst) {
     while (reduction.size() >= 3) {
-      auto const rhs = AoC::extractBack(reduction);
-      auto const operatorToken = AoC::extractBack(reduction);
+      auto const rhs = extractBack(reduction);
+      auto const operatorToken = extractBack(reduction);
       assert(operatorToken.type == TokenType::Times);
       reduction.back() = operatorToken.evaluate(reduction.back(), rhs);
     }
   }
   assert(reduction.size() == 1);
   tokens[start] = reduction.front();
+  assert(start + 1 <= tokens.size());
   tokens.erase(tokens.begin() + start + 1, tokens.end());
 }
 
@@ -130,6 +132,7 @@ void main(ArgumentParser const &argumentParser) {
       if (token.type == TokenType::CloseParenthesis) {
         assert(!openingBrackets.empty());
         reduce(tokens, AoC::extractTop(openingBrackets) + 1, part == 2);
+        assert(tokens.size() >= 2);
         tokens.back() = AoC::extractBack(tokens);
       } else if (AoC::isAnyOf(token.type, TokenType::OpenParenthesis, TokenType::Number) || token.isOperator()) {
         if (token.type == TokenType::OpenParenthesis) {
@@ -139,6 +142,7 @@ void main(ArgumentParser const &argumentParser) {
       }
     }
     assert(openingBrackets.empty());
+    assert(tokens.size() > 2);
     reduce(tokens, 0, part == 2);
     assert(tokens.size() == 1);
     total += tokens.back().value;
