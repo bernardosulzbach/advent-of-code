@@ -2,6 +2,7 @@
 #include "Intcode.hpp"
 #include "Text.hpp"
 #include "Types.hpp"
+#include "Verify.hpp"
 
 #include "minbool.h"
 
@@ -224,8 +225,7 @@ void main(ArgumentParser const &argumentParser) {
     }
     enterInstruction("RUN");
   }
-  const auto finalState = originalIntcode.run();
-  assert(finalState == IntcodeState::Halted);
+  verify(originalIntcode.run() == IntcodeState::Halted);
   while (originalIntcode.getOutputBufferLength() > 1) {
     std::cout << static_cast<char>(originalIntcode.getOutput());
   }

@@ -2,6 +2,7 @@
 #include "Intcode.hpp"
 #include "Point.hpp"
 #include "Text.hpp"
+#include "Verify.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -12,12 +13,10 @@ void main(ArgumentParser const &argumentParser) {
   const auto originalIntcode = Intcode(readMemory(argumentParser.getPath()));
   const auto test = [&](Intcode::ValueType x, Intcode::ValueType y) {
     auto intcode = originalIntcode;
-    const auto firstState = intcode.run();
-    assert(firstState == IntcodeState::Blocked);
+    verify(intcode.run() == IntcodeState::Blocked);
     intcode.addInput(x);
     intcode.addInput(y);
-    const auto secondState = intcode.run();
-    assert(secondState == IntcodeState::Halted);
+    verify(intcode.run() == IntcodeState::Halted);
     assert(intcode.hasOutput());
     return intcode.getOutput();
   };
