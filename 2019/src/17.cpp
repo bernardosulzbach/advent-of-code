@@ -4,6 +4,7 @@
 #include "Point.hpp"
 #include "Pose.hpp"
 #include "Text.hpp"
+#include "Verify.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -364,8 +365,7 @@ void main(ArgumentParser const &argumentParser) {
     std::cout << total << '\n';
   } else {
     intcode.memory[0] = 2;
-    const auto firstState = intcode.run();
-    assert(firstState == IntcodeState::Blocked);
+    verify(intcode.run() == IntcodeState::Blocked);
     auto initialMap = readMap(intcode);
     while (true) {
       if (initialMap.canMoveTheRobotForward()) {

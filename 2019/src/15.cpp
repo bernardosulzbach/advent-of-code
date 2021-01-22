@@ -8,6 +8,7 @@
 #include "Screen.hpp"
 #include "Text.hpp"
 #include "Vector.hpp"
+#include "Verify.hpp"
 
 #include <cassert>
 #include <fstream>
@@ -231,7 +232,7 @@ void main(ArgumentParser const &argumentParser) {
     const auto robotPath = map.getPathToUnknown(robotPosition);
     for (std::size_t i = 0; i < robotPath.directions.size(); i++) {
       if (i > 0) {
-        assert(intcode.getOutput() != 0);
+        verify(intcode.getOutput() != 0);
         updateRobotPosition(robotPath.directions[i - 1]);
       }
       intcode.addInput(directionToCommand(robotPath.directions[i]));
