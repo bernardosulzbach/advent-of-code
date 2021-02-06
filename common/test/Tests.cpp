@@ -1,17 +1,46 @@
 #define BOOST_TEST_MODULE Tests
 #define BOOST_TEST_DYN_LINK
+
+// Should include all headers here.
+// It should be possible to include all headers together.
+#include "../src/ArgumentParser.hpp"
+#include "../src/Bit.hpp"
+#include "../src/BitMask.hpp"
+#include "../src/Body.hpp"
+#include "../src/BoundingBox.hpp"
+#include "../src/BugScan.hpp"
+#include "../src/Casts.hpp"
+#include "../src/Concepts.hpp"
+#include "../src/Containers.hpp"
+#include "../src/ContextFreeGrammar.hpp"
+#include "../src/Cycle.hpp"
+#include "../src/Debugging.hpp"
+#include "../src/DirectedGraph.hpp"
+#include "../src/Direction.hpp"
+#include "../src/Filesystem.hpp"
+#include "../src/Hash.hpp"
+#include "../src/IO.hpp"
+#include "../src/Intcode.hpp"
+#include "../src/IntcodeState.hpp"
+#include "../src/Interval.hpp"
+#include "../src/Logic.hpp"
+#include "../src/Math.hpp"
+#include "../src/OrbitGraph.hpp"
+#include "../src/Path.hpp"
+#include "../src/Point.hpp"
+#include "../src/Pose.hpp"
+#include "../src/Ranges.hpp"
+#include "../src/Runner.hpp"
+#include "../src/Screen.hpp"
+#include "../src/Text.hpp"
+#include "../src/Time.hpp"
+#include "../src/Types.hpp"
+#include "../src/Vector.hpp"
+#include "../src/Verify.hpp"
+
 #include <boost/test/unit_test.hpp>
 
 #include <iostream>
-
-#include "../src/ContextFreeGrammar.hpp"
-#include "../src/Direction.hpp"
-#include "../src/IO.hpp"
-#include "../src/Logic.hpp"
-#include "../src/Math.hpp"
-#include "../src/Point.hpp"
-#include "../src/Ranges.hpp"
-#include "../src/Text.hpp"
 
 BOOST_AUTO_TEST_CASE(splitAtTest) {
   std::vector<std::string> expectedResult{"a", "b", "c"};
