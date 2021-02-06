@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.13) # We use add_link_options
 project(advent-of-code-2019)
 
 include(../common/CMake/Settings.cmake)
+include(../common/CMake/Warnings.cmake)
 
 add_library(
   advent-of-code-common OBJECT
