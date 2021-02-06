@@ -27,7 +27,7 @@ set(Boost_USE_MULTITHREADED ON)
 
 find_package(Threads REQUIRED)
 
-include_directories(SYSTEM include)
+include_directories(include)
 
 add_executable(tests test/Tests.cpp $<TARGET_OBJECTS:advent-of-code>)
 
