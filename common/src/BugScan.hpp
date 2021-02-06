@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Math.hpp"
 #include "Types.hpp"
 
 #include <cassert>
@@ -7,16 +8,25 @@
 #include <sstream>
 #include <unordered_set>
 
+namespace AoC {
 class BugScan {
-  constexpr static S32 Side = 5;
+  using CoordinateType = S32;
+  using UnsignedCoordinateType = std::make_unsigned_t<CoordinateType>;
+
+  static constexpr CoordinateType Side = 5;
 
   U32 state = 0;
 
-  [[nodiscard]] U32 get(U32 i, U32 j) const {
-    return state >> (i * static_cast<U32>(Side) + j) & 1u;
+  [[nodiscard]] constexpr UnsignedCoordinateType toIndex(UnsignedCoordinateType const i,
+                                                         UnsignedCoordinateType const j) const noexcept {
+    return i * unsignedCast(Side) + j;
   }
 
-  [[nodiscard]] U32 countNeighbors(S32 i, S32 j) const {
+  [[nodiscard]] U32 get(UnsignedCoordinateType const i, UnsignedCoordinateType const j) const noexcept {
+    return state >> toIndex(i, j) & 1u;
+  }
+
+  [[nodiscard]] U32 countNeighbors(CoordinateType const i, CoordinateType const j) const noexcept {
     U32 count = 0;
     count += get(i - 1, j);
     count += get(i, j - 1);
@@ -26,16 +36,16 @@ class BugScan {
   }
 
 public:
-  [[nodiscard]] U32 get(S32 i, S32 j) const {
+  [[nodiscard]] U32 get(CoordinateType const i, CoordinateType const j) const noexcept {
     if (i < 0 || i >= Side || j < 0 || j >= Side) {
       return 0;
     }
-    return get(static_cast<U32>(i), static_cast<U32>(j));
+    return get(unsignedCast(i), unsignedCast(j));
   }
 
-  void set(U32 i, U32 j, U32 x) {
+  void set(CoordinateType const i, CoordinateType const j, U32 const x) noexcept {
     assert(x == 0 || x == 1);
-    const U32 oneHot = 1u << (i * static_cast<U32>(Side) + j);
+    auto const oneHot = 1u << toIndex(unsignedCast(i), unsignedCast(j));
     if (x == 0) {
       state &= ~oneHot;
     }
@@ -44,8 +54,8 @@ public:
     }
   }
 
-  [[nodiscard]] BugScan evolve() const {
-    BugScan evolution = *this;
+  [[nodiscard]] BugScan evolve() const noexcept {
+    auto evolution = *this;
     for (S32 i = 0; i < Side; i++) {
       for (S32 j = 0; j < Side; j++) {
         const auto count = countNeighbors(i, j);
@@ -63,19 +73,13 @@ public:
     return evolution;
   }
 
-  [[nodiscard]] U32 getBiodiversity() const {
+  [[nodiscard]] U32 getBiodiversity() const noexcept {
     return state;
   }
 
-  bool operator==(const BugScan &rhs) const {
-    return state == rhs.state;
-  }
+  [[nodiscard]] constexpr auto operator<=>(BugScan const &rhs) const noexcept = default;
 
-  bool operator!=(const BugScan &rhs) const {
-    return !(rhs == *this);
-  }
-
-  [[nodiscard]] std::string toString() const {
+  [[nodiscard]] std::string toString() const noexcept {
     std::string string;
     for (S32 i = 0; i < BugScan::Side; i++) {
       for (S32 j = 0; j < BugScan::Side; j++) {
@@ -89,18 +93,18 @@ public:
   }
 
   static BugScan fromString(const std::string &string) {
-    std::stringstream stream(string);
     BugScan scan;
-    for (U32 i = 0; i < Side; i++) {
-      for (U32 j = 0; j < Side; j++) {
-        char character = '\0';
+    std::stringstream stream(string);
+    for (CoordinateType i = 0; i < Side; i++) {
+      for (CoordinateType j = 0; j < Side; j++) {
+        auto character = '\0';
         if (!(stream >> character)) {
           throw std::invalid_argument("Could not extract a character.");
         }
         if (character == '#') {
-          scan.set(i, j, 1);
+          scan.set(i, j, 1u);
         } else if (character == '.') {
-          scan.set(i, j, 0);
+          scan.set(i, j, 0u);
         } else {
           throw std::invalid_argument("Read an unexpected character.");
         }
@@ -109,13 +113,14 @@ public:
     return scan;
   }
 
-  [[nodiscard]] std::size_t hash() const {
+  [[nodiscard]] std::size_t hash() const noexcept {
     return state;
   }
 };
+} // namespace AoC
 
-template <> struct std::hash<BugScan> {
-  std::size_t operator()(const BugScan &scan) const {
+template <> struct std::hash<AoC::BugScan> {
+  std::size_t operator()(const AoC::BugScan &scan) const {
     return scan.hash();
   }
 };
