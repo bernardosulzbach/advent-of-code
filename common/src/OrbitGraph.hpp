@@ -1,17 +1,19 @@
 #pragma once
 
+#include "Math.hpp"
+#include "Types.hpp"
+
 #include <queue>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
-#include "Types.hpp"
-
+namespace AoC {
 class OrbitGraph {
+  using IndexType = U32;
   constexpr static auto Undefined = std::numeric_limits<U64>::max();
 
-private:
-  U64 computeTotalOrbits(std::vector<U64> &totalOrbits, U32 index) const {
+  U64 computeTotalOrbits(std::vector<U64> &totalOrbits, IndexType const index) const {
     if (totalOrbits[index] != Undefined) {
       return totalOrbits[index];
     }
@@ -24,19 +26,19 @@ private:
   }
 
 public:
-  std::unordered_map<std::string, U32> labelToIndex;
+  std::unordered_map<std::string, IndexType> labelToIndex;
   std::vector<std::string> labels;
-  std::vector<std::vector<U32>> orbits;
+  std::vector<std::vector<IndexType>> orbits;
 
-  U32 getIndex(const std::string &label) {
+  U32 getIndex(std::string const &label) {
     if (labelToIndex.count(label) == 0) {
-      labelToIndex[label] = labels.size();
+      labelToIndex[label] = checkedCast<IndexType>(labels.size());
       labels.push_back(label);
     }
     return labelToIndex[label];
   }
 
-  void addOrbit(const std::string &a, const std::string &b) {
+  void addOrbit(std::string const &a, std::string const &b) {
     const auto aIndex = getIndex(a);
     const auto bIndex = getIndex(b);
     if (bIndex >= orbits.size()) {
@@ -56,7 +58,7 @@ public:
   U64 getTotalOrbits() const {
     std::vector<U64> totalOrbits(orbits.size(), Undefined);
     U64 totalOrbitCount = 0;
-    for (U64 i = 0; i < orbits.size(); i++) {
+    for (IndexType i = 0; i < orbits.size(); i++) {
       totalOrbitCount += computeTotalOrbits(totalOrbits, i);
     }
     return totalOrbitCount;
@@ -95,3 +97,4 @@ public:
     return best;
   }
 };
+} // namespace AoC
