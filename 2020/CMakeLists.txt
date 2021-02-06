@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.13) # We use add_link_options
 project(advent-of-code-2020)
 
 include(../common/CMake/Settings.cmake)
+include(../common/CMake/Warnings.cmake)
 
 add_library(advent-of-code-common OBJECT ../common/src/ArgumentParser.cpp ../common/src/BitMask.cpp ../common/src/Direction.cpp ../common/src/Filesystem.cpp ../common/src/Pose.cpp ../common/src/Text.cpp)
 
