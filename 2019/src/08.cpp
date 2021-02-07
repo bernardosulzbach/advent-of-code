@@ -1,21 +1,24 @@
 #include "ArgumentParser.hpp"
+#include "Math.hpp"
 
 #include <algorithm>
 #include <fstream>
 #include <iostream>
+#include <numeric>
 #include <optional>
 #include <string>
+#include <type_traits>
 
 namespace AoC {
-constexpr int Width = 25;
-constexpr int Height = 6;
+static constexpr Size Width = 25;
+static constexpr Size Height = 6;
 
 using Layer = std::vector<std::vector<char>>;
 
 std::optional<Layer> readLayer(std::istream &stream) {
   Layer layer(Height, std::vector<char>(Width, '\0'));
-  for (int i = 0; i < Height; i++) {
-    for (int j = 0; j < Width; j++) {
+  for (Size i = 0; i < Height; i++) {
+    for (Size j = 0; j < Width; j++) {
       stream >> layer[i][j];
       if (!stream.good()) {
         if (i == 0 && j == 0) {
@@ -28,18 +31,17 @@ std::optional<Layer> readLayer(std::istream &stream) {
   return layer;
 }
 
-int count(const Layer &layer, char digit) {
-  int total = 0;
-  for (const auto &row : layer) {
-    total += std::count(std::begin(row), std::end(row), digit);
-  }
-  return total;
+[[nodiscard]] Size count(const Layer &layer, char digit) noexcept {
+  return std::accumulate(std::begin(layer), std::end(layer), Size{},
+                         [digit](auto const count, auto const &row) noexcept {
+                           return count + unsignedCast<Unchecked>(std::count(std::begin(row), std::end(row), digit));
+                         });
 }
 
 Layer mergeLayers(const std::vector<Layer> &layers) {
   Layer layer(Height, std::vector<char>(Width, '2'));
-  for (int i = 0; i < Height; i++) {
-    for (int j = 0; j < Width; j++) {
+  for (Size i = 0; i < Height; i++) {
+    for (Size j = 0; j < Width; j++) {
       for (const auto &transmittedLayer : layers) {
         if (layer[i][j] == '0' || layer[i][j] == '1') {
           break;
@@ -63,7 +65,7 @@ void main(ArgumentParser const &argumentParser) {
   }
   if (argumentParser.getPart() == 1) {
     std::size_t bestLayer = 0;
-    int bestLayerZeros = std::numeric_limits<int>::max();
+    auto bestLayerZeros = std::numeric_limits<Size>::max();
     for (std::size_t i = 0; i < layers.size(); i++) {
       const auto thisLayerZeros = count(layers[i], '0');
       if (thisLayerZeros < bestLayerZeros) {
