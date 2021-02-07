@@ -1,4 +1,5 @@
 #include "ArgumentParser.hpp"
+#include "Casts.hpp"
 #include "Cycle.hpp"
 #include "Intcode.hpp"
 #include "Point.hpp"
@@ -71,7 +72,7 @@ public:
     if (robot && robot->getPosition() == point) {
       return directionToArrowCharacter(robot->getDirection());
     }
-    return grid[static_cast<S32>(grid.size()) - 1 - point.getY()][point.getX()];
+    return grid[grid.size() - 1u - unsignedCast<Unchecked>(point.getY())][unsignedCast<Unchecked>(point.getX())];
   }
 
   [[nodiscard]] bool hasSupport(Point<S32, 2> point) const {
@@ -180,7 +181,7 @@ Map readMap(Intcode &intcode) {
   map.grid.emplace_back();
   auto running = true;
   while (running) {
-    const auto value = intcode.getOutput();
+    auto const value = checkedCast<char>(intcode.getOutput());
     switch (value) {
     case '#': {
       map.grid.back().push_back('#');
@@ -227,7 +228,8 @@ Map readMap(Intcode &intcode) {
   }
   map.grid.pop_back();
   assert(robotOffset.has_value());
-  const auto robotPosition = Point<S32, 2>(robotOffset->getX(), map.grid.size() - robotOffset->getY());
+  const auto robotPosition =
+      Point<S32, 2>(robotOffset->getX(), static_cast<S32>(map.grid.size()) - robotOffset->getY());
   robot.setPosition(robotPosition);
   map.setRobot(robot);
   return map;
@@ -247,7 +249,7 @@ std::string robotMovementSequenceToString(const RobotMovementSequence &sequence)
 }
 
 S64 getRobotMovementSequenceLength(const RobotMovementSequence &sequence) {
-  return robotMovementSequenceToString(sequence).size();
+  return static_cast<S64>(robotMovementSequenceToString(sequence).size());
 }
 
 using MainRoutine = std::vector<std::variant<RobotMovement, std::size_t>>;
@@ -294,7 +296,7 @@ public:
   }
 
   void extractRoutine() {
-    std::map<RobotMovementSequence, std::size_t> counter;
+    std::map<RobotMovementSequence, S64> counter;
     for (std::size_t i = 0; i < main.size(); i++) {
       RobotMovementSequence subsequence;
       for (std::size_t j = i; j < main.size(); j++) {
@@ -325,7 +327,7 @@ public:
     RobotMovementSequence bestSequence;
     S64 bestSequenceSavings = 0;
     for (const auto &entry : counter) {
-      const auto savings = static_cast<S64>(entry.second * evaluateReplacementSavings(entry.first));
+      const auto savings = entry.second * evaluateReplacementSavings(entry.first);
       if (savings > bestSequenceSavings) {
         bestSequence = entry.first;
         bestSequenceSavings = savings;
@@ -336,7 +338,8 @@ public:
       if (equals(main, i, bestSequence)) {
         const auto index = routines.size() - 1;
         main[i] = index;
-        main.erase(std::begin(main) + i + 1, std::begin(main) + i + bestSequence.size());
+        main.erase(std::begin(main) + static_cast<S32>(i) + 1,
+                   std::begin(main) + static_cast<S32>(i + bestSequence.size()));
       }
     }
   }
