@@ -14,7 +14,7 @@ void ArgumentParser::parseArguments(int argc, char **argv) {
   }
   path = std::string(argv[1]);
   if (argc < 3) {
-    throw std::runtime_error("Expected a part as the first argument.");
+    throw std::runtime_error("Expected a part as the second argument.");
   }
   part = parseValue<decltype(part)>(std::string(argv[2]));
   if (!Interval<decltype(part)>(1, 3).contains(part)) {
