@@ -108,7 +108,8 @@ void main(ArgumentParser const &argumentParser) {
     SafetyTables safetyTables;
     safetyTables.safeIfJumps[toAhead("#########")] = true;
     safetyTables.safeIfDoesNotJump[toAhead("#########")] = true;
-    for (S32 i = States - 2u; i >= 0; i--) {
+    for (U32 i = States - 1u; i > 0u;) {
+      i--;
       safetyTables.safeIfJumps[i] = isSafeIfJumps(safetyTables, static_cast<U32>(i));
       safetyTables.safeIfDoesNotJump[i] = isSafeIfDoesNotJump(safetyTables, static_cast<U32>(i));
     }
@@ -177,7 +178,7 @@ void main(ArgumentParser const &argumentParser) {
     // Minimize the boolean function we have.
     std::vector<U16> on;
     std::vector<U16> dontCare;
-    for (U32 i = 0u; i < States; i++) {
+    for (U16 i = 0u; i < States; i++) {
       if (desiredOutput[i].value() == DesiredOutput::True) {
         on.push_back(i);
       } else if (desiredOutput[i].value() == DesiredOutput::Any) {
