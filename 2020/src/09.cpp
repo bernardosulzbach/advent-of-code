@@ -11,7 +11,7 @@
 #include <vector>
 
 namespace AoC {
-inline constexpr std::size_t PreambleSize = 25;
+inline constexpr Size PreambleSize = 25;
 
 void main(ArgumentParser const &argumentParser) {
   auto const part = argumentParser.getPart();
@@ -20,7 +20,7 @@ void main(ArgumentParser const &argumentParser) {
   auto const firstViolation = [&lastValues]() {
     for (auto i = PreambleSize; i < lastValues.size(); ++i) {
       auto const value = lastValues[i];
-      auto const view = std::views::counted(lastValues.begin() + i - PreambleSize, PreambleSize);
+      auto const view = std::views::counted(lastValues.begin() + static_cast<S64>(i) - PreambleSize, PreambleSize);
       auto const iterPair = AoC::findPair(view, [value](auto const a, auto const b) { return a + b == value; });
       if (iterPair.first == view.end()) {
         assert(iterPair.second == view.end());
