@@ -31,10 +31,10 @@ struct VisibleAsteroid {
     return angle;
   }
 
-  [[nodiscard]] F64 getDistance(std::size_t oI, std::size_t oJ) const {
-    const auto dI = static_cast<F64>(i) - oI;
-    const auto dJ = static_cast<F64>(j) - oJ;
-    return std::hypotf(dI, dJ);
+  [[nodiscard]] F64 getDistance(std::size_t const oI, std::size_t const oJ) const {
+    const auto dI = static_cast<F64>(i) - static_cast<F64>(oI);
+    const auto dJ = static_cast<F64>(j) - static_cast<F64>(oJ);
+    return std::hypot(dI, dJ);
   }
 };
 
