@@ -1,4 +1,5 @@
 #include "ArgumentParser.hpp"
+#include "Casts.hpp"
 #include "Intcode.hpp"
 #include "Point.hpp"
 #include "Text.hpp"
@@ -11,7 +12,7 @@
 namespace AoC {
 void main(ArgumentParser const &argumentParser) {
   const auto originalIntcode = Intcode(readMemory(argumentParser.getPath()));
-  const auto test = [&](Intcode::ValueType x, Intcode::ValueType y) {
+  const auto test = [&](Intcode::ValueType const x, Intcode::ValueType const y) {
     auto intcode = originalIntcode;
     verify(intcode.run() == IntcodeState::Blocked);
     intcode.addInput(x);
@@ -34,38 +35,43 @@ void main(ArgumentParser const &argumentParser) {
   } else {
     // Empirically determined.
     const Intcode::ValueType size = 2000;
+    using UnsignedType = std::make_unsigned_t<std::decay_t<decltype(size)>>;
     std::vector<std::vector<bool>> grid(size, std::vector<bool>(size));
     for (Intcode::ValueType i = 0; i < size; i++) {
       for (Intcode::ValueType j = 0; j < size; j++) {
         if (test(j, i) == 1) {
-          grid[i][j] = true;
+          grid[unsignedCast<Unchecked>(i)][unsignedCast<Unchecked>(j)] = true;
         }
       }
     }
-    std::vector<std::vector<U32>> lengthRight(size + 1, std::vector<U32>(size + 1));
-    std::vector<std::vector<U32>> lengthDown(size + 1, std::vector<U32>(size + 1));
+    std::vector<std::vector<UnsignedType>> lengthRight(size + 1, std::vector<UnsignedType>(size + 1));
+    std::vector<std::vector<UnsignedType>> lengthDown(size + 1, std::vector<UnsignedType>(size + 1));
     for (Intcode::ValueType i = size - 1; i >= 0; i--) {
       for (Intcode::ValueType j = size - 1; j >= 0; j--) {
-        if (grid[i][j]) {
-          lengthRight[i][j] = lengthRight[i][j + 1] + 1;
-          lengthDown[i][j] = lengthDown[i + 1][j] + 1;
+        auto const uI = unsignedCast<Unchecked>(i);
+        auto const uJ = unsignedCast<Unchecked>(j);
+        if (grid[uI][uJ]) {
+          lengthRight[uI][uJ] = lengthRight[uI][uJ + 1u] + 1;
+          lengthDown[uI][uJ] = lengthDown[uI + 1u][uJ] + 1;
         } else {
-          lengthRight[i][j] = 0;
-          lengthDown[i][j] = 0;
+          lengthRight[uI][uJ] = 0;
+          lengthDown[uI][uJ] = 0;
         }
       }
     }
-    std::optional<Point<U32, 2>> closestPoint;
-    const auto getPointDistanceSquare = [](std::optional<Point<U32, 2>> const &point) {
-      if (!point) {
-        return std::numeric_limits<U32>::max();
+    std::optional<Point<Intcode::ValueType, 2>> closestPoint;
+    const auto getPointDistanceSquare = [](std::optional<Point<Intcode::ValueType, 2>> const &optionalPoint) noexcept {
+      if (!optionalPoint) {
+        return std::numeric_limits<Intcode::ValueType>::max();
       }
-      return point->toOrigin().getL2NormSquare();
+      return optionalPoint->toOrigin().getL2NormSquare();
     };
     for (Intcode::ValueType i = 0; i < size; i++) {
       for (Intcode::ValueType j = 0; j < size; j++) {
-        if (lengthRight[i][j] >= 100 && lengthDown[i][j] >= 100) {
-          const auto point = Point<U32, 2>(j, i);
+        auto const uI = unsignedCast<Unchecked>(i);
+        auto const uJ = unsignedCast<Unchecked>(j);
+        if (lengthRight[uI][uJ] >= 100 && lengthDown[uI][uJ] >= 100) {
+          const auto point = Point<Intcode::ValueType, 2>(i, j);
           if (getPointDistanceSquare(point) < getPointDistanceSquare(closestPoint)) {
             closestPoint = point;
           }
