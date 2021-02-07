@@ -86,7 +86,7 @@ void main(ArgumentParser const &argumentParser) {
 
   std::vector<U32> reactionToMakeChemical(dictionary.size());
   for (std::size_t i = 0; i < reactions.size(); i++) {
-    reactionToMakeChemical[reactions[i].output.index] = i;
+    reactionToMakeChemical[reactions[i].output.index] = static_cast<U32>(i);
   }
 
   DirectedGraph directedGraph(dictionary.size());
