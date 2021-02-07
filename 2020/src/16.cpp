@@ -1,4 +1,5 @@
 #include "ArgumentParser.hpp"
+#include "Casts.hpp"
 #include "IO.hpp"
 #include "Interval.hpp"
 #include "Text.hpp"
@@ -113,7 +114,7 @@ void main(ArgumentParser const &argumentParser) {
       }
     }
     auto const Unknown = std::numeric_limits<std::size_t>::max();
-    std::vector<std::size_t> is(fields.size(), Unknown);
+    std::vector<Size> is(fields.size(), Unknown);
     for (std::size_t discovered = 0; discovered < fields.size(); discovered++) {
       for (std::size_t i = 0; i < fields.size(); i++) {
         if (is[i] != Unknown) {
@@ -122,7 +123,7 @@ void main(ArgumentParser const &argumentParser) {
         auto const itJ = std::find(std::begin(canBe[i]), std::end(canBe[i]), true);
         assert(itJ != std::end(canBe[i]));
         if (std::find(std::next(itJ), std::end(canBe[i]), true) == std::end(canBe[i])) {
-          auto const j = std::distance(std::begin(canBe[i]), itJ);
+          auto const j = unsignedCast<Unchecked>(std::distance(std::begin(canBe[i]), itJ));
           is[i] = j;
           for (std::size_t k = 0; k < fields.size(); k++) {
             if (k != i) {
