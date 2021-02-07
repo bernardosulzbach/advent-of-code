@@ -1,4 +1,5 @@
 #include "ArgumentParser.hpp"
+#include "Casts.hpp"
 #include "IO.hpp"
 
 #include <algorithm>
@@ -34,7 +35,7 @@ void main(ArgumentParser const &argumentParser) {
     std::bitset<26> declaredInLine{};
     for (auto const character : line) {
       if ('a' <= character && character <= 'z') {
-        declaredInLine[character - 'a'] = true;
+        declaredInLine[unsignedCast<Unchecked>(character - 'a')] = true;
       }
     }
     if (part == 1) {
