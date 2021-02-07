@@ -24,7 +24,7 @@ constexpr auto BlockSymbol = '*';
 constexpr auto PadSymbol = '-';
 constexpr auto BallSymbol = 'o';
 
-char characterFromTileId(U64 tileId) {
+[[nodiscard]] char characterFromTileId(Intcode::ValueType tileId) {
   switch (tileId) {
   case 0:
     return EmptySpaceSymbol;
@@ -49,7 +49,7 @@ void updateScreen(Intcode &intcode, Screen &screen) {
     assert(intcode.hasOutput());
     const auto value = intcode.getOutput();
     if (x >= 0 && y >= 0) {
-      screen.paint(x, y, characterFromTileId(value));
+      screen.paint(unsignedCast<Unchecked>(x), unsignedCast<Unchecked>(y), characterFromTileId(value));
     } else {
       assert(x == -1);
       assert(y == 0);
