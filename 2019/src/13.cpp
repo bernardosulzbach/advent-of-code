@@ -59,7 +59,7 @@ void updateScreen(Intcode &intcode, Screen &screen) {
 }
 
 struct DefeatCause {
-  Point<S64, 2> position;
+  Point<Size, 2> position;
   U32 turns;
 };
 
@@ -71,7 +71,7 @@ DefeatCause findDefeatCause(Intcode intcode, Screen screen) {
     intcode.addInput(0);
     turns++;
   }
-  return DefeatCause{screen.getPosition(BallSymbol), turns};
+  return {screen.getPosition(BallSymbol), turns};
 }
 
 void main(ArgumentParser const &argumentParser) {
@@ -84,13 +84,13 @@ void main(ArgumentParser const &argumentParser) {
     std::cout << std::count(std::begin(string), std::end(string), BlockSymbol) << '\n';
   } else {
     intcode.memory[0] = 2;
-    std::optional<Point<S64, 2>> previousBallPosition{};
+    std::optional<Point<Size, 2>> previousBallPosition;
     while (intcode.run() != IntcodeState::Halted) {
       updateScreen(intcode, screen);
       // Idea: find the position at which we are defeated, then move the paddle to that position in the old state.
       const auto defeatCause = findDefeatCause(intcode, screen);
       const auto currentPaddlePosition = screen.getPosition(PadSymbol);
-      const auto dx = defeatCause.position.getX() - currentPaddlePosition.getX();
+      const auto dx = checkedCast<S64>(defeatCause.position.getX()) - checkedCast<S64>(currentPaddlePosition.getX());
       const auto currentBallPosition = screen.getPosition(BallSymbol);
       if (std::abs(dx) + 2 >= defeatCause.turns) {
         if (currentPaddlePosition.getX() == defeatCause.position.getX()) {
