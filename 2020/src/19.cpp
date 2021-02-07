@@ -1,4 +1,5 @@
 #include "ArgumentParser.hpp"
+#include "Casts.hpp"
 #include "Containers.hpp"
 #include "ContextFreeGrammar.hpp"
 #include "IO.hpp"
@@ -65,7 +66,7 @@ void main(ArgumentParser const &argumentParser) {
   AoC::ContextFreeGrammar contextFreeGrammar(productions);
   auto const zeroProductionIterator = std::ranges::find_if(productions, isZeroProduction);
   auto const zeroProductionIndex = std::ranges::distance(std::ranges::begin(productions), zeroProductionIterator);
-  AoC::ContextFreeGrammarRecognizer recognizer(contextFreeGrammar, zeroProductionIndex);
+  AoC::ContextFreeGrammarRecognizer recognizer(contextFreeGrammar, unsignedCast<Unchecked>(zeroProductionIndex));
   std::cout << std::count_if(lineIterator, std::end(lines), [&recognizer](auto const &it) {
     std::vector<std::string> words;
     for (auto const character : it) {
