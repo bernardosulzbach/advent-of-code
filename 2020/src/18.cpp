@@ -93,7 +93,7 @@ struct Token {
 // If additionsFirst, performs an addition only pass first.
 void reduce(std::vector<Token> &tokens, Size const start, bool const additionsFirst) noexcept {
   std::vector<Token> reduction;
-  for (auto read = tokens.begin() + start; read != tokens.end(); read++) {
+  for (auto read = tokens.begin() + static_cast<S64>(start); read != tokens.end(); read++) {
     if (!reduction.empty() && read->type == TokenType::Number) {
       if (!additionsFirst || reduction.back().type == TokenType::Plus) {
         assert(reduction.size() >= 2);
@@ -116,7 +116,7 @@ void reduce(std::vector<Token> &tokens, Size const start, bool const additionsFi
   assert(reduction.size() == 1);
   tokens[start] = reduction.front();
   assert(start + 1 <= tokens.size());
-  tokens.erase(tokens.begin() + start + 1, tokens.end());
+  tokens.erase(tokens.begin() + static_cast<S64>(start) + 1, tokens.end());
 }
 
 void main(ArgumentParser const &argumentParser) {
