@@ -1,21 +1,22 @@
 #pragma once
 
+#include "Casts.hpp"
+#include "Point.hpp"
+#include "Types.hpp"
+
 #include <stdexcept>
 #include <string>
 #include <vector>
 
-#include "Point.hpp"
-#include "Types.hpp"
-
 class Screen {
   std::vector<std::string> pixels;
-  std::size_t width = 0;
-  std::size_t height = 0;
+  Size width = 0;
+  Size height = 0;
   S64 score = 0;
 
-  constexpr static char DefaultCharacter = ' ';
+  static constexpr char DefaultCharacter = ' ';
 
-  void resize(std::size_t x, std::size_t y) {
+  void resize(Size const x, Size const y) noexcept {
     width = std::max(width, x);
     height = std::max(height, y);
     pixels.resize(height + 1);
@@ -25,31 +26,31 @@ class Screen {
   }
 
 public:
-  void setScore(S64 newScore) {
+  void setScore(S64 const newScore) noexcept {
     score = newScore;
   }
 
-  [[nodiscard]] S64 getScore() const {
+  [[nodiscard]] S64 getScore() const noexcept {
     return score;
   }
 
-  [[nodiscard]] Point<S64, 2> getPosition(char symbol) const {
-    for (std::size_t i = 0; i < height; i++) {
-      for (std::size_t j = 0; j < width; j++) {
+  [[nodiscard]] Point<Size, 2> getPosition(char symbol) const {
+    for (Size i = 0; i < height; i++) {
+      for (Size j = 0; j < width; j++) {
         if (pixels[i][j] == symbol) {
-          return Point<S64, 2>(j, i);
+          return {i, j};
         }
       }
     }
     throw std::runtime_error("Symbol '" + std::string(1, symbol) + "' not found.");
   }
 
-  void paint(S64 x, S64 y, char c) {
+  void paint(Size const x, Size const y, char const c) {
     resize(x, y);
     pixels[y][x] = c;
   }
 
-  [[nodiscard]] std::string toString() const {
+  [[nodiscard]] std::string toString() const noexcept {
     std::string result;
     result += "Score: " + std::to_string(score);
     for (const auto &line : pixels) {
