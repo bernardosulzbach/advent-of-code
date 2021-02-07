@@ -50,10 +50,12 @@ void main(ArgumentParser const &argumentParser) {
       minY = std::min(minY, point.getY());
       maxY = std::max(maxY, point.getY());
     }
-    std::vector<std::string> lines(maxY - minY + 1, std::string(maxX - minX + 1, ' '));
+    auto const yRange = unsignedCast<Unchecked>(maxY - minY + 1);
+    auto const xRange = unsignedCast<Unchecked>(maxX - minX + 1);
+    std::vector<std::string> lines(yRange, std::string(xRange, ' '));
     for (const auto &hullEntry : hull) {
-      const auto i = maxY - hullEntry.first.getY();
-      const auto j = hullEntry.first.getX() - minX;
+      const auto i = unsignedCast<Unchecked>(maxY - hullEntry.first.getY());
+      const auto j = unsignedCast<Unchecked>(hullEntry.first.getX() - minX);
       lines[i][j] = hullEntry.second ? 'X' : ' ';
     }
     for (const auto &line : lines) {
