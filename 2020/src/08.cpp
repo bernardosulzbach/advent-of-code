@@ -17,22 +17,23 @@ struct ExecutionResult {
   int accumulator;
 };
 
-ExecutionResult execute(std::vector<std::string> const &operations, std::vector<int> const &arguments) {
+ExecutionResult execute(std::vector<std::string> const &operations, std::vector<S32> const &arguments) {
   std::vector<bool> executed(operations.size());
-  int accumulator = 0;
+  S32 accumulator = 0;
   S64 i = 0;
   auto const size = static_cast<decltype(i)>(operations.size());
   auto const interval = AoC::Interval<decltype(i)>(0, size);
-  while (interval.contains(i) && !executed[i]) {
-    executed[i] = true;
-    if (operations[i] == "jmp") {
-      i += arguments[i];
+  while (interval.contains(i) && !executed[unsignedCast<Unchecked>(i)]) {
+    auto const uI = unsignedCast<Unchecked>(i);
+    executed[uI] = true;
+    if (operations[uI] == "jmp") {
+      i += arguments[uI];
       continue;
     }
-    if (operations[i] == "acc") {
-      accumulator += arguments[i];
+    if (operations[uI] == "acc") {
+      accumulator += arguments[uI];
     } else {
-      assert(operations[i] == "nop");
+      assert(operations[uI] == "nop");
     }
     ++i;
   }
@@ -49,10 +50,10 @@ void main(ArgumentParser const &argumentParser) {
   auto const part = argumentParser.getPart();
   auto stream = std::ifstream(argumentParser.getPath());
   std::vector<std::string> operations;
-  std::vector<int> arguments;
+  std::vector<S32> arguments;
   {
     std::string operation;
-    int argument;
+    S32 argument;
     while (stream >> operation >> argument) {
       operations.push_back(operation);
       arguments.push_back(argument);
