@@ -19,7 +19,7 @@ class BugScan {
 
   [[nodiscard]] constexpr UnsignedCoordinateType toIndex(UnsignedCoordinateType const i,
                                                          UnsignedCoordinateType const j) const noexcept {
-    return i * unsignedCast(Side) + j;
+    return i * unsignedCast<Checked>(Side) + j;
   }
 
   [[nodiscard]] U32 get(UnsignedCoordinateType const i, UnsignedCoordinateType const j) const noexcept {
@@ -40,12 +40,12 @@ public:
     if (i < 0 || i >= Side || j < 0 || j >= Side) {
       return 0;
     }
-    return get(unsignedCast(i), unsignedCast(j));
+    return get(unsignedCast<Checked>(i), unsignedCast<Checked>(j));
   }
 
   void set(CoordinateType const i, CoordinateType const j, U32 const x) noexcept {
     assert(x == 0 || x == 1);
-    auto const oneHot = 1u << toIndex(unsignedCast(i), unsignedCast(j));
+    auto const oneHot = 1u << toIndex(unsignedCast<Checked>(i), unsignedCast<Checked>(j));
     if (x == 0) {
       state &= ~oneHot;
     }

@@ -2,10 +2,10 @@
 
 #include <bit>
 #include <cmath>
-#include <execution>
 #include <iostream>
 #include <numeric>
 #include <tuple>
+#include <type_traits>
 
 #include <boost/numeric/conversion/cast.hpp>
 
@@ -27,20 +27,6 @@ template <typename T> T leastCommonMultiple(T a, T b) {
 }
 
 namespace AoC {
-/**
- * Checks if the cast preserves the value before performing it.
- */
-template <Integral Target, Integral Source> constexpr Target checkedCast(Source const source) {
-  return boost::numeric_cast<Target>(source);
-}
-
-/**
- * Also checks if the cast preserves the value before performing it.
- */
-template <Integral Source> constexpr std::make_unsigned_t<Source> unsignedCast(Source const source) {
-  return boost::numeric_cast<std::make_unsigned_t<Source>>(source);
-}
-
 template <Integral ResultType, UnsignedIntegral ExponentType>
 constexpr ResultType pow(ResultType const base, ExponentType const exponent, ResultType const result = 1) {
   return exponent == 0 ? result : pow(base * base, exponent / 2, (exponent % 2) ? result * base : result);

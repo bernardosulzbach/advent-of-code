@@ -1,12 +1,13 @@
 #pragma once
 
+#include "Casts.hpp"
+#include "Types.hpp"
+
 #include <cassert>
 #include <numeric>
 #include <tuple>
 #include <type_traits>
 #include <utility>
-
-#include "Types.hpp"
 
 namespace AoC {
 template <typename Range>
@@ -76,7 +77,7 @@ template <std::size_t N, typename Range> struct CombinationIterator {
 private:
   void increment(decltype(N) const i) &noexcept {
     ++iters[i];
-    if (toUnsigned(std::distance(iters[i], itEnd)) == N - 1 - i) {
+    if (unsignedCast<Unchecked>(std::distance(iters[i], itEnd)) == N - 1 - i) {
       if (i == 0) {
         toEnd();
         return;

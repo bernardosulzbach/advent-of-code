@@ -50,6 +50,7 @@ Some of these rules are not objective, and exist only to ensure consistency.
 * Use `assert` for expressions that can be removed from the program. Use `AoC::verify` for expressions that can't.
 * Hashes should use `AoC::Hash`.
 * To test if a value is one of a set of values, use `AoC::isAnyOf(x, y, z, ...)` rather than `x == y || x == z || ...`.
+* To convert a signed integer to an unsigned one, use `AoC::unsignedCast<Checked>` or `AoC::unsignedCast<Unchecked>`. If `Checked`, the conversion will be checked at runtime.
 
 ## 2018
 
