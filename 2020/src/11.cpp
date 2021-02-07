@@ -43,8 +43,10 @@ void main(ArgumentParser const &argumentParser) {
     if (part == 1) {
       for (auto const vector : DirectionVectors) {
         auto const n = sizesToVector(i, j) + vector;
-        if (iInterval.contains(n[0]) && jInterval.contains(n[1]) && lines[n[0]][n[1]] == OccupiedSeat) {
-          count++;
+        if (iInterval.contains(n[0]) && jInterval.contains(n[1])) {
+          if (lines[unsignedCast<Unchecked>(n[0])][unsignedCast<Unchecked>(n[1])] == OccupiedSeat) {
+            count++;
+          }
         }
       }
     } else if (part == 2) {
@@ -52,10 +54,10 @@ void main(ArgumentParser const &argumentParser) {
         if (distanceToNeighbors[i][j][k] == Undefined) {
           continue;
         }
-        auto const n = sizesToVector(i, j) + DirectionVectors[k].scale(distanceToNeighbors[i][j][k]);
+        auto const n = sizesToVector(i, j) + DirectionVectors[k].scale(static_cast<S64>(distanceToNeighbors[i][j][k]));
         assert(iInterval.contains(n[0]) && jInterval.contains(n[1]));
-        assert(lines[n[0]][n[1]] != EmptySpace);
-        if (lines[n[0]][n[1]] == OccupiedSeat) {
+        assert(lines[unsignedCast<Unchecked>(n[0])][unsignedCast<Unchecked>(n[1])] != EmptySpace);
+        if (lines[unsignedCast<Unchecked>(n[0])][unsignedCast<Unchecked>(n[1])] == OccupiedSeat) {
           count++;
         }
       }
@@ -67,12 +69,14 @@ void main(ArgumentParser const &argumentParser) {
                                                                        Vector<S64, 2> const d) noexcept {
       auto n = p + d;
       std::size_t distance = 1;
-      while (iInterval.contains(n[0]) && jInterval.contains(n[1]) && lines[n[0]][n[1]] == EmptySpace) {
-        n += d;
-        distance++;
+      while (iInterval.contains(n[0]) && jInterval.contains(n[1])) {
+        if (lines[unsignedCast<Unchecked>(n[0])][unsignedCast<Unchecked>(n[1])] == EmptySpace) {
+          n += d;
+          distance++;
+        }
       }
       if (iInterval.contains(n[0]) && jInterval.contains(n[1])) {
-        assert(lines[n[0]][n[1]] != EmptySpace);
+        assert(lines[unsignedCast<Unchecked>(n[0])][unsignedCast<Unchecked>(n[1])] != EmptySpace);
         return distance;
       }
       return Undefined;
