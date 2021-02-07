@@ -176,8 +176,8 @@ private:
       }
       return;
     }
-    auto initialValue = currentPoint[dimension];
-    for (auto value = initialValue - 1; value <= initialValue + 1; value++) {
+    auto const initialValue = currentPoint[dimension];
+    for (std::decay_t<decltype(initialValue)> value = initialValue - 1; value <= initialValue + 1; value++) {
       currentPoint[dimension] = value;
       getNeighborsRecursion(neighborsIterator, currentPoint, equalToPoint && (value == initialValue), dimension + 1);
     }
