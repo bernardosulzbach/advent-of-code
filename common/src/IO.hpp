@@ -35,7 +35,7 @@ template <typename T, typename Stream> std::vector<T> readVector(Stream &s) {
   return vector;
 }
 
-template <typename Stream> std::vector<std::string> readLines(Stream &s) {
+template <typename Stream> std::vector<std::string> readLines(Stream &&s) {
   if (!s) {
     throw std::runtime_error("Stream is not in a good state.");
   }
