@@ -1,0 +1,20 @@
+dist: focal
+language: cpp
+
+compiler:
+  - clang
+  - gcc
+
+addons:
+  apt:
+    update: true
+    packages:
+      - build-essential
+      - cmake
+      - libboost-all-dev
+
+script:
+  - cd 2020
+  - mkdir build && cd build || exit
+  - cmake -DCMAKE_BUILD_TYPE=Debug ..
+  - cmake --build .
