@@ -69,11 +69,10 @@ void main(ArgumentParser const &argumentParser) {
                                                                        Vector<S64, 2> const d) noexcept {
       auto n = p + d;
       std::size_t distance = 1;
-      while (iInterval.contains(n[0]) && jInterval.contains(n[1])) {
-        if (lines[unsignedCast<Unchecked>(n[0])][unsignedCast<Unchecked>(n[1])] == EmptySpace) {
-          n += d;
-          distance++;
-        }
+      while (iInterval.contains(n[0]) && jInterval.contains(n[1]) &&
+             lines[unsignedCast<Unchecked>(n[0])][unsignedCast<Unchecked>(n[1])] == EmptySpace) {
+        n += d;
+        distance++;
       }
       if (iInterval.contains(n[0]) && jInterval.contains(n[1])) {
         assert(lines[unsignedCast<Unchecked>(n[0])][unsignedCast<Unchecked>(n[1])] != EmptySpace);
