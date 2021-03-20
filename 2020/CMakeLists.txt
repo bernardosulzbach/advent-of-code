@@ -9,6 +9,12 @@ add_library(advent-of-code-common OBJECT ../common/src/ArgumentParser.cpp ../com
 
 include_directories("../common/src")
 
+find_package(Boost REQUIRED)
+include_directories(${Boost_INCLUDE_DIR})
+set(Boost_USE_MULTITHREADED ON)
+
+find_package(Threads REQUIRED)
+
 add_executable(01 src/01.cpp $<TARGET_OBJECTS:advent-of-code-common>)
 add_executable(02 src/02.cpp $<TARGET_OBJECTS:advent-of-code-common>)
 add_executable(03 src/03.cpp $<TARGET_OBJECTS:advent-of-code-common>)
