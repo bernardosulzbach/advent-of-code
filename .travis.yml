@@ -15,7 +15,4 @@ matrix:
             - libboost-all-dev
 
 script:
-  - cd 2020
-  - mkdir build && cd build || exit
-  - cmake -DCMAKE_CXX_COMPILER=g++-10 -DCMAKE_BUILD_TYPE=Debug ..
-  - cmake --build .
+  - bash scripts/build-c++.sh
