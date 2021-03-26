@@ -10,6 +10,7 @@ matrix:
           update: true
           packages:
             - g++-10
+            - clang-format-10
             - build-essential
             - cmake
             - libboost-all-dev
