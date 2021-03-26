@@ -5,15 +5,13 @@
 #include <algorithm>
 #include <bitset>
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   std::bitset<26> declared;
   if (part == 2) {
     declared.flip();

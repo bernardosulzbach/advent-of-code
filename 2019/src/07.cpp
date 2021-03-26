@@ -60,9 +60,8 @@ void solve(std::vector<Intcode::ValueType> const &memory, U32 const part) {
   std::cout << bestOutputLevel.value() << '\n';
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto const memory = readMemory(argumentParser.getPath());
-  solve(memory, argumentParser.getPart());
+void main(std::istream &stream, U32 const part) {
+  solve(readMemory(stream), part);
 }
 } // namespace AoC
 

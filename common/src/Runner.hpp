@@ -47,7 +47,8 @@ public:
     const auto actualOutput = getOutput(command);
     const auto duration = timer.getElapsed();
     std::cout << "Done after " << duration << ".\n";
-    const auto expectedOutput = readFile(outputPath);
+    std::ifstream outputStream(outputPath);
+    const auto expectedOutput = readFile(outputStream);
     const auto passedTests = actualOutput == expectedOutput;
     if (!passedTests) {
       std::cout << "Output is wrong: " << actualOutput << " != " << expectedOutput << '\n';

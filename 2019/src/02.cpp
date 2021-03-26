@@ -1,13 +1,12 @@
 #include "ArgumentParser.hpp"
 #include "Intcode.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <vector>
 
 namespace AoC {
-void partOne(const std::string &path) {
-  auto memory = readMemory(path);
+void partOne(std::istream &stream) {
+  auto memory = readMemory(stream);
   memory[1] = 12;
   memory[2] = 2;
   Intcode intcode(memory);
@@ -15,8 +14,7 @@ void partOne(const std::string &path) {
   std::cout << intcode.memory[0] << '\n';
 }
 
-void partTwo(const std::string &path) {
-  std::ifstream stream(path);
+void partTwo(std::istream &stream) {
   std::vector<Intcode::ValueType> memory;
   int value;
   while (stream >> value) {
@@ -41,11 +39,11 @@ void partTwo(const std::string &path) {
   }
 }
 
-void main(ArgumentParser const &argumentParser) {
-  if (argumentParser.getPart() == 1) {
-    partOne(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
+  if (part == 1) {
+    partOne(stream);
   } else {
-    partTwo(argumentParser.getPath());
+    partTwo(stream);
   }
 }
 } // namespace AoC

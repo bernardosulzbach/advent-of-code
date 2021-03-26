@@ -188,8 +188,7 @@ IntcodeState Intcode::run() {
   throw std::runtime_error("Should never happen.");
 }
 
-std::vector<Intcode::ValueType> readMemory(const std::string &path) {
-  std::ifstream stream(path);
+std::vector<Intcode::ValueType> readMemory(std::istream &stream) {
   std::vector<Intcode::ValueType> memory;
   Intcode::ValueType value;
   while (stream >> value) {

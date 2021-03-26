@@ -3,7 +3,6 @@
 #include "Math.hpp"
 #include "Vector.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <optional>
 #include <vector>
@@ -70,10 +69,9 @@ std::vector<VisibleAsteroid> computeVisibleAsteroids(const AsteroidField &astero
   return visibleAsteroids;
 }
 
-void main(ArgumentParser const &argumentParser) {
+void main(std::istream &stream, U32 const part) {
   AsteroidField asteroids;
   {
-    std::ifstream stream(argumentParser.getPath());
     std::string line;
     std::size_t i = 0;
     while (stream >> line) {
@@ -99,7 +97,7 @@ void main(ArgumentParser const &argumentParser) {
       }
     }
   }
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     std::cout << maximumVisible << '\n';
   } else {
     U32 destroyed = 0;

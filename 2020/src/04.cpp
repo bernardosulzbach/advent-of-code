@@ -5,16 +5,14 @@
 
 #include <algorithm>
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <unordered_map>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   std::unordered_map<std::string, std::string> passport;
   std::string line;
   int validPassports = 0;

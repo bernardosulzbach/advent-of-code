@@ -7,7 +7,7 @@
 
 #include <algorithm>
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <ranges>
 #include <sstream>
@@ -58,8 +58,7 @@ template <typename Stream> std::vector<Field> readFields(Stream &stream) noexcep
   return fields;
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   auto const fields = readFields(stream);
   std::vector<AoC::Interval<ValueType>> mergedFieldIntervals;
   std::ranges::for_each(fields, [&mergedFieldIntervals](auto const &field) {
@@ -89,7 +88,7 @@ void main(ArgumentParser const &argumentParser) {
   auto const isInvalidTicket = [&isValidFieldValue](auto const &ticket) noexcept {
     return !std::ranges::all_of(ticket.values, isValidFieldValue);
   };
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     ValueType ticketScanningErrorRate{};
     for (auto const &ticket : nearbyTickets) {
       for (auto const value : ticket.values) {

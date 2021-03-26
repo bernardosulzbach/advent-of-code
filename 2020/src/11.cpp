@@ -7,7 +7,7 @@
 
 #include <algorithm>
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <ranges>
 #include <vector>
@@ -27,9 +27,7 @@ using DistanceArray = std::array<std::size_t, DirectionVectors.size()>;
   return Vector<S64, 2>{static_cast<S64>(i), static_cast<S64>(j)};
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   auto lines = AoC::readVector<std::string>(stream);
   auto const iInterval = AoC::Interval<S64>(0, static_cast<S64>(lines.size()));
   auto const jInterval = AoC::Interval<S64>(0, static_cast<S64>(lines.front().size()));

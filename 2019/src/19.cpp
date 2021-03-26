@@ -10,8 +10,8 @@
 #include <optional>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  const auto originalIntcode = Intcode(readMemory(argumentParser.getPath()));
+void main(std::istream &stream, U32 const part) {
+  const auto originalIntcode = Intcode(readMemory(stream));
   const auto test = [&](Intcode::ValueType const x, Intcode::ValueType const y) {
     auto intcode = originalIntcode;
     verify(intcode.run() == IntcodeState::Blocked);
@@ -21,7 +21,7 @@ void main(ArgumentParser const &argumentParser) {
     assert(intcode.hasOutput());
     return intcode.getOutput();
   };
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     const Intcode::ValueType size = 50;
     S32 count = 0;
     for (Intcode::ValueType i = 0; i < size; i++) {

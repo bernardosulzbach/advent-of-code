@@ -4,10 +4,10 @@
 #include <iostream>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  const auto memory = readMemory(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
+  const auto memory = readMemory(stream);
   Intcode intcode(memory);
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     intcode.addInput(1);
   } else {
     intcode.addInput(5);

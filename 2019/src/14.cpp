@@ -10,7 +10,7 @@
 #include "Vector.hpp"
 
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <optional>
 #include <unordered_map>
@@ -61,9 +61,8 @@ Term readTerm(const std::string &string, std::unordered_map<std::string, U32> &d
   return term;
 }
 
-std::vector<Reaction> readReactionsFromFile(const std::string &path, std::unordered_map<std::string, U32> &dictionary) {
+std::vector<Reaction> readReactionsFromFile(std::istream &stream, std::unordered_map<std::string, U32> &dictionary) {
   std::vector<Reaction> reactions;
-  std::ifstream stream(path);
   std::string line;
   while (stream && std::getline(stream, line) && !line.empty()) {
     const auto sides = splitAt(line, " => ");
@@ -76,9 +75,9 @@ std::vector<Reaction> readReactionsFromFile(const std::string &path, std::unorde
   return reactions;
 }
 
-void main(ArgumentParser const &argumentParser) {
+void main(std::istream &stream, U32 const part) {
   std::unordered_map<std::string, U32> dictionary;
-  const auto reactions = readReactionsFromFile(argumentParser.getPath(), dictionary);
+  const auto reactions = readReactionsFromFile(stream, dictionary);
   std::vector<std::string> reverseDictionary(dictionary.size());
   for (const auto &entry : dictionary) {
     reverseDictionary[entry.second] = entry.first;
@@ -114,7 +113,7 @@ void main(ArgumentParser const &argumentParser) {
     return demand[dictionary["ORE"]];
   };
 
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     std::cout << determineOreRequiredToMakeFuel(1) << '\n';
   } else {
     constexpr U64 FuelLimit = 1000000000000ULL;

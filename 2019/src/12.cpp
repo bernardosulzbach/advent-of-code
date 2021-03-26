@@ -6,7 +6,6 @@
 #include "Point.hpp"
 #include "Vector.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <optional>
 #include <unordered_map>
@@ -69,9 +68,9 @@ std::array<Cycle, 3> findCycles(const std::vector<Body> &initialBodies) {
   return cycles;
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto bodies = readBodies(argumentParser.getPath());
-  if (argumentParser.getPart() == 1) {
+void main(std::istream &stream, U32 const part) {
+  auto bodies = readBodies(stream);
+  if (part == 1) {
     for (U32 it = 1; it <= 1000; it++) {
       updateBodies(bodies);
     }

@@ -11,7 +11,7 @@
 #include "Verify.hpp"
 
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <optional>
 #include <queue>
@@ -205,8 +205,8 @@ Intcode::ValueType directionToCommand(Direction direction) {
   throw std::runtime_error("Not all cases are handled.");
 }
 
-void main(ArgumentParser const &argumentParser) {
-  Intcode intcode(readMemory(argumentParser.getPath()));
+void main(std::istream &stream, U32 const part) {
+  Intcode intcode(readMemory(stream));
   std::optional<Point<S32, 2>> oxygenSystemPosition;
   const Point<S32, 2> startingRobotPosition{0, 0};
   auto robotPosition = startingRobotPosition;
@@ -252,7 +252,7 @@ void main(ArgumentParser const &argumentParser) {
     }
   }
   assert(oxygenSystemPosition.has_value());
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     std::cout << map.getDistanceBetween(startingRobotPosition, oxygenSystemPosition.value()) << '\n';
   } else {
     std::cout << map.getStepsToFloodFrom(oxygenSystemPosition.value()) << '\n';

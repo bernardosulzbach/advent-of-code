@@ -19,8 +19,7 @@ std::ostream &operator<<(std::ostream &stream, const Body &body) {
   return stream;
 }
 
-std::vector<Body> readBodies(const std::string &path) {
-  std::ifstream stream(path);
+std::vector<Body> readBodies(std::istream &stream) {
   std::vector<Body> bodies;
   Body body{};
   while (stream >> body) {

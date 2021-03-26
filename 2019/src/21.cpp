@@ -80,15 +80,15 @@ bool isSafe(const SafetyTables &safetyTables, const U32 ahead) {
   return isSafeIfJumps(safetyTables, ahead) || isSafeIfDoesNotJump(safetyTables, ahead);
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto originalIntcode = Intcode(readMemory(argumentParser.getPath()));
+void main(std::istream &stream, U32 const part) {
+  auto originalIntcode = Intcode(readMemory(stream));
   const auto enterInstruction = [&originalIntcode](const std::string &string) {
     for (const auto c : string) {
       originalIntcode.addInput(c);
     }
     originalIntcode.addInput('\n');
   };
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     // D must be 1.
     enterInstruction("NOT A T");
     enterInstruction("OR T J");

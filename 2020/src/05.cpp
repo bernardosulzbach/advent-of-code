@@ -4,7 +4,7 @@
 
 #include <algorithm>
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -34,8 +34,7 @@ namespace AoC {
   return point.getY() * 8 + point.getX();
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   assert((findSeatPoint("FBFBBFFRLR") == Point<S32, 2>(5, 44)));
   assert(seatId(findSeatPoint("FBFBBFFRLR")) == 357);
   std::vector<int> seatIds;
@@ -45,7 +44,7 @@ void main(ArgumentParser const &argumentParser) {
       seatIds.push_back(seatId(findSeatPoint(string)));
     }
   }
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     std::cout << *std::ranges::max_element(seatIds) << '\n';
   } else {
     std::ranges::sort(seatIds);

@@ -4,7 +4,7 @@
 #include "Types.hpp"
 
 #include <algorithm>
-#include <fstream>
+
 #include <iostream>
 #include <iterator>
 #include <ranges>
@@ -17,7 +17,7 @@
 #include <vector>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
+void main(std::istream &stream, U32 const part) {
   std::unordered_map<std::string, std::unordered_set<std::string>> mayBeIn;
   auto const parseLine = [](auto const &line) noexcept {
     auto const openingParenthesisIndex = line.find('(');
@@ -31,7 +31,7 @@ void main(ArgumentParser const &argumentParser) {
   };
   std::unordered_map<std::string, bool> mayContainAnAllergen;
   std::unordered_map<std::string, U32> ingredientAppearances;
-  for (auto const &line : readLines(std::ifstream(argumentParser.getPath()))) {
+  for (auto const &line : readLines(stream)) {
     auto const [ingredients, allergens] = parseLine(line);
     for (auto const &ingredient : ingredients) {
       ++ingredientAppearances[ingredient];
@@ -57,7 +57,7 @@ void main(ArgumentParser const &argumentParser) {
       mayContainAnAllergen[suspect] = true;
     }
   }
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     U32 count = 0;
     for (auto const &[ingredient, mayContain] : mayContainAnAllergen) {
       if (!mayContain) {
