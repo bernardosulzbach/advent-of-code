@@ -8,7 +8,7 @@
 
 #include <algorithm>
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <ranges>
 #include <sstream>
@@ -45,8 +45,7 @@ void parseProductionLine(std::vector<Production> &productions, std::string const
   flush();
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   std::vector<AoC::Production> productions;
   auto const lines = AoC::readLines(stream);
   auto lineIterator = std::begin(lines);
@@ -56,7 +55,7 @@ void main(ArgumentParser const &argumentParser) {
   ++lineIterator; // Skip the blank line.
   auto const isZeroProduction = [](auto const &production) { return production.getName() == "0"; };
   assert(std::ranges::count_if(productions, isZeroProduction) == 1);
-  if (argumentParser.getPart() == 2) {
+  if (part == 2) {
     std::erase_if(productions, [](auto const &production) { return AoC::isAnyOf(production.getName(), "8", "11"); });
     productions.emplace_back("8", std::vector<std::string>{"42"});
     productions.emplace_back("8", std::vector<std::string>{"42", "8"});

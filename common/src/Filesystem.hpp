@@ -1,6 +1,6 @@
 #pragma once
 
-#include <filesystem>
+#include <fstream>
 #include <string>
 
-std::string readFile(const std::filesystem::path &path);
+std::string readFile(std::istream const &stream);

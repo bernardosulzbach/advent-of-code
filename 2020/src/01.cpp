@@ -3,7 +3,6 @@
 #include "Ranges.hpp"
 #include "Types.hpp"
 
-#include <fstream>
 #include <iostream>
 
 namespace AoC {
@@ -16,10 +15,9 @@ template <std::size_t N, typename Range> void findCombination(Range const &input
   }
 }
 
-void main(ArgumentParser const &argumentParser) {
-  std::ifstream stream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   auto const input = AoC::readVector<S64>(stream);
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     findCombination<2>(input);
   } else {
     findCombination<3>(input);

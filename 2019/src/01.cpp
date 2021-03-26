@@ -1,6 +1,5 @@
 #include "ArgumentParser.hpp"
 
-#include <fstream>
 #include <iostream>
 
 namespace AoC {
@@ -8,12 +7,11 @@ int fuelRequired(int weight) {
   return weight / 3 - 2;
 }
 
-void main(ArgumentParser const &argumentParser) {
+void main(std::istream &stream, U32 const part) {
   int sum = 0;
-  std::ifstream stream(argumentParser.getPath());
   int value;
   while (stream >> value) {
-    if (argumentParser.getPart() == 1) {
+    if (part == 1) {
       sum += fuelRequired(value);
     } else {
       while (fuelRequired(value) > 0) {

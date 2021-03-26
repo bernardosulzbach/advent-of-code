@@ -3,13 +3,11 @@
 #include "IO.hpp"
 #include "Point.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <string>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   auto const lines = AoC::readVector<std::string>(stream);
   auto const countTrees = [&lines](std::size_t const right, std::size_t const down) {
     std::size_t trees = 0;
@@ -26,7 +24,7 @@ void main(ArgumentParser const &argumentParser) {
     }
     return trees;
   };
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     std::cout << countTrees(3, 1) << '\n';
   } else {
     std::cout << countTrees(1, 1) * countTrees(3, 1) * countTrees(5, 1) * countTrees(7, 1) * countTrees(1, 2) << '\n';

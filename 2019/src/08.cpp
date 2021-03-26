@@ -2,7 +2,7 @@
 #include "Math.hpp"
 
 #include <algorithm>
-#include <fstream>
+
 #include <iostream>
 #include <numeric>
 #include <optional>
@@ -53,8 +53,7 @@ Layer mergeLayers(const std::vector<Layer> &layers) {
   return layer;
 }
 
-void main(ArgumentParser const &argumentParser) {
-  std::ifstream stream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   std::vector<Layer> layers;
   while (true) {
     const auto layer = readLayer(stream);
@@ -63,7 +62,7 @@ void main(ArgumentParser const &argumentParser) {
     }
     layers.push_back(layer.value());
   }
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     std::size_t bestLayer = 0;
     auto bestLayerZeros = std::numeric_limits<Size>::max();
     for (std::size_t i = 0; i < layers.size(); i++) {

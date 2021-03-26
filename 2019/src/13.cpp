@@ -9,7 +9,7 @@
 
 #include <cassert>
 #include <chrono>
-#include <fstream>
+
 #include <iostream>
 #include <optional>
 #include <thread>
@@ -74,10 +74,10 @@ DefeatCause findDefeatCause(Intcode intcode, Screen screen) {
   return {screen.getPosition(BallSymbol), turns};
 }
 
-void main(ArgumentParser const &argumentParser) {
-  Intcode intcode(readMemory(argumentParser.getPath()));
+void main(std::istream &stream, U32 const part) {
+  Intcode intcode(readMemory(stream));
   Screen screen;
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     intcode.run();
     updateScreen(intcode, screen);
     const auto string = screen.toString();

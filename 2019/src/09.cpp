@@ -4,9 +4,9 @@
 #include <iostream>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  Intcode intcode(readMemory(argumentParser.getPath()));
-  intcode.addInput(argumentParser.getPart());
+void main(std::istream &stream, U32 const part) {
+  Intcode intcode(readMemory(stream));
+  intcode.addInput(part);
   intcode.run();
   while (intcode.hasOutput()) {
     std::cout << intcode.getOutput() << '\n';

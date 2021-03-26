@@ -5,7 +5,6 @@
 #include "Text.hpp"
 #include "Types.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <vector>
 
@@ -29,9 +28,7 @@ struct BusScore {
   return BusScore{id, (id - earliestDeparture % id) % id};
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   auto const earliestDeparture = AoC::readValue<Integer>(stream);
   auto const idLine = AoC::readValue<std::string>(stream);
   if (part == 1) {

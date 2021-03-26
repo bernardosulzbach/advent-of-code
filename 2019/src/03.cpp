@@ -4,7 +4,7 @@
 #include "Types.hpp"
 
 #include <cmath>
-#include <fstream>
+
 #include <iostream>
 #include <sstream>
 #include <vector>
@@ -45,14 +45,13 @@ Path<S32> pathFromString(std::string &string) {
   return path;
 }
 
-void main(ArgumentParser const &argumentParser) {
-  std::ifstream stream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   std::string pathStringA;
   std::string pathStringB;
   stream >> pathStringA >> pathStringB;
   const auto pathA = pathFromString(pathStringA);
   const auto pathB = pathFromString(pathStringB);
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     std::optional<Point<S32, 2>> nearestIntersection;
     for (const auto point : pathA.computeIntersection(pathB)) {
       if (point == Point<S32, 2>(0, 0)) {

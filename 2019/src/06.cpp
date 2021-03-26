@@ -1,15 +1,13 @@
 #include "ArgumentParser.hpp"
 #include "OrbitGraph.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <string>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
+void main(std::istream &stream, U32 const part) {
   OrbitGraph orbitGraph;
   {
-    std::ifstream stream(argumentParser.getPath());
     std::string line;
     while (stream >> line) {
       const auto operatorPosition = line.find(')');
@@ -18,7 +16,6 @@ void main(ArgumentParser const &argumentParser) {
       orbitGraph.addOrbit(a, b);
     }
   }
-  const auto part = argumentParser.getPart();
   if (part == 1) {
     std::cout << orbitGraph.getTotalOrbits() << '\n';
   } else {

@@ -10,7 +10,7 @@
 #include "Vector.hpp"
 
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <optional>
 #include <queue>
@@ -31,16 +31,15 @@ void fftPhase(std::vector<S32> const &input, std::vector<S32> &output) noexcept 
   }
 }
 
-void main(ArgumentParser const &argumentParser) {
+void main(std::istream &stream, U32 const part) {
   std::vector<S32> sequence;
   {
-    std::ifstream stream(argumentParser.getPath());
     char x;
     while (stream >> x) {
       sequence.push_back(x - '0');
     }
   }
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     std::vector<S32> output(sequence.size());
     for (U32 phase = 1; phase <= 100; phase++) {
       fftPhase(sequence, output);

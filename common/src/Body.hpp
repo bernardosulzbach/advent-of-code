@@ -19,7 +19,7 @@ std::istream &operator>>(std::istream &stream, Body &body);
 
 std::ostream &operator<<(std::ostream &stream, const Body &body);
 
-std::vector<Body> readBodies(const std::string &path);
+std::vector<Body> readBodies(std::istream &stream);
 
 template <> struct std::hash<Body> {
   std::size_t operator()(const Body &body) const {

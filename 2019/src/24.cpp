@@ -7,9 +7,9 @@
 #include <unordered_set>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  const auto text = readFile(argumentParser.getPath());
-  if (argumentParser.getPart() == 1) {
+void main(std::istream &stream, U32 const part) {
+  const auto text = readFile(stream);
+  if (part == 1) {
     BugScan scan = BugScan::fromString(text);
     std::unordered_set<BugScan> seen;
     while (seen.count(scan) == 0) {

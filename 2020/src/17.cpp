@@ -8,7 +8,7 @@
 
 #include <algorithm>
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <ranges>
 #include <sstream>
@@ -59,9 +59,8 @@ template <Size Dimensions> void solve(std::istream &stream) {
   std::cout << active.size() << '\n';
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto stream = std::ifstream(argumentParser.getPath());
-  if (argumentParser.getPart() == 1) {
+void main(std::istream &stream, U32 const part) {
+  if (part == 1) {
     solve<3>(stream);
   } else {
     solve<4>(stream);
