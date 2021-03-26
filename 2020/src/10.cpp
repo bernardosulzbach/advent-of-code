@@ -5,7 +5,7 @@
 
 #include <algorithm>
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <ranges>
 #include <vector>
@@ -13,9 +13,7 @@
 namespace AoC {
 inline constexpr std::size_t PreambleSize = 25;
 
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   auto adapters = AoC::readVector<U64>(stream);
   adapters.push_back(0);
   adapters.push_back(*std::ranges::max_element(adapters) + 3);

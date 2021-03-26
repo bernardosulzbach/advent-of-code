@@ -1,13 +1,14 @@
 #include "Filesystem.hpp"
 
-#include <fstream>
+#include <cassert>
+#include <sstream>
 
 #include <boost/algorithm/string.hpp>
 
-std::string readFile(const std::filesystem::path &path) {
+std::string readFile(std::istream const &stream) {
+  assert(stream);
   std::ostringstream buffer;
-  std::ifstream input(path.native());
-  buffer << input.rdbuf();
+  buffer << stream.rdbuf();
   auto asString = buffer.str();
   boost::trim(asString);
   return asString;

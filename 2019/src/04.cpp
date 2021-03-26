@@ -2,7 +2,6 @@
 #include "IO.hpp"
 #include "Types.hpp"
 
-#include <fstream>
 #include <iostream>
 
 namespace AoC {
@@ -41,15 +40,13 @@ bool isValid(U32 password, bool exactlyTwoEqual) {
   return repetitionCriterion && neverDecreases;
 }
 
-void main(ArgumentParser const &argumentParser) {
-  const auto path = argumentParser.getPath();
-  std::ifstream stream(path);
+void main(std::istream &stream, U32 const part) {
   auto const a = AoC::readValue<U32>(stream);
   stream.ignore();
   auto const b = AoC::readValue<U32>(stream);
   U32 valid = 0;
   for (U32 i = a; i <= b; i++) {
-    if (isValid(i, argumentParser.getPart() == 2)) {
+    if (isValid(i, part == 2)) {
       valid++;
     }
   }

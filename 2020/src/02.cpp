@@ -3,14 +3,11 @@
 #include "Interval.hpp"
 #include "Types.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <string>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  std::ifstream stream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   U32 validPasswords = 0;
   U32 a;
   while (stream >> a) {

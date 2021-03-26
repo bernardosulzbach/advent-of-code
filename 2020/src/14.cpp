@@ -5,15 +5,12 @@
 #include "Ranges.hpp"
 #include "Types.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <numeric>
 #include <ranges>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   using AddressType = U64;
   using ValueType = U64;
   std::unordered_map<AddressType, ValueType> memory;

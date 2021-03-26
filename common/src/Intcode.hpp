@@ -77,4 +77,4 @@ public:
   IntcodeState run();
 };
 
-std::vector<Intcode::ValueType> readMemory(const std::string &path);
+std::vector<Intcode::ValueType> readMemory(std::istream &stream);

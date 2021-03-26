@@ -2,7 +2,7 @@
 #include "Types.hpp"
 
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <ranges>
 #include <unordered_map>
@@ -10,8 +10,7 @@
 namespace AoC {
 auto const NotSaidYet = std::numeric_limits<U32>::max();
 
-void main(ArgumentParser const &argumentParser) {
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   std::vector<U32> initialValues;
   {
     U32 value;
@@ -21,7 +20,7 @@ void main(ArgumentParser const &argumentParser) {
     }
   }
   assert(!initialValues.empty());
-  auto const target = argumentParser.getPart() == 1 ? 2020u : 30'000'000u;
+  auto const target = part == 1 ? 2020u : 30'000'000u;
   std::vector<U32> lastSaidMap(target, NotSaidYet);
   U32 lastSaidValue = initialValues[0];
   for (U32 i = 1; i < target; i++) {

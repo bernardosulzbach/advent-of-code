@@ -356,9 +356,9 @@ CompressedMovementSequence compressMovementSequence(const std::vector<RobotMovem
   return compressedMovementSequence;
 }
 
-void main(ArgumentParser const &argumentParser) {
-  Intcode intcode(readMemory(argumentParser.getPath()));
-  if (argumentParser.getPart() == 1) {
+void main(std::istream &stream, U32 const part) {
+  Intcode intcode(readMemory(stream));
+  if (part == 1) {
     const auto map = readMap(intcode);
     assert(!intcode.hasOutput());
     S32 total = 0;

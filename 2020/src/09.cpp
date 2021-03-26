@@ -4,7 +4,7 @@
 #include "Types.hpp"
 
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <ranges>
 #include <stdexcept>
@@ -13,9 +13,7 @@
 namespace AoC {
 inline constexpr Size PreambleSize = 25;
 
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   auto const lastValues = AoC::readVector<U64>(stream);
   auto const firstViolation = [&lastValues]() {
     for (auto i = PreambleSize; i < lastValues.size(); ++i) {

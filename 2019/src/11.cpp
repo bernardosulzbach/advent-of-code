@@ -5,7 +5,6 @@
 #include "Pose.hpp"
 #include "Vector.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <optional>
 #include <unordered_map>
@@ -13,12 +12,12 @@
 #include <vector>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  Intcode intcode(readMemory(argumentParser.getPath()));
+void main(std::istream &stream, U32 const part) {
+  Intcode intcode(readMemory(stream));
   Pose robot;
   std::unordered_map<Point<S32, 2>, bool> hull;
   std::unordered_set<Point<S32, 2>> painted;
-  if (argumentParser.getPart() == 2) {
+  if (part == 2) {
     hull[robot.getPosition()] = true;
   }
   while (intcode.run() != IntcodeState::Halted) {
@@ -37,7 +36,7 @@ void main(ArgumentParser const &argumentParser) {
     }
     robot.goForward();
   }
-  if (argumentParser.getPart() == 1) {
+  if (part == 1) {
     std::cout << painted.size() << '\n';
   } else {
     auto minX = std::numeric_limits<S32>::max();

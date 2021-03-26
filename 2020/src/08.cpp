@@ -4,7 +4,7 @@
 #include "Types.hpp"
 
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -46,9 +46,7 @@ ExecutionResult execute(std::vector<std::string> const &operations, std::vector<
   return ExecutionResult{ResultType::OutOfBounds, accumulator};
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   std::vector<std::string> operations;
   std::vector<S32> arguments;
   {

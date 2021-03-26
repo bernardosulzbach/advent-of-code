@@ -5,14 +5,11 @@
 #include "Ranges.hpp"
 #include "Types.hpp"
 
-#include <fstream>
 #include <iostream>
 #include <vector>
 
 namespace AoC {
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   auto const lines = AoC::readVector<std::string>(stream);
   auto ship = Pose(Direction::East);
   if (part == 1) {

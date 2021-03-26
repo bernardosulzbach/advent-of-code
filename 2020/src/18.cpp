@@ -6,7 +6,7 @@
 #include "Verify.hpp"
 
 #include <cassert>
-#include <fstream>
+
 #include <iostream>
 #include <ranges>
 #include <sstream>
@@ -119,9 +119,7 @@ void reduce(std::vector<Token> &tokens, Size const start, bool const additionsFi
   tokens.erase(tokens.begin() + static_cast<S64>(start) + 1, tokens.end());
 }
 
-void main(ArgumentParser const &argumentParser) {
-  auto const part = argumentParser.getPart();
-  auto stream = std::ifstream(argumentParser.getPath());
+void main(std::istream &stream, U32 const part) {
   IntegerType total = 0;
   for (auto const &line : AoC::readLines(stream)) {
     Token token;
