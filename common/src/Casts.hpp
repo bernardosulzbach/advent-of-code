@@ -31,4 +31,18 @@ unsignedCast(Source const source) noexcept(std::is_same_v<IsChecked, Unchecked>)
     return checkedCast<std::make_unsigned_t<Source>>(source);
   }
 }
+
+/**
+ * Casts an integral to its signed version.
+ *
+ * If checked, checks if the cast preserves the value before performing it.
+ */
+template <typename IsChecked, Integral Source>
+constexpr std::make_signed_t<Source> signedCast(Source const source) noexcept(std::is_same_v<IsChecked, Unchecked>) {
+  if constexpr (std::is_same_v<IsChecked, Checked>) {
+    return checkedCast<std::make_signed_t<Source>>(source);
+  } else {
+    return static_cast<std::make_signed_t<Source>>(source);
+  }
+}
 } // namespace AoC
