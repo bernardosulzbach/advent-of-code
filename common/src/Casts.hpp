@@ -26,9 +26,9 @@ template <typename IsChecked, Integral Source>
 constexpr std::make_unsigned_t<Source>
 unsignedCast(Source const source) noexcept(std::is_same_v<IsChecked, Unchecked>) {
   if constexpr (std::is_same_v<IsChecked, Checked>) {
-    return static_cast<std::make_unsigned_t<Source>>(source);
-  } else {
     return checkedCast<std::make_unsigned_t<Source>>(source);
+  } else {
+    return static_cast<std::make_unsigned_t<Source>>(source);
   }
 }
 
