@@ -12,10 +12,10 @@ template <typename T> auto extractFront(std::deque<T> &d) noexcept {
   return front;
 }
 
-template <typename T> auto extractTop(std::stack<T> &t) noexcept {
-  assert(!t.empty());
-  auto top = t.top();
-  t.pop();
+template <typename T> auto extractTop(std::stack<T> &s) noexcept {
+  assert(!s.empty());
+  auto top = s.top();
+  s.pop();
   return top;
 }
 
