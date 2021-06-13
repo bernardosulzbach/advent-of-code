@@ -87,25 +87,17 @@ void main(std::istream &stream, U32 const part) {
     std::optional<Point<Size, 2>> previousBallPosition;
     while (intcode.run() != IntcodeState::Halted) {
       updateScreen(intcode, screen);
-      // Idea: find the position at which we are defeated, then move the paddle to that position in the old state.
-      const auto defeatCause = findDefeatCause(intcode, screen);
-      const auto currentPaddlePosition = screen.getPosition(PadSymbol);
-      const auto dx = checkedCast<S64>(defeatCause.position.getX()) - checkedCast<S64>(currentPaddlePosition.getX());
-      const auto currentBallPosition = screen.getPosition(BallSymbol);
-      if (std::abs(dx) + 2 >= defeatCause.turns) {
-        if (currentPaddlePosition.getX() == defeatCause.position.getX()) {
-          intcode.addInput(0);
-        } else if (currentPaddlePosition.getX() < defeatCause.position.getX()) {
-          intcode.addInput(+1);
-        } else {
-          intcode.addInput(-1);
-        }
+      auto const ballPosition = screen.getPosition(BallSymbol);
+      if (previousBallPosition && previousBallPosition->getX() == screen.getPosition(PadSymbol).getX()) {
+        intcode.addInput(signedCast<Unchecked>(ballPosition.getX()) -
+                         signedCast<Unchecked>(previousBallPosition->getX()));
       } else {
         intcode.addInput(0);
       }
-      std::cout << screen.toString() << '\n';
-      previousBallPosition = currentBallPosition;
+      previousBallPosition = ballPosition;
     }
+    updateScreen(intcode, screen);
+    std::cout << screen.getScore() << '\n';
   }
 }
 } // namespace AoC

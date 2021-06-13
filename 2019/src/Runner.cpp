@@ -36,8 +36,7 @@ namespace AoC {
 
   for (int day = 1; day <= 17; day++) {
     runSpecifications.emplace(day, false, 1, 1);
-    // TODO: remove this once day 13 is solved.
-    if (day == 13 || day == 16) {
+    if (day == 16) {
       continue;
     }
     runSpecifications.emplace(day, false, 2, 1);
