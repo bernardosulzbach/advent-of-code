@@ -16,8 +16,10 @@ add_library(
   src/Body.cpp
   src/DirectedGraph.cpp
   src/Direction.cpp
+  src/Filesystem.cpp
   src/Intcode.cpp
   src/Pose.cpp
+  src/Runner.cpp
   src/Text.cpp
   src/Vector.cpp)
 

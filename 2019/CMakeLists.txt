@@ -60,4 +60,4 @@ add_executable(19 src/19.cpp $<TARGET_OBJECTS:advent-of-code-common>)
 add_executable(21 src/21.cpp $<TARGET_OBJECTS:advent-of-code-common>)
 add_executable(24 src/24.cpp $<TARGET_OBJECTS:advent-of-code-common>)
 
-add_executable(runner src/Runner.cpp $<TARGET_OBJECTS:advent-of-code-common>)
+add_executable(runner src/Runner.cpp ../common/src/Runner.cpp $<TARGET_OBJECTS:advent-of-code-common>)
