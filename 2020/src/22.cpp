@@ -102,7 +102,7 @@ void main(std::istream &stream, U32 const part) {
   Decks decks;
   {
     Size readingInto;
-    for (auto const line : readLines(stream)) {
+    for (auto const &line : readLines(stream)) {
       if (line.starts_with("Player")) {
         readingInto = parseValue<decltype(readingInto)>(line.substr(7, 1)) - 1;
       } else if (!line.empty()) {
