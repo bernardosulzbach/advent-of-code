@@ -38,7 +38,7 @@ public:
     for (Size i = 0; i < height; i++) {
       for (Size j = 0; j < width; j++) {
         if (pixels[i][j] == symbol) {
-          return {i, j};
+          return {j, i};
         }
       }
     }
