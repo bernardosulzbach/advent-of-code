@@ -1,6 +1,6 @@
 defmodule Runner do
   def run() do
-    [Day01]
+    [Day01, Day02]
     |> Enum.with_index()
     |> Enum.map(fn {module, index} -> {module, index + 1} end)
     |> Enum.map(fn {module, day} ->
