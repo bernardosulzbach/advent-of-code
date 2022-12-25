@@ -7,8 +7,8 @@ defmodule Runner do
       end)
       |> Enum.sort()
       |> Enum.map(fn module ->
-        day = module |> Atom.to_string() |> String.slice(-2..-1) |> String.to_integer()
-        IO.puts("Day #{day}")
+        padded_day = module |> Atom.to_string() |> String.slice(-2..-1)
+        IO.puts("Day #{padded_day |> String.to_integer()}")
 
         1..2
         |> Enum.map(fn part ->
@@ -16,7 +16,6 @@ defmodule Runner do
 
           ["Sample", "Puzzle"]
           |> Enum.map(fn test_type ->
-            padded_day = day |> Integer.to_string() |> String.pad_leading(2, "0")
             directory = "#{String.downcase(test_type)}s"
 
             actual_output =
@@ -27,7 +26,7 @@ defmodule Runner do
 
             with {:ok, expected_output} =
                    File.read("output/#{directory}/#{padded_day}-#{part}.txt") do
-              passed = actual_output == String.slice(expected_output, 0..-2)
+              passed = actual_output === String.trim(expected_output)
 
               IO.puts(
                 if passed do
