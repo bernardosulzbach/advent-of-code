@@ -3,7 +3,7 @@ defmodule Runner do
     with {:ok, list} <- :application.get_key(:advent_of_code_2022, :modules) do
       list
       |> Enum.filter(fn module ->
-        module |> Atom.to_string() |> String.match?(~r/Day\d{2}/)
+        module |> Atom.to_string() |> String.match?(~r/Day\d{2}$/)
       end)
       |> Enum.sort()
       |> Enum.map(fn module ->
