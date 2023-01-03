@@ -12,36 +12,43 @@ defmodule Runner do
 
         1..2
         |> Enum.map(fn part ->
-          IO.puts("  Part #{part}")
-
           ["Sample", "Puzzle"]
-          |> Enum.map(fn test_type ->
+          |> Enum.reduce(false, fn test_type, some_output ->
             directory = "#{String.downcase(test_type)}s"
 
-            actual_output =
-              module.run(
-                "input/#{directory}/#{padded_day}.txt",
-                part
-              )
+            case File.read("output/#{directory}/#{padded_day}-#{part}.txt") do
+              {:ok, expected_output} ->
+                actual_output =
+                  module.run(
+                    "input/#{directory}/#{padded_day}.txt",
+                    part
+                  )
 
-            with {:ok, expected_output} =
-                   File.read("output/#{directory}/#{padded_day}-#{part}.txt") do
-              passed = actual_output === String.trim(expected_output)
+                passed = actual_output === String.trim(expected_output)
 
-              IO.puts(
-                if passed do
-                  IO.ANSI.green()
-                else
-                  IO.ANSI.red()
-                end <>
-                  "    #{test_type} " <>
+                if !some_output do
+                  IO.puts("  Part #{part}")
+                end
+
+                IO.puts(
                   if passed do
-                    "passed."
+                    IO.ANSI.green()
                   else
-                    "failed!"
+                    IO.ANSI.red()
                   end <>
-                  IO.ANSI.reset()
-              )
+                    "    #{test_type} " <>
+                    if passed do
+                      "passed."
+                    else
+                      "failed!"
+                    end <>
+                    IO.ANSI.reset()
+                )
+
+                true
+
+              {:error, :enoent} ->
+                false
             end
           end)
         end)
