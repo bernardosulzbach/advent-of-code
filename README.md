@@ -4,6 +4,14 @@ My solutions for the [Advent of Code](https://adventofcode.com) (AoC) events.
 
 One of my goals is to use a different programming language each year.
 
+## 2023
+
+Using Haskell.
+
+```bash
+ghc --run src/01.hs < input/samples/01.txt
+```
+
 ## 2020
 
 Using C++ (again).
