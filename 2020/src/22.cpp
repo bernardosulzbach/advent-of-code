@@ -27,11 +27,11 @@ using CardType = U32;
 struct [[nodiscard]] Decks {
   std::array<std::deque<CardType>, 2> decks;
 
-  [[nodiscard]] auto &operator[](Size const i) &noexcept {
+  [[nodiscard]] auto &operator[](Size const i) & noexcept {
     return decks[i];
   }
 
-  [[nodiscard]] auto const &operator[](Size const i) const &noexcept {
+  [[nodiscard]] auto const &operator[](Size const i) const & noexcept {
     return decks[i];
   }
 
