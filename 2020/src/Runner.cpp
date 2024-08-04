@@ -3,7 +3,7 @@
 namespace AoC {
 [[nodiscard]] std::set<RunSpecification> generateRunSpecifications() noexcept {
   std::set<RunSpecification> runSpecifications;
-  for (U32 day = 1; day <= 23; day++) {
+  for (U32 day = 1; day <= 24; day++) {
     if (day == 20) {
       continue;
     }
